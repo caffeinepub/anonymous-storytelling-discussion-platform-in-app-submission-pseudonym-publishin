@@ -8,6 +8,16 @@ interface Comment {
   timestamp: bigint;
 }
 
+/**
+ * Exponential backoff with cap for retry delays
+ */
+function getRetryDelay(attemptIndex: number): number {
+  const baseDelay = 1000; // 1 second
+  const maxDelay = 5000; // 5 seconds cap
+  const delay = Math.min(baseDelay * Math.pow(2, attemptIndex), maxDelay);
+  return delay;
+}
+
 export function useGetPublishedStories() {
   const { actor, isFetching } = useActor();
 
@@ -24,8 +34,8 @@ export function useGetPublishedStories() {
       }
     },
     enabled: !!actor && !isFetching,
-    retry: 2,
-    retryDelay: 1000,
+    retry: 4, // Total of 5 attempts (initial + 4 retries)
+    retryDelay: getRetryDelay,
   });
 }
 

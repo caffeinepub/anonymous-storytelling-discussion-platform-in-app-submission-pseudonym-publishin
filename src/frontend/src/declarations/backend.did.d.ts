@@ -32,6 +32,7 @@ export interface _SERVICE {
     undefined
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'checkBackendHeartbeat' : ActorMethod<[], boolean>,
   'getAllStories' : ActorMethod<[], Array<Story>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,

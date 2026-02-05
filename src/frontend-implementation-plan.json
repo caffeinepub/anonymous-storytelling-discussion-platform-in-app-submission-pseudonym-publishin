@@ -1,53 +1,73 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Troubleshooting UI + redeploy documentation for Canister ID resolution issues",
+  "title": "Improve feed error diagnostics, backend availability checks, and retry UX",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a public troubleshooting page/panel for “Canister ID Not Resolved” with copyable icp0.io and raw.icp0.io URLs derived from the app canister ID.",
+      "summary": "Add a frontend-visible backend availability check to classify feed load failures as propagation/unreachable vs application error.",
       "acceptanceCriteria": [
-        "A new UI section/page exists titled \"Troubleshooting: Canister ID Not Resolved\" (or similar) with clear English text.",
-        "The panel includes copyable URLs for both formats: https://<CANISTER_ID>.icp0.io and https://<CANISTER_ID>.raw.icp0.io (using the app canister ID available at build time).",
-        "The panel includes at least: refresh/wait guidance, try alternate network/browser guidance, and a note that this is typically routing/edge propagation.",
-        "The panel is reachable from an existing navigation area (e.g., footer or About page) without requiring authentication."
+        "Frontend calls the existing lightweight backend heartbeat capability when the feed load fails and labels the error as either 'Backend unreachable/not propagated' vs 'Backend reachable but request failed'.",
+        "When the backend is unreachable, the UI messaging explicitly suggests propagation delay and next steps (wait, retry, try raw URL), rather than a generic error."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/TroubleshootingCanisterIdNotResolvedPage.tsx",
+          "path": "frontend/src/hooks/useBackendAvailability.ts",
           "operation": "create",
-          "description": "Create a new public page titled “Troubleshooting: Canister ID Not Resolved” explaining the error in clear English and showing copyable icp0.io + raw.icp0.io access URLs derived from the build-time canister ID; use shadcn-ui components (e.g., Card/Button/Input) to present the panel and copy controls. Verify the component's usage instructions before implementing."
+          "description": "Create a small hook that uses the existing actor to call the backend heartbeat function (checkBackendHeartbeat) with conservative guards (only when actor is available) and returns an availability state (e.g., unknown/checking/reachable/unreachable) plus any diagnostic error text for UI display."
         },
         {
-          "path": "frontend/src/utils/canisterUrls.ts",
-          "operation": "create",
-          "description": "Add a small utility to read the app canister ID from available build-time environment variables and generate the two access URLs used by the troubleshooting page."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/FeedPage.tsx",
           "operation": "modify",
-          "description": "Register a new route for the troubleshooting page so it is navigable within the existing router configuration."
-        },
-        {
-          "path": "frontend/src/components/AppLayout.tsx",
-          "operation": "modify",
-          "description": "Add a footer navigation link to the troubleshooting route so it’s reachable without authentication from an existing navigation area."
+          "description": "Integrate the backend availability hook into the feed error flow: when loading stories fails, trigger the availability check and use the result to render distinct messaging for (a) unreachable/not propagated vs (b) reachable-but-request-failed; ensure the unreachable message recommends waiting for propagation, retrying, and trying the raw URL."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add a developer-facing redeploy guide document with clean redeploy commands, canister ID verification, and quick troubleshooting checklist for “Canister ID Not Resolved”.",
+      "summary": "Enhance the Feed page 'Failed to load stories' error UI with actionable troubleshooting, canister details, and one-click actions.",
       "acceptanceCriteria": [
-        "A new doc file exists in the repository (e.g., DEPLOYMENT.md) with step-by-step commands for a clean redeploy.",
-        "The doc includes verification steps to confirm the canister IDs being used and how to open the app via icp0.io and raw.icp0.io.",
-        "The doc includes a brief checklist of common causes for 'Canister ID Not Resolved' and what to try before redeploying."
+        "On the Feed page error state, display a clear heading and short explanation that the website loaded but the backend may be unavailable or still propagating.",
+        "Include buttons/links: Retry now, Open Troubleshooting page, and Open raw.icp0.io URL (when detectable).",
+        "Display detected canister info using existing canister resolution utilities (frontend canister ID/source, backend canister ID when available, standard/raw URLs) with copy-to-clipboard actions or a clear path to copy (can reuse existing UI patterns from TroubleshootingPage).",
+        "All user-facing text is in English and avoids vague messages like only 'Failed to load stories' without next steps."
       ],
       "file_operations": [
         {
-          "path": "frontend/DEPLOYMENT.md",
+          "path": "frontend/src/components/FeedDiagnosticsPanel.tsx",
           "operation": "create",
-          "description": "Create a developer-focused redeploy guide (stop/clean/redeploy/verify canister IDs) including steps to confirm the canister IDs in use and how to open via icp0.io and raw.icp0.io, plus a short checklist of common causes and what to try before redeploying."
+          "description": "Add a reusable Feed diagnostics UI block for the error state: uses existing canister resolution utilities (getCanisterInfo) to show frontend asset canister ID/source, backend canister ID (when available), standard/raw URLs, and provides copy-to-clipboard actions and external-open actions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "modify",
+          "description": "Replace the current destructive Alert-only error state with an actionable error layout: include Retry now, a link/button to the existing /troubleshooting route, and an external link to the raw URL when available; render the new FeedDiagnosticsPanel and incorporate the backend availability classification messaging from REQ-1. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/utils/canisterUrls.ts",
+          "operation": "modify",
+          "description": "Extend/adjust canister URL utilities as needed to support Feed error actions reliably (e.g., exposing enough info to decide when raw URL is detectable and to display a clear 'unknown' state) while keeping existing TroubleshootingPage behavior intact."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Implement improved retry/backoff for the published stories fetch and show progress feedback during the initial 10–15 seconds after page load.",
+      "acceptanceCriteria": [
+        "When the backend request fails, the UI shows a visible 'Retrying…' / 'Checking backend…' state rather than immediately settling into a static failure state after 1–2 seconds.",
+        "Retry timing uses a backoff strategy (increasing delays) up to a reasonable cap, and stops after a finite number of attempts with a final actionable error state.",
+        "A manual 'Retry now' action is always available in the final error state."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useStories.ts",
+          "operation": "modify",
+          "description": "Update useGetPublishedStories react-query settings to use an increasing backoff (e.g., exponential with a cap) and a finite retry count tuned to cover roughly the first ~10–15 seconds; ensure failures ultimately settle into a final error state and that manual refetch remains available."
+        },
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "modify",
+          "description": "Add a visible in-between state for the feed while retries/backoff are happening after an initial failure (e.g., 'Checking backend…' / 'Retrying…' with attempt feedback derived from react-query state such as failureCount/isFetching), and ensure the final error state still provides a prominent 'Retry now' action."
         }
       ]
     }

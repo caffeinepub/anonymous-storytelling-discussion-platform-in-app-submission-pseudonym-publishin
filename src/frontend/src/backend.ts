@@ -114,6 +114,7 @@ export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     adminRewordAndPublishStory(title: string, rewordedStory: string, rewordedPseudonym: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    checkBackendHeartbeat(): Promise<boolean>;
     getAllStories(): Promise<Array<Story>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -181,6 +182,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async checkBackendHeartbeat(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.checkBackendHeartbeat();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.checkBackendHeartbeat();
             return result;
         }
     }

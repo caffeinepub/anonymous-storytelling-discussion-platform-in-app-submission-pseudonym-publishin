@@ -31,6 +31,7 @@ export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     adminRewordAndPublishStory(title: string, rewordedStory: string, rewordedPseudonym: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    checkBackendHeartbeat(): Promise<boolean>;
     getAllStories(): Promise<Array<Story>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;

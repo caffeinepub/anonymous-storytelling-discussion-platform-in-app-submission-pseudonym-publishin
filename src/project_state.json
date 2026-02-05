@@ -2,31 +2,41 @@
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
   "summary": "New project",
-  "architectural_notes": [],
+  "architectural_notes": [
+    "App appears to be deployed on Internet Computer (IC) with frontend + backend canisters accessed via a gateway/domain routing."
+  ],
   "known_issues": [
-    "Deployed Internet Computer app link returns \"Canister ID not resolved\" (including raw.icp0.io), suggesting routing/edge propagation issue; user requests guidance to force a fresh redeploy."
+    "Deployment/runtime issue: gateway reports 'Canister ID Not Resolved' and frontend shows 'Failed to load stories' after 1–2 seconds, suggesting frontend loads but backend canister is unavailable/not resolving."
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-a-user-facing-troubleshooting-panel-for-the-canister-id-not-resolved-error-that-explains-what-the-error-means-and-provides-the-app-s-known-access-urls-icp0-io-and-raw-icp0-io-in-a-copyable-format",
-      "title": "Add a user-facing troubleshooting panel for the \"Canister ID Not Resolved\" error that explains what the error means and provides the app’s known access URLs (icp0.io and raw.icp0.io) in a copyable format.",
+      "id": "feature-add-an-explicit-backend-availability-check-and-expose-it-to-the-frontend-so-the-app-can-distinguish-between-a-backend-canister-unreachable-not-yet-propagated-and-b-application-level-errors",
+      "title": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-developer-facing-redeploy-instructions-in-a-new-documentation-file-that-guides-how-to-force-a-fresh-redeploy-using-dfx-including-commands-to-stop-clean-redeploy-and-verify-canister-ids",
-      "title": "Create developer-facing redeploy instructions in a new documentation file that guides how to force a fresh redeploy using dfx, including commands to stop, clean, redeploy, and verify canister IDs.",
+      "id": "feature-improve-the-failed-to-load-stories-error-state-on-the-stories-feed-to-show-actionable-troubleshooting-and-canister-details-frontend-asset-canister-id-backend-api-canister-id-when-available-standard-url-raw-url-and-provide-one-click-actions",
+      "title": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
       "reqIds": [
         "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-retry-backoff-behavior-for-fetching-published-stories-to-reduce-perceived-slowness-and-provide-clear-progress-feedback-during-the-first-10-15-seconds-after-page-load-when-the-backend-is-not-yet-reachable",
+      "title": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
+      "reqIds": [
+        "REQ-3"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [],
-  "projectName": "Add deployment troubleshooting & redeploy guidance for 'Canister ID Not Resolved'",
+  "projectName": "Improve user-visible deployment diagnostics and backend availability checks for 'Failed to load stories'",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

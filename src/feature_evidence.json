@@ -2,12 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-user-facing-troubleshooting-panel-for-the-canister-id-not-resolved-error-that-explains-what-the-error-means-and-provides-the-app-s-known-access-urls-icp0-io-and-raw-icp0-io-in-a-copyable-format",
-      "featureTitle": "Add a user-facing troubleshooting panel for the \"Canister ID Not Resolved\" error that explains what the error means and provides the app’s known access URLs (icp0.io and raw.icp0.io) in a copyable format.",
+      "featureId": "feature-add-an-explicit-backend-availability-check-and-expose-it-to-the-frontend-so-the-app-can-distinguish-between-a-backend-canister-unreachable-not-yet-propagated-and-b-application-level-errors",
+      "featureTitle": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AppLayout.tsx",
-        "frontend/src/utils/canisterUrls.ts"
+        "frontend/src/hooks/useBackendAvailability.ts",
+        "frontend/src/pages/FeedPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,10 +22,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-developer-facing-redeploy-instructions-in-a-new-documentation-file-that-guides-how-to-force-a-fresh-redeploy-using-dfx-including-commands-to-stop-clean-redeploy-and-verify-canister-ids",
-      "featureTitle": "Create developer-facing redeploy instructions in a new documentation file that guides how to force a fresh redeploy using dfx, including commands to stop, clean, redeploy, and verify canister IDs.",
+      "featureId": "feature-improve-the-failed-to-load-stories-error-state-on-the-stories-feed-to-show-actionable-troubleshooting-and-canister-details-frontend-asset-canister-id-backend-api-canister-id-when-available-standard-url-raw-url-and-provide-one-click-actions",
+      "featureTitle": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
       "files": [
-        "frontend/DEPLOYMENT.md"
+        "frontend/src/components/FeedDiagnosticsPanel.tsx",
+        "frontend/src/pages/FeedPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -38,6 +38,26 @@
       ],
       "testIds": [
         "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-retry-backoff-behavior-for-fetching-published-stories-to-reduce-perceived-slowness-and-provide-clear-progress-feedback-during-the-first-10-15-seconds-after-page-load-when-the-backend-is-not-yet-reachable",
+      "featureTitle": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
+      "files": [
+        "frontend/src/hooks/useStories.ts",
+        "frontend/src/pages/FeedPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

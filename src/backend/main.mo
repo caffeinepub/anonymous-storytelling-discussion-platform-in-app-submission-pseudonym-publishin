@@ -1,4 +1,3 @@
-// No changes needed in backend for this task
 import Array "mo:core/Array";
 import List "mo:core/List";
 import Time "mo:core/Time";
@@ -14,6 +13,10 @@ import MixinAuthorization "authorization/MixinAuthorization";
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  public query ({ caller }) func checkBackendHeartbeat() : async Bool {
+    true;
+  };
 
   public type Comment = {
     commenterHandle : Text;
@@ -163,4 +166,3 @@ actor {
     publishedTitles.values().toArray().sort();
   };
 };
-

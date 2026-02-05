@@ -4,12 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Copy, CheckCircle2, AlertCircle, RefreshCw, Globe, ExternalLink } from 'lucide-react';
-import { getCanisterUrls } from '../utils/canisterUrls';
+import { Copy, CheckCircle2, AlertCircle, RefreshCw, Globe, ExternalLink, AlertTriangle } from 'lucide-react';
+import { getCanisterInfo } from '../utils/canisterUrls';
 
 export default function TroubleshootingPage() {
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
-  const { canisterId, standardUrl, rawUrl } = getCanisterUrls();
+  const canisterInfo = getCanisterInfo();
 
   const copyToClipboard = async (text: string, label: string) => {
     try {
@@ -20,6 +20,8 @@ export default function TroubleshootingPage() {
       console.error('Failed to copy:', err);
     }
   };
+
+  const isUnknown = canisterInfo.source === 'unknown';
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -46,6 +48,18 @@ export default function TroubleshootingPage() {
           </AlertDescription>
         </Alert>
 
+        {isUnknown && (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Cannot Determine Canister ID</AlertTitle>
+            <AlertDescription>
+              The frontend canister ID could not be resolved from the current hostname or environment variables. 
+              This usually means the application needs to be redeployed. Please refer to the DEPLOYMENT.md file 
+              for step-by-step instructions on how to deploy and verify your canister IDs.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -53,99 +67,144 @@ export default function TroubleshootingPage() {
               Your Canister Information
             </CardTitle>
             <CardDescription>
-              Use these URLs to access your application on the Internet Computer
+              {isUnknown 
+                ? 'Canister information could not be determined. Please redeploy your application.'
+                : 'Use these URLs to access your application on the Internet Computer'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <label className="text-sm font-medium mb-2 block">Canister ID</label>
+              <label className="text-sm font-medium mb-2 block">
+                Frontend (Asset) Canister ID
+                <span className="text-xs text-muted-foreground ml-2">(This is the website you're viewing)</span>
+              </label>
               <div className="flex gap-2">
                 <Input 
-                  value={canisterId} 
+                  value={canisterInfo.frontendCanisterId || 'Unknown - Please redeploy'} 
                   readOnly 
-                  className="font-mono text-sm"
+                  className={`font-mono text-sm ${!canisterInfo.frontendCanisterId ? 'text-destructive' : ''}`}
                 />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(canisterId, 'id')}
-                >
-                  {copiedUrl === 'id' ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-2 block">Standard URL (icp0.io)</label>
-              <div className="flex gap-2">
-                <Input 
-                  value={standardUrl} 
-                  readOnly 
-                  className="font-mono text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(standardUrl, 'standard')}
-                >
-                  {copiedUrl === 'standard' ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  asChild
-                >
-                  <a href={standardUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+                {canisterInfo.frontendCanisterId && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(canisterInfo.frontendCanisterId!, 'frontend-id')}
+                  >
+                    {copiedUrl === 'frontend-id' ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                )}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                This is the primary URL for your application
+                Source: {canisterInfo.source === 'hostname' ? 'Detected from current URL' : canisterInfo.source === 'env' ? 'From environment variables' : 'Unknown'}
               </p>
             </div>
 
-            <div>
-              <label className="text-sm font-medium mb-2 block">Raw URL (raw.icp0.io)</label>
-              <div className="flex gap-2">
-                <Input 
-                  value={rawUrl} 
-                  readOnly 
-                  className="font-mono text-sm"
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(rawUrl, 'raw')}
-                >
-                  {copiedUrl === 'raw' ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  asChild
-                >
-                  <a href={rawUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+            {canisterInfo.backendCanisterId && (
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Backend (API) Canister ID
+                  <span className="text-xs text-muted-foreground ml-2">(This handles data and logic)</span>
+                </label>
+                <div className="flex gap-2">
+                  <Input 
+                    value={canisterInfo.backendCanisterId} 
+                    readOnly 
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(canisterInfo.backendCanisterId!, 'backend-id')}
+                  >
+                    {copiedUrl === 'backend-id' ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  ⚠️ Do not use this ID to access the website - it will cause routing errors
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Alternative URL that sometimes loads faster during propagation
-              </p>
-            </div>
+            )}
+
+            {canisterInfo.standardUrl && (
+              <div>
+                <label className="text-sm font-medium mb-2 block">Standard URL (icp0.io)</label>
+                <div className="flex gap-2">
+                  <Input 
+                    value={canisterInfo.standardUrl} 
+                    readOnly 
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(canisterInfo.standardUrl!, 'standard')}
+                  >
+                    {copiedUrl === 'standard' ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    asChild
+                  >
+                    <a href={canisterInfo.standardUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  This is the primary URL for your application
+                </p>
+              </div>
+            )}
+
+            {canisterInfo.rawUrl && (
+              <div>
+                <label className="text-sm font-medium mb-2 block">Raw URL (raw.icp0.io)</label>
+                <div className="flex gap-2">
+                  <Input 
+                    value={canisterInfo.rawUrl} 
+                    readOnly 
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(canisterInfo.rawUrl!, 'raw')}
+                  >
+                    {copiedUrl === 'raw' ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    asChild
+                  >
+                    <a href={canisterInfo.rawUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Alternative URL that sometimes loads faster during propagation
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -207,6 +266,12 @@ export default function TroubleshootingPage() {
               <li className="flex gap-3">
                 <div className="text-primary mt-0.5">•</div>
                 <div className="text-sm">
+                  <strong>Wrong canister ID in URL</strong> – Using the backend canister ID instead of the frontend canister ID will cause this error. Always use the frontend (asset) canister ID for website URLs.
+                </div>
+              </li>
+              <li className="flex gap-3">
+                <div className="text-primary mt-0.5">•</div>
+                <div className="text-sm">
                   <strong>DNS propagation delay</strong> – Your local DNS hasn't picked up the canister yet (try mobile data or different network)
                 </div>
               </li>
@@ -231,7 +296,7 @@ export default function TroubleshootingPage() {
           <AlertTitle>Still having issues?</AlertTitle>
           <AlertDescription>
             If the error persists after 10-15 minutes and you've tried all the steps above, there may be a deployment issue. 
-            Check the deployment logs or consult the DEPLOYMENT.md file in the repository for redeployment instructions.
+            Check the DEPLOYMENT.md file in the repository for detailed redeployment instructions and verification steps.
           </AlertDescription>
         </Alert>
       </div>

@@ -1,14 +1,27 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGetPublishedStories } from '../hooks/useStories';
+import { useBackendAvailability } from '../hooks/useBackendAvailability';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MessageCircle, Calendar, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { FeedDiagnosticsPanel } from '../components/FeedDiagnosticsPanel';
+import { MessageCircle, Calendar, AlertCircle, RefreshCw, ExternalLink, Loader2 } from 'lucide-react';
+import { getCanisterInfo } from '../utils/canisterUrls';
 
 export default function FeedPage() {
   const navigate = useNavigate();
-  const { data: stories, isLoading, error, refetch } = useGetPublishedStories();
+  const { data: stories, isLoading, error, refetch, failureCount, isFetching } = useGetPublishedStories();
+  const [checkBackend, setCheckBackend] = useState(false);
+  const backendAvailability = useBackendAvailability(checkBackend);
+
+  // Trigger backend availability check when we have an error
+  useEffect(() => {
+    if (error && !checkBackend) {
+      setCheckBackend(true);
+    }
+  }, [error, checkBackend]);
 
   const formatDate = (timestamp: bigint) => {
     try {
@@ -18,6 +31,48 @@ export default function FeedPage() {
       return 'Unknown date';
     }
   };
+
+  const canisterInfo = getCanisterInfo();
+  const isRetrying = error && isFetching;
+  const hasReachedMaxRetries = error && !isFetching && failureCount >= 4;
+
+  // Determine error messaging based on backend availability
+  const getErrorMessage = () => {
+    if (backendAvailability.state === 'unreachable') {
+      return {
+        title: 'Backend Not Responding',
+        description: 'The backend canister is not reachable. This usually means the canister is still propagating across the Internet Computer network after deployment, or there may be a temporary network issue.',
+        suggestions: [
+          'Wait 1-3 minutes for the canister to finish propagating',
+          'Try refreshing the page',
+          'Try the raw URL (see below)',
+          'Check if you recently deployed - propagation can take a few minutes',
+        ],
+      };
+    } else if (backendAvailability.state === 'reachable') {
+      return {
+        title: 'Failed to Load Stories',
+        description: 'The backend is reachable, but the request to load stories failed. This could be a temporary issue or a problem with the specific request.',
+        suggestions: [
+          'Click "Retry Now" to try loading again',
+          'Check your internet connection',
+          'Try refreshing the page',
+        ],
+      };
+    } else {
+      return {
+        title: 'Failed to Load Stories',
+        description: 'There was an error loading the stories. The website loaded successfully, but we cannot connect to the backend service.',
+        suggestions: [
+          'Wait a moment and click "Retry Now"',
+          'The backend may still be propagating after deployment',
+          'Try the troubleshooting page for more options',
+        ],
+      };
+    }
+  };
+
+  const errorInfo = error ? getErrorMessage() : null;
 
   return (
     <div className="w-full">
@@ -45,6 +100,7 @@ export default function FeedPage() {
       {/* Stories Feed */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto space-y-8">
+          {/* Loading State */}
           {isLoading && (
             <>
               {[1, 2, 3].map((i) => (
@@ -61,24 +117,83 @@ export default function FeedPage() {
             </>
           )}
 
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Failed to load stories</AlertTitle>
-              <AlertDescription className="space-y-3">
-                <p>There was an error loading the stories. This could be due to a connection issue or the backend service being unavailable.</p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => refetch()}
-                  className="mt-2"
-                >
-                  Try Again
-                </Button>
+          {/* Retrying State */}
+          {isRetrying && (
+            <Alert className="border-primary/50 bg-primary/5">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <AlertTitle>Checking backend...</AlertTitle>
+              <AlertDescription>
+                Retrying connection (attempt {failureCount + 1} of 5). The backend may still be propagating after deployment.
               </AlertDescription>
             </Alert>
           )}
 
+          {/* Error State with Enhanced Diagnostics */}
+          {hasReachedMaxRetries && errorInfo && (
+            <div className="space-y-6">
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>{errorInfo.title}</AlertTitle>
+                <AlertDescription className="space-y-4">
+                  <p>{errorInfo.description}</p>
+                  
+                  {backendAvailability.state === 'checking' && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      <span>Checking backend availability...</span>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <p className="font-medium text-sm">What to try:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      {errorInfo.suggestions.map((suggestion, idx) => (
+                        <li key={idx}>{suggestion}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        setCheckBackend(false);
+                        refetch();
+                      }}
+                      className="gap-2"
+                    >
+                      <RefreshCw className="h-3 w-3" />
+                      Retry Now
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => navigate({ to: '/troubleshooting' })}
+                    >
+                      Open Troubleshooting
+                    </Button>
+                    {canisterInfo.rawUrl && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        asChild
+                      >
+                        <a href={canisterInfo.rawUrl} target="_blank" rel="noopener noreferrer" className="gap-2">
+                          <ExternalLink className="h-3 w-3" />
+                          Try Raw URL
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </AlertDescription>
+              </Alert>
+
+              <FeedDiagnosticsPanel />
+            </div>
+          )}
+
+          {/* Empty State */}
           {!isLoading && !error && stories && stories.length === 0 && (
             <Card className="border-dashed">
               <CardContent className="pt-12 pb-12 text-center space-y-4">
@@ -90,6 +205,7 @@ export default function FeedPage() {
             </Card>
           )}
 
+          {/* Success State - Stories List */}
           {!isLoading && !error && stories && stories.length > 0 && (
             <>
               {stories.map((story) => (

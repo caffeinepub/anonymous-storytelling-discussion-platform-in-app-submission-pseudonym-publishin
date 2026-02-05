@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Help users and developers recover from the “Canister ID Not Resolved” (Error 400) issue by adding in-app troubleshooting guidance and repo documentation for forcing a clean redeploy.
+**Goal:** Improve diagnostics and user guidance when the stories feed fails to load by distinguishing backend unreachability/propagation delays from application-level errors, and by providing clearer retry progress and troubleshooting actions.
 
 **Planned changes:**
-- Add a new user-facing UI section/page titled “Troubleshooting: Canister ID Not Resolved” (or similar) explaining what the error means and that it’s commonly due to routing/edge propagation.
-- Display the app’s known access URLs in a copyable format for both patterns using the app canister ID available at build time: `https://<CANISTER_ID>.icp0.io` and `https://<CANISTER_ID>.raw.icp0.io`.
-- Include basic troubleshooting guidance in the panel (refresh/wait, try alternate network/browser) and make it reachable from existing navigation (e.g., footer/About) without authentication.
-- Add a new repository doc file (e.g., `DEPLOYMENT.md`) with step-by-step `dfx` commands to stop, clean, redeploy, and verify canister IDs, plus verification steps for opening via `icp0.io` and `raw.icp0.io`.
-- Include a brief checklist in the doc of common causes for “Canister ID Not Resolved” and what to try before redeploying.
+- Add a lightweight backend public availability method (e.g., ping/health) that returns immediately when the backend canister is reachable, and expose its result to the frontend.
+- Update the feed error handling to call the availability check when story fetch fails and label the error as “Backend unreachable/not propagated” vs “Backend reachable but request failed”.
+- Enhance the “Failed to load stories” feed error state with actionable troubleshooting text, detected canister details (frontend asset canister ID, backend canister ID when available, standard/raw URLs), and one-click actions (Retry now, open Troubleshooting, open raw.icp0.io URL when detectable), including copy-to-clipboard/copy affordances.
+- Adjust frontend retry/backoff behavior for fetching stories to show an explicit “Checking backend…” / “Retrying…” progress state for the first ~10–15 seconds, using increasing delays up to a cap and ending in a final actionable error state with manual retry.
 
-**User-visible outcome:** Users can open an in-app troubleshooting page that explains the error and provides copyable `icp0.io` and `raw.icp0.io` URLs for the app canister, while developers have clear redeploy steps in a new doc to force a clean redeploy and verify canister IDs.
+**User-visible outcome:** When stories fail to load, users see clear progress and then a helpful, actionable error screen that explains whether the backend is unreachable/still propagating versus a request error, and provides canister/URL details plus quick actions to retry or troubleshoot.

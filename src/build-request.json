@@ -1,54 +1,79 @@
 {
   "kind": "build_request",
-  "title": "Add deployment troubleshooting & redeploy guidance for 'Canister ID Not Resolved'",
+  "title": "Improve user-visible deployment diagnostics and backend availability checks for 'Failed to load stories'",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a user-facing troubleshooting panel for the \"Canister ID Not Resolved\" error that explains what the error means and provides the app’s known access URLs (icp0.io and raw.icp0.io) in a copyable format.",
+      "text": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "its showing failed loading",
+          "Canister ID Not Resolved",
+          "Failed to load stories",
+          "yes why is taking so long"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend provides a lightweight public method (e.g., health/ping) that returns immediately when the canister is reachable.",
+        "Frontend calls this method when the feed load fails and uses the result to label the error as either 'Backend unreachable/not propagated' vs 'Backend reachable but request failed'.",
+        "When the backend is unreachable, the UI messaging explicitly suggests propagation delay and next steps (wait, retry, try raw URL), rather than a generic error."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "will guide you to force a fresh redeploy please"
+          "Failed to load stories\nThere was an error loading the stories. This could be due to a connection issue or the backend service being unavailable.",
+          "Canister ID Not Resolved",
+          "yes why is taking so long"
         ]
       },
       "acceptanceCriteria": [
-        "A new UI section/page exists titled \"Troubleshooting: Canister ID Not Resolved\" (or similar) with clear English text.",
-        "The panel includes copyable URLs for both formats: https://<CANISTER_ID>.icp0.io and https://<CANISTER_ID>.raw.icp0.io (using the app canister ID available at build time).",
-        "The panel includes at least: refresh/wait guidance, try alternate network/browser guidance, and a note that this is typically routing/edge propagation.",
-        "The panel is reachable from an existing navigation area (e.g., footer or About page) without requiring authentication."
+        "On the Feed page error state, display a clear heading and short explanation that the website loaded but the backend may be unavailable or still propagating.",
+        "Include buttons/links: Retry now, Open Troubleshooting page, and Open raw.icp0.io URL (when detectable).",
+        "Display detected canister info using existing canister resolution utilities (frontend canister ID/source, backend canister ID when available, standard/raw URLs) with copy-to-clipboard actions or a clear path to copy (can reuse existing UI patterns from TroubleshootingPage).",
+        "All user-facing text is in English and avoids vague messages like only 'Failed to load stories' without next steps."
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Create developer-facing redeploy instructions in a new documentation file that guides how to force a fresh redeploy using dfx, including commands to stop, clean, redeploy, and verify canister IDs.",
-      "target": "unknown",
+      "id": "REQ-3",
+      "text": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "will guide you to force a fresh redeploy please"
+          "shows the message after about 1–2 seconds",
+          "yes why is taking so long"
         ]
       },
       "acceptanceCriteria": [
-        "A new doc file exists in the repository (e.g., DEPLOYMENT.md) with step-by-step commands for a clean redeploy.",
-        "The doc includes verification steps to confirm the canister IDs being used and how to open the app via icp0.io and raw.icp0.io.",
-        "The doc includes a brief checklist of common causes for 'Canister ID Not Resolved' and what to try before redeploying."
+        "When the backend request fails, the UI shows a visible 'Retrying…' / 'Checking backend…' state rather than immediately settling into a static failure state after 1–2 seconds.",
+        "Retry timing uses a backoff strategy (increasing delays) up to a reasonable cap, and stops after a finite number of attempts with a final actionable error state.",
+        "A manual 'Retry now' action is always available in the final error state."
       ]
     }
   ],
   "constraints": [
-    "Frontend must not modify files under frontend/src/components/ui or any paths listed in frontend.immutablePaths.",
-    "Backend must remain single-actor; do not introduce additional backend services."
+    "Do not modify files under frontend/src/components/ui (read-only Shadcn components).",
+    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
+    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo if an upgrade requires state migration."
   ],
   "nonGoals": [
-    "Fixing Internet Computer edge routing/propagation behavior (external to the app).",
-    "Adding non-Internet-Identity authentication providers.",
-    "Adding real-time messaging or WebSockets."
+    "Do not add third-party monitoring, logging services, or external uptime checks.",
+    "Do not implement real-time features (WebSockets/push).",
+    "Do not change authentication providers (Internet Identity remains the only auth)."
   ],
   "imageRequirements": {
     "required": [],
