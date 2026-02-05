@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
-  "summary": "Anonymous storytelling & discussion platform where users submit real-life stories (optionally anonymous) via in-app form, stories are published/rewritten under pseudonyms, and readers can comment/discuss.",
+  "projectStateVersion": 7,
+  "summary": "Anonymous storytelling & discussion platform (Genuine Being Real) where users submit real-life stories (optionally anonymous) via in-app form, stories are published/rewritten under pseudonyms, readers can comment/discuss, and the app includes an About Me section/page describing the creator and mission.",
   "architectural_notes": [
     "Email-based story submission is not available; support story submissions directly in-app instead."
   ],
@@ -9,7 +9,6 @@
     "Generated image assets use blue/light-blue colors; user indicates the image color palette is not acceptable and should be adjusted to the intended warm neutral/editorial palette."
   ],
   "isFixRequest": true,
-  "imageRequirements": "## Edit Images\n- Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (story-ink-wordmark.dim_512x128.png > story-ink-wordmark-warm.dim_512x128.png)\n- Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (paper-stories-hero.dim_1400x400.png > paper-stories-hero-warm.dim_1400x400.png)",
   "existing_features": [
     {
       "id": "feature-build-a-frontend-story-submission-flow-a-page-with-a-form-to-submit-a-real-life-story-including-fields-for-story-text-optional-name-and-a-clear-toggle-to-submit-anonymously-show-a-success-confirmation-state-after-submission",
@@ -58,6 +57,30 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-new-about-page-that-displays-the-provided-about-me-bio-mission-text-for-genuine-being-real-including-the-debut-novel-mention-shining-gaze-a-search-for-the-unknown",
+      "title": "Create a new About page that displays the provided “About Me” bio/mission text for Genuine Being Real, including the debut novel mention (“Shining Gaze – A Search for the Unknown”).",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-about-route-to-the-tanstack-router-configuration-and-wire-it-to-the-new-about-page-component",
+      "title": "Add an /about route to the TanStack Router configuration and wire it to the new About page component.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-visible-navigation-entry-point-to-the-about-page-from-the-global-layout-footer-and-keep-existing-footer-content-intact",
+      "title": "Add a visible navigation entry point to the About page from the global layout footer (and keep existing footer content intact).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -102,10 +125,16 @@
         "REQ-3"
       ],
       "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add an About Me page/section with the provided creator bio/mission text (Genuine Being Real, debut novel mention) and link it from the app (e.g., footer/nav).",
+      "reqIds": [],
+      "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "Anonymous storytelling & discussion platform (in-app submission, pseudonym publishing, comments)",
+  "projectName": "Genuine Being Real",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

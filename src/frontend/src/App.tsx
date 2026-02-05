@@ -3,6 +3,7 @@ import FeedPage from './pages/FeedPage';
 import SubmitStoryPage from './pages/SubmitStoryPage';
 import StoryDetailPage from './pages/StoryDetailPage';
 import AdminModerationPage from './pages/AdminModerationPage';
+import AboutPage from './pages/AboutPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -37,7 +38,13 @@ const adminRoute = createRoute({
   component: AdminModerationPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, submitRoute, storyRoute, adminRoute]);
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: AboutPage,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, submitRoute, storyRoute, adminRoute, aboutRoute]);
 
 const router = createRouter({ routeTree });
 

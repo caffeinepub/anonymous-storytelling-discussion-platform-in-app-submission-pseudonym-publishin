@@ -1,36 +1,50 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Replace generated image assets with warm editorial palette and update frontend references",
+  "title": "Add About page and navigation link",
   "requirements": [
     {
-      "id": "REQ-9",
-      "summary": "Recolor the generated header wordmark and feed hero images to a warm neutral editorial palette and update the frontend to reference the new filenames.",
+      "id": "REQ-10",
+      "summary": "Create an About page that renders the provided “About Me” bio/mission text for Genuine Being Real, including the debut novel mention.",
       "acceptanceCriteria": [
-        "The header wordmark image no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
-        "The feed page hero illustration no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
-        "The frontend references the updated image filenames under frontend/public/assets/generated and both images render correctly in the UI (no broken image links)."
+        "Navigating to an About route renders an About page with the full user-provided text in English, preserving punctuation and meaning (including “Genuine Being Real” and “Shining Gaze – A Search for the Unknown”).",
+        "The About page layout matches the existing warm editorial theme (typography, spacing, background colors) and is readable on mobile and desktop."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png",
+          "path": "frontend/src/pages/AboutPage.tsx",
           "operation": "create",
-          "description": "Add the recolored warm-neutral editorial wordmark image asset (replacing blue/light-blue tones) as a static file at frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png."
-        },
+          "description": "Add a new AboutPage component that displays the full provided “About Me” text verbatim (including “Genuine Being Real” and “Shining Gaze – A Search for the Unknown”), styled to match the existing warm editorial theme using existing Tailwind/theme tokens and composed existing UI components (e.g., Card/typography patterns) without modifying any files under frontend/src/components/ui."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Add an /about route in TanStack Router and wire it to the new About page component.",
+      "acceptanceCriteria": [
+        "The app has a new route at /about that is reachable via client-side navigation (no full page reload required).",
+        "Existing routes continue to function: /, /submit, /story/$title, /admin."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png",
-          "operation": "create",
-          "description": "Add the recolored warm-neutral editorial hero illustration asset (replacing blue/light-blue tones) as a static file at frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png."
-        },
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the header wordmark <img> source to reference the new static asset filename frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png so the logo renders with the warm editorial palette."
-        },
+          "description": "Register a new TanStack Router route at path /about, import and wire it to AboutPage, and include it in the root route children so it works with client-side navigation while preserving existing routes (/ , /submit, /story/$title, /admin)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Add a visible About link in the global layout footer while keeping existing footer content unchanged.",
+      "acceptanceCriteria": [
+        "The footer includes an “About” link (English label) that navigates to /about.",
+        "The existing footer line “© 2026. Built with love using caffeine.ai” remains present and functional."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/FeedPage.tsx",
+          "path": "frontend/src/components/AppLayout.tsx",
           "operation": "modify",
-          "description": "Update the feed hero <img> source to reference the new static asset filename frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png so the hero image renders with the warm editorial palette."
+          "description": "Add a visible “About” navigation link in the footer that routes to /about (client-side) using TanStack Router Link, while keeping the existing footer line “© 2026. Built with love using caffeine.ai” intact and functional (including the external caffeine.ai link)."
         }
       ]
     }

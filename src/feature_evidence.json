@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-app-s-generated-image-assets-to-remove-blue-light-blue-tones-and-replace-them-with-a-warm-neutral-editorial-palette-off-white-paper-warm-grays-ink-charcoal-then-update-the-frontend-to-reference-the-updated-image-filenames-wherever-they-are-used-header-wordmark-and-feed-hero-image",
-      "featureTitle": "Update the app’s generated image assets to remove blue/light-blue tones and replace them with a warm neutral, editorial palette (off-white paper, warm grays, ink/charcoal), then update the frontend to reference the updated image filenames wherever they are used (header wordmark and feed hero image).",
+      "featureId": "feature-create-a-new-about-page-that-displays-the-provided-about-me-bio-mission-text-for-genuine-being-real-including-the-debut-novel-mention-shining-gaze-a-search-for-the-unknown",
+      "featureTitle": "Create a new About page that displays the provided “About Me” bio/mission text for Genuine Being Real, including the debut novel mention (“Shining Gaze – A Search for the Unknown”).",
       "files": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/FeedPage.tsx"
+        "frontend/src/pages/AboutPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,7 +16,45 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-9"
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-about-route-to-the-tanstack-router-configuration-and-wire-it-to-the-new-about-page-component",
+      "featureTitle": "Add an /about route to the TanStack Router configuration and wire it to the new About page component.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-visible-navigation-entry-point-to-the-about-page-from-the-global-layout-footer-and-keep-existing-footer-content-intact",
+      "featureTitle": "Add a visible navigation entry point to the About page from the global layout footer (and keep existing footer content intact).",
+      "files": [
+        "frontend/src/components/AppLayout.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-12"
       ],
       "confidence": "high"
     }

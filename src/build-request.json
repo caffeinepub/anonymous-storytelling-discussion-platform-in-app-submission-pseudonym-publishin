@@ -1,50 +1,66 @@
 {
   "kind": "build_request",
-  "title": "Replace blue/light-blue generated images with warm editorial palette",
+  "title": "Add About Me page with creator bio and link from layout",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-9",
-      "text": "Update the app’s generated image assets to remove blue/light-blue tones and replace them with a warm neutral, editorial palette (off-white paper, warm grays, ink/charcoal), then update the frontend to reference the updated image filenames wherever they are used (header wordmark and feed hero image).",
+      "id": "REQ-10",
+      "text": "Create a new About page that displays the provided “About Me” bio/mission text for Genuine Being Real, including the debut novel mention (“Shining Gaze – A Search for the Unknown”).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages-4"
+          "msg-4"
         ],
         "quotes": [
-          "image is not good colour blue and light blue ,"
+          "About Me\n\nI am an author and storyteller, and the creator of Genuine Being Real — a platform dedicated to sharing real, anonymous stories and emotions. My debut novel, Shining Gaze – A Search for the Unknown, reflects my belief in emotional resilience, self-discovery, and the power of untold stories.\n\nThrough this platform, I aim to create a safe space where people can share experiences they may not always be able to express openly. My goal is to build a community rooted in honesty, empathy, and meaningful conversations, where every story finds understanding and respect."
         ]
       },
       "acceptanceCriteria": [
-        "The header wordmark image no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
-        "The feed page hero illustration no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
-        "The frontend references the updated image filenames under frontend/public/assets/generated and both images render correctly in the UI (no broken image links)."
+        "Navigating to an About route renders an About page with the full user-provided text in English, preserving punctuation and meaning (including “Genuine Being Real” and “Shining Gaze – A Search for the Unknown”).",
+        "The About page layout matches the existing warm editorial theme (typography, spacing, background colors) and is readable on mobile and desktop."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Add an /about route to the TanStack Router configuration and wire it to the new About page component.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app has a new route at /about that is reachable via client-side navigation (no full page reload required).",
+        "Existing routes continue to function: /, /submit, /story/$title, /admin."
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Add a visible navigation entry point to the About page from the global layout footer (and keep existing footer content intact).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The footer includes an “About” link (English label) that navigates to /about.",
+        "The existing footer line “© 2026. Built with love using caffeine.ai” remains present and functional."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (compose instead).",
-    "Store and serve images as static assets under frontend/public/assets/generated (do not route images through the backend)."
+    "Use English for any user-facing text.",
+    "Do not modify files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not edit immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
   ],
   "nonGoals": [
-    "No changes to backend logic or data models.",
-    "No new pages or new features beyond updating the existing generated images and their frontend references."
+    "Changing backend data models or adding new backend APIs.",
+    "Adding third-party integrations or external CMS/content sources.",
+    "Redesigning existing pages beyond what’s necessary to add the About page and link."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (story-ink-wordmark.dim_512x128.png > story-ink-wordmark-warm.dim_512x128.png)",
-      "Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (paper-stories-hero.dim_1400x400.png > paper-stories-hero-warm.dim_1400x400.png)"
-    ]
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
+    "edits": []
   }
 }
