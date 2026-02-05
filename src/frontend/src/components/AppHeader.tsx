@@ -20,12 +20,26 @@ export default function AppHeader() {
             onClick={() => navigate({ to: '/' })}
             className="hover:text-primary"
           >
+            Home
+          </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate({ to: '/stories' })}
+            className="hover:text-primary"
+          >
             Stories
+          </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate({ to: '/about' })}
+            className="hover:text-primary"
+          >
+            About
           </Button>
           <Button 
             variant="default"
             onClick={() => navigate({ to: '/submit' })}
-            className="gap-2"
+            className="gap-2 ml-2"
           >
             <PenLine className="h-4 w-4" />
             Share Your Story

@@ -40,7 +40,7 @@ export default function StoryDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto space-y-8">
-          <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2 hover:text-primary">
+          <Button variant="ghost" onClick={() => navigate({ to: '/stories' })} className="gap-2 hover:text-primary">
             <ArrowLeft className="h-4 w-4" />
             Back to Stories
           </Button>
@@ -57,7 +57,7 @@ export default function StoryDetailPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto space-y-8">
-        <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2 hover:text-primary">
+        <Button variant="ghost" onClick={() => navigate({ to: '/stories' })} className="gap-2 hover:text-primary">
           <ArrowLeft className="h-4 w-4" />
           Back to Stories
         </Button>

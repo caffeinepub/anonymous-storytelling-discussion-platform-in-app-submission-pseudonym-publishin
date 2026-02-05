@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { Mail } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -15,6 +16,22 @@ export default function AboutPage() {
             <p className="leading-relaxed">
               Through this platform, I aim to create a safe space where people can share experiences they may not always be able to express openly. My goal is to build a community rooted in honesty, empathy, and meaningful conversations, where every story finds understanding and respect.
             </p>
+          </div>
+
+          <div className="mt-10 pt-8 border-t border-border">
+            <h2 className="text-2xl font-serif font-semibold text-foreground mb-4">Get in Touch</h2>
+            <div className="flex items-center gap-3 text-foreground/90">
+              <Mail className="w-5 h-5 text-primary" />
+              <div>
+                <p className="font-medium">Sana Khan</p>
+                <a 
+                  href="mailto:authorsanakhan@gmail.com" 
+                  className="text-primary hover:underline transition-colors"
+                >
+                  authorsanakhan@gmail.com
+                </a>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

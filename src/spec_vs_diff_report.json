@@ -1,54 +1,57 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T22:34:25.252Z",
-  "summary": "No explicit requirements or acceptance criteria were provided in the BuildRequest. The diff introduces substantial new functionality and UI changes (backend access control/user profiles/story/comment models; frontend comments UI, React Query hooks, feed page updates, theme/assets references), which are therefore unrequested relative to the provided BuildRequest.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-05T23:05:09.300Z",
+  "summary": "REQ-1 appears implemented via a new Troubleshooting page routed at /troubleshooting with copyable icp0.io and raw.icp0.io URLs and a footer navigation link. REQ-2 is only partially evidenced: a DEPLOYMENT.md file was added but the shown content looks incomplete and does not yet demonstrate the required step-by-step redeploy/verification/checklist content. Several unrelated frontend UI/theme and error-handling changes also appear in the diff summary without being requested.",
+  "missing_requirements": [
     {
-      "description": "Backend: added access control integration, user profile management APIs, story submission/commenting data structures, and admin moderation/publishing functions (partial due to truncation).",
-      "reason": "BuildRequest lists no requirements; these capabilities are newly implemented changes.",
+      "id": "REQ-2",
+      "requirement": "Create developer-facing redeploy instructions in a new documentation file with step-by-step dfx commands (stop, clean, redeploy) plus canister ID verification steps and a checklist of common causes for 'Canister ID Not Resolved'.",
+      "reason": "A new doc file exists, but the diff snippet is truncated and the visible content does not yet show the required step-by-step commands, verification steps, or checklist; the file excerpt ends immediately after headings and an opening code fence.",
       "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "description": "Frontend: added/modified CommentThread component with loading/empty states and alert about missing backend comment retrieval.",
-      "reason": "Not requested (no requirements provided).",
-      "evidence": [
-        "frontend/src/components/CommentThread.tsx"
-      ]
-    },
-    {
-      "description": "Frontend: added/modified React Query hooks for fetching published stories/story details, submitting stories, adding comments, and a placeholder comments query that returns empty due to missing backend method.",
-      "reason": "Not requested (no requirements provided).",
-      "evidence": [
-        "frontend/src/hooks/useStories.ts"
-      ]
-    },
-    {
-      "description": "Frontend: updated FeedPage with hero section, generated asset reference, improved error handling with retry, and date formatting changes.",
-      "reason": "Not requested (no requirements provided).",
-      "evidence": [
-        "frontend/src/pages/FeedPage.tsx"
-      ]
-    },
-    {
-      "description": "Project metadata updates describing additional features/pages (router routes, layouts, admin moderation page, about page, theme, tailwind config).",
-      "reason": "Not requested (no requirements provided). Evidence comes from summarized frontend file descriptions and project state changes.",
-      "evidence": [
-        "frontend-file-summaries.txt",
-        "project_state.json"
+        "frontend/DEPLOYMENT.md"
       ]
     }
   ],
-  "confidence": 0.78,
+  "hallucinated_features": [
+    {
+      "description": "Global UI re-theming and styling changes (blue/white OKLCH system, typography/shadows/font updates).",
+      "reason": "The BuildRequest only asks for a troubleshooting panel and redeploy documentation; no global rebrand/theme update was requested.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions modifications to frontend/src/index.css and frontend/tailwind.config.js)"
+      ]
+    },
+    {
+      "description": "Broad error-handling/retry/logging enhancements across story feed, comments, and hooks.",
+      "reason": "Not requested by REQ-1/REQ-2; the request is specifically about the 'Canister ID Not Resolved' troubleshooting UI and redeploy docs.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions modifications to frontend/src/pages/FeedPage.tsx, frontend/src/components/CommentThread.tsx, frontend/src/hooks/useStories.ts)"
+      ]
+    },
+    {
+      "description": "Added creator contact information and external attribution in the app footer.",
+      "reason": "Not requested; REQ-1 only requires that the troubleshooting panel be reachable from navigation without auth.",
+      "evidence": [
+        "frontend/src/components/AppLayout.tsx"
+      ]
+    },
+    {
+      "description": "Backend file marked as modified despite being unrelated to the requested changes.",
+      "reason": "The BuildRequest does not require backend changes; the diff indicates backend/main.mo was modified (even if only comments/formatting).",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.68,
   "changed_files": [
     "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/CommentThread.tsx",
-    "frontend/src/hooks/useStories.ts",
-    "frontend/src/pages/FeedPage.tsx",
+    "frontend/DEPLOYMENT.md",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AppLayout.tsx",
+    "frontend/src/pages/TroubleshootingPage.tsx",
+    "frontend/src/utils/canisterUrls.ts",
     "project_state.json"
   ]
 }

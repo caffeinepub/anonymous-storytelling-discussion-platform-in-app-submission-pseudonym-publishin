@@ -23,10 +23,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
               >
                 About
               </Link>
+              <span className="text-muted-foreground">•</span>
+              <Link 
+                to="/troubleshooting" 
+                className="text-sm text-muted-foreground hover:text-primary transition-colors underline"
+              >
+                Troubleshooting
+              </Link>
             </nav>
-            <p className="text-center text-sm text-muted-foreground">
-              © 2026. Built with love using <a href="https://caffeine.ai" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">caffeine.ai</a>
-            </p>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-1">
+                Contact: <span className="font-medium">Sana Khan</span> – <a href="mailto:authorsanakhan@gmail.com" className="text-primary hover:underline transition-colors">authorsanakhan@gmail.com</a>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                © 2026. Built with love using <a href="https://caffeine.ai" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary transition-colors">caffeine.ai</a>
+              </p>
+            </div>
           </div>
         </div>
       </footer>

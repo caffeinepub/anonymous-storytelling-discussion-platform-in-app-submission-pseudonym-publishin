@@ -1,10 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Untitled request",
+  "title": "Add deployment troubleshooting & redeploy guidance for 'Canister ID Not Resolved'",
   "priority": "normal",
-  "requirements": [],
-  "constraints": [],
-  "nonGoals": [],
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add a user-facing troubleshooting panel for the \"Canister ID Not Resolved\" error that explains what the error means and provides the app’s known access URLs (icp0.io and raw.icp0.io) in a copyable format.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "will guide you to force a fresh redeploy please"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new UI section/page exists titled \"Troubleshooting: Canister ID Not Resolved\" (or similar) with clear English text.",
+        "The panel includes copyable URLs for both formats: https://<CANISTER_ID>.icp0.io and https://<CANISTER_ID>.raw.icp0.io (using the app canister ID available at build time).",
+        "The panel includes at least: refresh/wait guidance, try alternate network/browser guidance, and a note that this is typically routing/edge propagation.",
+        "The panel is reachable from an existing navigation area (e.g., footer or About page) without requiring authentication."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create developer-facing redeploy instructions in a new documentation file that guides how to force a fresh redeploy using dfx, including commands to stop, clean, redeploy, and verify canister IDs.",
+      "target": "unknown",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "will guide you to force a fresh redeploy please"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new doc file exists in the repository (e.g., DEPLOYMENT.md) with step-by-step commands for a clean redeploy.",
+        "The doc includes verification steps to confirm the canister IDs being used and how to open the app via icp0.io and raw.icp0.io.",
+        "The doc includes a brief checklist of common causes for 'Canister ID Not Resolved' and what to try before redeploying."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend must not modify files under frontend/src/components/ui or any paths listed in frontend.immutablePaths.",
+    "Backend must remain single-actor; do not introduce additional backend services."
+  ],
+  "nonGoals": [
+    "Fixing Internet Computer edge routing/propagation behavior (external to the app).",
+    "Adding non-Internet-Identity authentication providers.",
+    "Adding real-time messaging or WebSockets."
+  ],
   "imageRequirements": {
     "required": [],
     "edits": []

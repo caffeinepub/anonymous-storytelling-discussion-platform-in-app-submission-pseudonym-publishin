@@ -59,7 +59,7 @@ export default function SubmitStoryPage() {
                 </p>
               </div>
               <div className="flex gap-3 justify-center pt-4">
-                <Button onClick={() => navigate({ to: '/' })}>
+                <Button onClick={() => navigate({ to: '/stories' })}>
                   View Stories
                 </Button>
                 <Button 
@@ -182,7 +182,7 @@ export default function SubmitStoryPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate({ to: '/' })}
+                  onClick={() => navigate({ to: '/stories' })}
                 >
                   Cancel
                 </Button>

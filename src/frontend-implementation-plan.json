@@ -1,6 +1,55 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Untitled request",
-  "requirements": []
+  "title": "Troubleshooting UI + redeploy documentation for Canister ID resolution issues",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add a public troubleshooting page/panel for “Canister ID Not Resolved” with copyable icp0.io and raw.icp0.io URLs derived from the app canister ID.",
+      "acceptanceCriteria": [
+        "A new UI section/page exists titled \"Troubleshooting: Canister ID Not Resolved\" (or similar) with clear English text.",
+        "The panel includes copyable URLs for both formats: https://<CANISTER_ID>.icp0.io and https://<CANISTER_ID>.raw.icp0.io (using the app canister ID available at build time).",
+        "The panel includes at least: refresh/wait guidance, try alternate network/browser guidance, and a note that this is typically routing/edge propagation.",
+        "The panel is reachable from an existing navigation area (e.g., footer or About page) without requiring authentication."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/TroubleshootingCanisterIdNotResolvedPage.tsx",
+          "operation": "create",
+          "description": "Create a new public page titled “Troubleshooting: Canister ID Not Resolved” explaining the error in clear English and showing copyable icp0.io + raw.icp0.io access URLs derived from the build-time canister ID; use shadcn-ui components (e.g., Card/Button/Input) to present the panel and copy controls. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/utils/canisterUrls.ts",
+          "operation": "create",
+          "description": "Add a small utility to read the app canister ID from available build-time environment variables and generate the two access URLs used by the troubleshooting page."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register a new route for the troubleshooting page so it is navigable within the existing router configuration."
+        },
+        {
+          "path": "frontend/src/components/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Add a footer navigation link to the troubleshooting route so it’s reachable without authentication from an existing navigation area."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add a developer-facing redeploy guide document with clean redeploy commands, canister ID verification, and quick troubleshooting checklist for “Canister ID Not Resolved”.",
+      "acceptanceCriteria": [
+        "A new doc file exists in the repository (e.g., DEPLOYMENT.md) with step-by-step commands for a clean redeploy.",
+        "The doc includes verification steps to confirm the canister IDs being used and how to open the app via icp0.io and raw.icp0.io.",
+        "The doc includes a brief checklist of common causes for 'Canister ID Not Resolved' and what to try before redeploying."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/DEPLOYMENT.md",
+          "operation": "create",
+          "description": "Create a developer-focused redeploy guide (stop/clean/redeploy/verify canister IDs) including steps to confirm the canister IDs in use and how to open via icp0.io and raw.icp0.io, plus a short checklist of common causes and what to try before redeploying."
+        }
+      ]
+    }
+  ]
 }

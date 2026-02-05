@@ -1,9 +1,11 @@
 import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet } from '@tanstack/react-router';
+import HomePage from './pages/HomePage';
 import FeedPage from './pages/FeedPage';
 import SubmitStoryPage from './pages/SubmitStoryPage';
 import StoryDetailPage from './pages/StoryDetailPage';
 import AdminModerationPage from './pages/AdminModerationPage';
 import AboutPage from './pages/AboutPage';
+import TroubleshootingPage from './pages/TroubleshootingPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -17,6 +19,12 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  component: HomePage,
+});
+
+const storiesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/stories',
   component: FeedPage,
 });
 
@@ -44,7 +52,21 @@ const aboutRoute = createRoute({
   component: AboutPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, submitRoute, storyRoute, adminRoute, aboutRoute]);
+const troubleshootingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/troubleshooting',
+  component: TroubleshootingPage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute, 
+  storiesRoute, 
+  submitRoute, 
+  storyRoute, 
+  adminRoute, 
+  aboutRoute,
+  troubleshootingRoute
+]);
 
 const router = createRouter({ routeTree });
 

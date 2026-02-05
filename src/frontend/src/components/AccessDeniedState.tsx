@@ -18,7 +18,7 @@ export default function AccessDeniedState() {
                 You don't have permission to access this page.
               </p>
             </div>
-            <Button onClick={() => navigate({ to: '/' })}>
+            <Button onClick={() => navigate({ to: '/stories' })}>
               Return to Stories
             </Button>
           </CardContent>
