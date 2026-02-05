@@ -1,13 +1,12 @@
 import Array "mo:core/Array";
 import List "mo:core/List";
 import Time "mo:core/Time";
-import Int "mo:core/Int";
 import Map "mo:core/Map";
-import Order "mo:core/Order";
+import Iter "mo:core/Iter";
 import Text "mo:core/Text";
+import Order "mo:core/Order";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-import Iter "mo:core/Iter";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
@@ -15,24 +14,24 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  public type Story = {
-    title : Text;
-    authorPseudonym : Text;
-    story : Text;
-    timestamp : Int;
-    isAnonymous : Bool;
-    authorName : ?Text;
-  };
-
   public type Comment = {
     commenterHandle : Text;
     comment : Text;
-    timestamp : Int;
+    timestamp : Time.Time;
   };
 
   public type CommentThread = {
     storyTitle : Text;
     comments : [Comment];
+  };
+
+  public type Story = {
+    title : Text;
+    authorPseudonym : Text;
+    story : Text;
+    timestamp : Time.Time;
+    isAnonymous : Bool;
+    authorName : ?Text;
   };
 
   public type UserProfile = {
@@ -50,7 +49,7 @@ actor {
   let commentThreads = Map.empty<Text, CommentThread>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // System
+  // System Info
   public type SystemInfo = { version : Text };
 
   public query func systemInfo() : async SystemInfo {
@@ -79,8 +78,14 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Story Submission (Public - anyone including guests can submit)
-  public shared ({ caller }) func submitStory(title : Text, authorPseudonym : Text, story : Text, isAnonymous : Bool, authorName : ?Text) : async () {
+  // Story Submission (anyone can submit)
+  public shared ({ caller }) func submitStory(
+    title : Text,
+    authorPseudonym : Text,
+    story : Text,
+    isAnonymous : Bool,
+    authorName : ?Text,
+  ) : async () {
     let newStory : Story = {
       title;
       authorPseudonym;
@@ -92,7 +97,7 @@ actor {
     stories.add(newStory);
   };
 
-  // Commenting (Public - anyone including guests can comment)
+  // Commenting (anyone can comment)
   public shared ({ caller }) func addComment(storyTitle : Text, commenterHandle : Text, comment : Text) : async () {
     let newComment : Comment = {
       commenterHandle;
@@ -155,12 +160,5 @@ actor {
 
   public query func getPublishedStories() : async [Story] {
     publishedTitles.values().toArray().sort();
-  };
-
-  // Helper function for admin checks
-  public func requireAdmin(caller : Principal) {
-    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
-      Runtime.trap("Unauthorized: Only admins can perform this action");
-    };
   };
 };

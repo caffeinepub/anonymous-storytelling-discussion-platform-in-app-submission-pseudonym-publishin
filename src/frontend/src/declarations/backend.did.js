@@ -13,12 +13,13 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const Time = IDL.Int;
 export const Story = IDL.Record({
   'title' : IDL.Text,
   'authorName' : IDL.Opt(IDL.Text),
   'isAnonymous' : IDL.Bool,
   'story' : IDL.Text,
-  'timestamp' : IDL.Int,
+  'timestamp' : Time,
   'authorPseudonym' : IDL.Text,
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
@@ -44,7 +45,6 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'requireAdmin' : IDL.Func([IDL.Principal], [], ['oneway']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'submitStory' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Bool, IDL.Opt(IDL.Text)],
@@ -62,12 +62,13 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const Time = IDL.Int;
   const Story = IDL.Record({
     'title' : IDL.Text,
     'authorName' : IDL.Opt(IDL.Text),
     'isAnonymous' : IDL.Bool,
     'story' : IDL.Text,
-    'timestamp' : IDL.Int,
+    'timestamp' : Time,
     'authorPseudonym' : IDL.Text,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
@@ -93,7 +94,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'requireAdmin' : IDL.Func([IDL.Principal], [], ['oneway']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'submitStory' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Bool, IDL.Opt(IDL.Text)],

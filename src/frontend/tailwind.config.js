@@ -67,8 +67,8 @@ export default {
                 sm: 'calc(var(--radius) - 4px)'
             },
             boxShadow: {
-                xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                soft: '0 2px 8px rgba(0,0,0,0.08)',
+                xs: '0 1px 2px 0 oklch(0.55 0.05 240 / 0.08)',
+                soft: '0 2px 8px oklch(0.50 0.08 240 / 0.12)',
             },
             keyframes: {
                 'accordion-down': {

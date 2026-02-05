@@ -106,7 +106,7 @@ export default function AdminModerationPage() {
         {!isLoading && !error && stories && (
           <div className="grid md:grid-cols-2 gap-6">
             {/* Submissions List */}
-            <Card>
+            <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Pending Submissions ({stories.length})</CardTitle>
                 <CardDescription>Select a story to review and publish</CardDescription>
@@ -119,8 +119,8 @@ export default function AdminModerationPage() {
                     {stories.map((story) => (
                       <Card
                         key={story.title}
-                        className={`cursor-pointer transition-all hover:shadow-md ${
-                          selectedStory?.title === story.title ? 'ring-2 ring-primary' : ''
+                        className={`cursor-pointer transition-all hover:shadow-soft hover:border-primary/30 ${
+                          selectedStory?.title === story.title ? 'ring-2 ring-primary border-primary' : ''
                         }`}
                         onClick={() => handleSelectStory(story)}
                       >
@@ -149,7 +149,7 @@ export default function AdminModerationPage() {
             </Card>
 
             {/* Publishing Editor */}
-            <Card>
+            <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Publish Story</CardTitle>
                 <CardDescription>Edit and publish the selected story</CardDescription>
@@ -185,7 +185,7 @@ export default function AdminModerationPage() {
                       </div>
                       <div className="space-y-2">
                         <Label className="text-xs text-muted-foreground">Original Story</Label>
-                        <div className="p-4 rounded-lg border bg-muted/30 max-h-[400px] overflow-y-auto">
+                        <div className="p-4 rounded-lg border bg-accent/10 max-h-[400px] overflow-y-auto">
                           <p className="whitespace-pre-wrap text-sm">{selectedStory.story}</p>
                         </div>
                       </div>

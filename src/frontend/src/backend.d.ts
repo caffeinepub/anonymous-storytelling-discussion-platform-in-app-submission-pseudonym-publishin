@@ -7,6 +7,7 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export type Time = bigint;
 export interface SystemInfo {
     version: string;
 }
@@ -18,7 +19,7 @@ export interface Story {
     authorName?: string;
     isAnonymous: boolean;
     story: string;
-    timestamp: bigint;
+    timestamp: Time;
     authorPseudonym: string;
 }
 export enum UserRole {
@@ -37,7 +38,6 @@ export interface backendInterface {
     getPublishedStory(title: string): Promise<Story>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    requireAdmin(caller: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitStory(title: string, authorPseudonym: string, story: string, isAnonymous: boolean, authorName: string | null): Promise<void>;
     systemInfo(): Promise<SystemInfo>;

@@ -1,12 +1,15 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 13,
   "summary": "Anonymous storytelling & discussion platform (Genuine Being Real) where users submit real-life stories (optionally anonymous) via in-app form, stories are published/rewritten under pseudonyms, readers can comment/discuss, and the app includes an About Me section/page describing the creator and mission.",
   "architectural_notes": [
-    "Email-based story submission is not available; support story submissions directly in-app instead."
+    "Email-based story submission is not available; support story submissions directly in-app instead.",
+    "Visual design direction changed: use a blue/white palette (dark blue + light blue) and avoid black as a primary site color."
   ],
   "known_issues": [
-    "Generated image assets use blue/light-blue colors; user indicates the image color palette is not acceptable and should be adjusted to the intended warm neutral/editorial palette."
+    "Build/deploy pipeline hit an internal configuration error (requires platform/team intervention or retry).",
+    "Color palette requirements conflict with the existing warm neutral/editorial palette direction; verify and reconcile theme + generated assets to match the requested blue/white (dark/light blue) palette and avoid black.",
+    "App UI shows “failed to load stories” when attempting to view stories (likely API/data fetch or backend availability issue)."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -81,6 +84,30 @@
         "REQ-12"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-app-s-visible-top-branding-header-area-to-display-the-text-genuine-being-real-including-the-hyphens-and-remove-any-veritas-branding-or-references-from-user-visible-ui",
+      "title": "Update the app’s visible top branding/header area to display the text “Genuine-Being Real” (including the hyphens) and remove any “veritas” branding or references from user-visible UI.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-tailwind-theme-tokens-css-variables-to-use-an-attractive-blue-white-palette-dark-blue-light-blue-and-avoid-black-as-a-primary-site-color-across-the-app",
+      "title": "Update the global Tailwind theme tokens (CSS variables) to use an attractive blue/white palette (dark blue + light blue) and avoid black as a primary site color across the app.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-page-level-styling-and-existing-ui-elements-reflect-the-new-blue-white-theme-consistently-including-hero-gradients-cards-buttons-and-links-without-introducing-black-heavy-surfaces",
+      "title": "Ensure page-level styling and existing UI elements reflect the new blue/white theme consistently (including hero gradients, cards, buttons, and links), without introducing black-heavy surfaces.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -129,6 +156,18 @@
     {
       "id": "AR-7",
       "summary": "Add an About Me page/section with the provided creator bio/mission text (Genuine Being Real, debut novel mention) and link it from the app (e.g., footer/nav).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Update branding/About section header text: remove “veritas” and display “Genuine-Being Real” at the top",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update the site visual theme to use an attractive blue/white palette (dark blue + light blue) and avoid black as a primary site color",
       "reqIds": [],
       "status": "pending"
     }

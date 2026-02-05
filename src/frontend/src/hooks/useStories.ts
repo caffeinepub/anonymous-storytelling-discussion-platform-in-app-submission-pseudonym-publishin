@@ -14,10 +14,18 @@ export function useGetPublishedStories() {
   return useQuery<Story[]>({
     queryKey: ['publishedStories'],
     queryFn: async () => {
-      if (!actor) return [];
-      return actor.getPublishedStories();
+      if (!actor) throw new Error('Actor not available');
+      try {
+        const stories = await actor.getPublishedStories();
+        return stories || [];
+      } catch (error) {
+        console.error('Error fetching published stories:', error);
+        throw error;
+      }
     },
     enabled: !!actor && !isFetching,
+    retry: 2,
+    retryDelay: 1000,
   });
 }
 
@@ -28,9 +36,15 @@ export function useGetPublishedStory(title: string) {
     queryKey: ['publishedStory', title],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getPublishedStory(title);
+      try {
+        return await actor.getPublishedStory(title);
+      } catch (error) {
+        console.error('Error fetching story:', error);
+        throw error;
+      }
     },
     enabled: !!actor && !isFetching && !!title,
+    retry: 2,
   });
 }
 
@@ -40,10 +54,8 @@ export function useGetComments(storyTitle: string) {
   return useQuery<Comment[]>({
     queryKey: ['comments', storyTitle],
     queryFn: async () => {
-      if (!actor) return [];
-      // The backend doesn't have a direct getComments method, 
-      // but we can infer comments are part of the story data structure
-      // For now, return empty array as comments are managed through the story
+      // Backend doesn't have a getComments method yet
+      // Comments are stored but not retrievable
       return [];
     },
     enabled: !!actor && !isFetching && !!storyTitle,

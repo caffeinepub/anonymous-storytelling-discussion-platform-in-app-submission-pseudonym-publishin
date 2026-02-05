@@ -89,6 +89,7 @@ export class ExternalBlob {
         return this;
     }
 }
+export type Time = bigint;
 export interface SystemInfo {
     version: string;
 }
@@ -100,7 +101,7 @@ export interface Story {
     authorName?: string;
     isAnonymous: boolean;
     story: string;
-    timestamp: bigint;
+    timestamp: Time;
     authorPseudonym: string;
 }
 export enum UserRole {
@@ -120,12 +121,11 @@ export interface backendInterface {
     getPublishedStory(title: string): Promise<Story>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    requireAdmin(caller: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     submitStory(title: string, authorPseudonym: string, story: string, isAnonymous: boolean, authorName: string | null): Promise<void>;
     systemInfo(): Promise<SystemInfo>;
 }
-import type { Story as _Story, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Story as _Story, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -282,20 +282,6 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async requireAdmin(arg0: Principal): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.requireAdmin(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.requireAdmin(arg0);
-            return result;
-        }
-    }
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
         if (this.processError) {
             try {
@@ -356,14 +342,14 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
     authorName: [] | [string];
     isAnonymous: boolean;
     story: string;
-    timestamp: bigint;
+    timestamp: _Time;
     authorPseudonym: string;
 }): {
     title: string;
     authorName?: string;
     isAnonymous: boolean;
     story: string;
-    timestamp: bigint;
+    timestamp: Time;
     authorPseudonym: string;
 } {
     return {

@@ -3,21 +3,26 @@ import { useGetPublishedStories } from '../hooks/useStories';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MessageCircle, Calendar } from 'lucide-react';
+import { MessageCircle, Calendar, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function FeedPage() {
   const navigate = useNavigate();
-  const { data: stories, isLoading, error } = useGetPublishedStories();
+  const { data: stories, isLoading, error, refetch } = useGetPublishedStories();
 
   const formatDate = (timestamp: bigint) => {
-    const date = new Date(Number(timestamp) / 1_000_000);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    try {
+      const date = new Date(Number(timestamp) / 1_000_000);
+      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch (e) {
+      return 'Unknown date';
+    }
   };
 
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <div className="relative w-full bg-gradient-to-b from-muted/50 to-background border-b border-border overflow-hidden">
+      <div className="relative w-full bg-gradient-to-b from-accent/30 via-muted/40 to-background border-b border-border overflow-hidden">
         <div className="container mx-auto px-4 py-12 md:py-16">
           <div className="max-w-4xl mx-auto text-center space-y-6">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight">
@@ -28,9 +33,9 @@ export default function FeedPage() {
             </p>
             <div className="pt-4">
               <img 
-                src="/assets/generated/paper-stories-hero-warm.dim_1400x400.png" 
+                src="/assets/generated/paper-stories-hero-blue.dim_1400x400.png" 
                 alt="Stories" 
-                className="w-full max-w-3xl mx-auto rounded-lg shadow-sm"
+                className="w-full max-w-3xl mx-auto rounded-lg shadow-soft"
               />
             </div>
           </div>
@@ -57,11 +62,21 @@ export default function FeedPage() {
           )}
 
           {error && (
-            <Card className="border-destructive/50 bg-destructive/5">
-              <CardContent className="pt-6">
-                <p className="text-destructive text-center">Failed to load stories. Please try again later.</p>
-              </CardContent>
-            </Card>
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Failed to load stories</AlertTitle>
+              <AlertDescription className="space-y-3">
+                <p>There was an error loading the stories. This could be due to a connection issue or the backend service being unavailable.</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => refetch()}
+                  className="mt-2"
+                >
+                  Try Again
+                </Button>
+              </AlertDescription>
+            </Alert>
           )}
 
           {!isLoading && !error && stories && stories.length === 0 && (
@@ -80,7 +95,7 @@ export default function FeedPage() {
               {stories.map((story) => (
                 <Card 
                   key={story.title} 
-                  className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+                  className="overflow-hidden hover:shadow-soft hover:border-primary/30 transition-all cursor-pointer group"
                   onClick={() => navigate({ to: '/story/$title', params: { title: story.title } })}
                 >
                   <CardHeader className="space-y-3">
@@ -100,7 +115,7 @@ export default function FeedPage() {
                       {story.story}
                     </p>
                     <div className="flex items-center justify-between pt-2">
-                      <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                      <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-primary">
                         <MessageCircle className="h-4 w-4" />
                         Read & Comment
                       </Button>

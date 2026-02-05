@@ -49,7 +49,7 @@ export default function SubmitStoryPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto">
-          <Card className="border-primary/50 bg-primary/5">
+          <Card className="border-primary/50 bg-accent/20">
             <CardContent className="pt-12 pb-12 text-center space-y-6">
               <CheckCircle2 className="h-16 w-16 text-primary mx-auto" />
               <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function SubmitStoryPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Anonymous Toggle */}
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/30">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-accent/10">
                 <div className="space-y-0.5">
                   <Label htmlFor="anonymous" className="text-base font-medium">
                     Submit Anonymously

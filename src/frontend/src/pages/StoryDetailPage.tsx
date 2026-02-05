@@ -40,7 +40,7 @@ export default function StoryDetailPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto space-y-8">
-          <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2">
+          <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2 hover:text-primary">
             <ArrowLeft className="h-4 w-4" />
             Back to Stories
           </Button>
@@ -57,14 +57,14 @@ export default function StoryDetailPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-3xl mx-auto space-y-8">
-        <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2">
+        <Button variant="ghost" onClick={() => navigate({ to: '/' })} className="gap-2 hover:text-primary">
           <ArrowLeft className="h-4 w-4" />
           Back to Stories
         </Button>
 
         {/* Story Content */}
         <article>
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden shadow-soft">
             <CardHeader className="space-y-4 pb-6">
               <CardTitle className="font-serif text-3xl md:text-4xl leading-tight">
                 {story.title}

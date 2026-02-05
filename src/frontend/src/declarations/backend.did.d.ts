@@ -15,10 +15,11 @@ export interface Story {
   'authorName' : [] | [string],
   'isAnonymous' : boolean,
   'story' : string,
-  'timestamp' : bigint,
+  'timestamp' : Time,
   'authorPseudonym' : string,
 }
 export interface SystemInfo { 'version' : string }
+export type Time = bigint;
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -38,7 +39,6 @@ export interface _SERVICE {
   'getPublishedStory' : ActorMethod<[string], Story>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'requireAdmin' : ActorMethod<[Principal], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'submitStory' : ActorMethod<
     [string, string, string, boolean, [] | [string]],

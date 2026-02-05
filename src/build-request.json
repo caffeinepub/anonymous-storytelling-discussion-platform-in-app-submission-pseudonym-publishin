@@ -1,64 +1,10 @@
 {
   "kind": "build_request",
-  "title": "Add About Me page with creator bio and link from layout",
+  "title": "Untitled request",
   "priority": "normal",
-  "requirements": [
-    {
-      "id": "REQ-10",
-      "text": "Create a new About page that displays the provided “About Me” bio/mission text for Genuine Being Real, including the debut novel mention (“Shining Gaze – A Search for the Unknown”).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "About Me\n\nI am an author and storyteller, and the creator of Genuine Being Real — a platform dedicated to sharing real, anonymous stories and emotions. My debut novel, Shining Gaze – A Search for the Unknown, reflects my belief in emotional resilience, self-discovery, and the power of untold stories.\n\nThrough this platform, I aim to create a safe space where people can share experiences they may not always be able to express openly. My goal is to build a community rooted in honesty, empathy, and meaningful conversations, where every story finds understanding and respect."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Navigating to an About route renders an About page with the full user-provided text in English, preserving punctuation and meaning (including “Genuine Being Real” and “Shining Gaze – A Search for the Unknown”).",
-        "The About page layout matches the existing warm editorial theme (typography, spacing, background colors) and is readable on mobile and desktop."
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Add an /about route to the TanStack Router configuration and wire it to the new About page component.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The app has a new route at /about that is reachable via client-side navigation (no full page reload required).",
-        "Existing routes continue to function: /, /submit, /story/$title, /admin."
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Add a visible navigation entry point to the About page from the global layout footer (and keep existing footer content intact).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The footer includes an “About” link (English label) that navigates to /about.",
-        "The existing footer line “© 2026. Built with love using caffeine.ai” remains present and functional."
-      ]
-    }
-  ],
-  "constraints": [
-    "Use English for any user-facing text.",
-    "Do not modify files under frontend/src/components/ui (compose existing UI components instead).",
-    "Do not edit immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
-  ],
-  "nonGoals": [
-    "Changing backend data models or adding new backend APIs.",
-    "Adding third-party integrations or external CMS/content sources.",
-    "Redesigning existing pages beyond what’s necessary to add the About page and link."
-  ],
+  "requirements": [],
+  "constraints": [],
+  "nonGoals": [],
   "imageRequirements": {
     "required": [],
     "edits": []
