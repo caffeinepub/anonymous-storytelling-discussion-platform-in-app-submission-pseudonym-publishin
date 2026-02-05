@@ -1,0 +1,50 @@
+{
+  "kind": "build_request",
+  "title": "Replace blue/light-blue generated images with warm editorial palette",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-9",
+      "text": "Update the app’s generated image assets to remove blue/light-blue tones and replace them with a warm neutral, editorial palette (off-white paper, warm grays, ink/charcoal), then update the frontend to reference the updated image filenames wherever they are used (header wordmark and feed hero image).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages-4"
+        ],
+        "quotes": [
+          "image is not good colour blue and light blue ,"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The header wordmark image no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
+        "The feed page hero illustration no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
+        "The frontend references the updated image filenames under frontend/public/assets/generated and both images render correctly in the UI (no broken image links)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/components/ui (compose instead).",
+    "Store and serve images as static assets under frontend/public/assets/generated (do not route images through the backend)."
+  ],
+  "nonGoals": [
+    "No changes to backend logic or data models.",
+    "No new pages or new features beyond updating the existing generated images and their frontend references."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": [
+      "Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (story-ink-wordmark.dim_512x128.png > story-ink-wordmark-warm.dim_512x128.png)",
+      "Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (paper-stories-hero.dim_1400x400.png > paper-stories-hero-warm.dim_1400x400.png)"
+    ]
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Replace generated image assets with warm editorial palette and update frontend references",
+  "requirements": [
+    {
+      "id": "REQ-9",
+      "summary": "Recolor the generated header wordmark and feed hero images to a warm neutral editorial palette and update the frontend to reference the new filenames.",
+      "acceptanceCriteria": [
+        "The header wordmark image no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
+        "The feed page hero illustration no longer contains prominent blue/light-blue colors and visually matches a warm editorial palette.",
+        "The frontend references the updated image filenames under frontend/public/assets/generated and both images render correctly in the UI (no broken image links)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png",
+          "operation": "create",
+          "description": "Add the recolored warm-neutral editorial wordmark image asset (replacing blue/light-blue tones) as a static file at frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png",
+          "operation": "create",
+          "description": "Add the recolored warm-neutral editorial hero illustration asset (replacing blue/light-blue tones) as a static file at frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Update the header wordmark <img> source to reference the new static asset filename frontend/public/assets/generated/story-ink-wordmark-warm.dim_512x128.png so the logo renders with the warm editorial palette."
+        },
+        {
+          "path": "frontend/src/pages/FeedPage.tsx",
+          "operation": "modify",
+          "description": "Update the feed hero <img> source to reference the new static asset filename frontend/public/assets/generated/paper-stories-hero-warm.dim_1400x400.png so the hero image renders with the warm editorial palette."
+        }
+      ]
+    }
+  ]
+}

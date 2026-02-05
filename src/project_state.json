@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Anonymous storytelling & discussion platform where users submit real-life stories (optionally anonymous) via in-app form, stories are published/rewritten under pseudonyms, and readers can comment/discuss.",
+  "architectural_notes": [
+    "Email-based story submission is not available; support story submissions directly in-app instead."
+  ],
+  "known_issues": [
+    "Generated image assets use blue/light-blue colors; user indicates the image color palette is not acceptable and should be adjusted to the intended warm neutral/editorial palette."
+  ],
+  "isFixRequest": true,
+  "imageRequirements": "## Edit Images\n- Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (story-ink-wordmark.dim_512x128.png > story-ink-wordmark-warm.dim_512x128.png)\n- Recolor to a warm neutral editorial palette with no prominent blue/light-blue tones (paper-stories-hero.dim_1400x400.png > paper-stories-hero-warm.dim_1400x400.png)",
+  "existing_features": [
+    {
+      "id": "feature-build-a-frontend-story-submission-flow-a-page-with-a-form-to-submit-a-real-life-story-including-fields-for-story-text-optional-name-and-a-clear-toggle-to-submit-anonymously-show-a-success-confirmation-state-after-submission",
+      "title": "Build a frontend story submission flow: a page with a form to submit a real-life story, including fields for story text, optional name, and a clear toggle to submit anonymously; show a success confirmation state after submission.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-reader-experience-a-published-story-feed-page-and-a-story-detail-page-that-displays-the-pseudonym-published-content-and-comment-thread-include-a-comment-composer-that-lets-readers-post-comments-with-an-optional-display-name",
+      "title": "Build the reader experience: a published story feed page and a story detail page that displays the pseudonym, published content, and comment thread; include a comment composer that lets readers post comments with an optional display name.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-moderation-ui-for-the-authorized-principal-to-view-incoming-submissions-enter-rewritten-published-title-and-body-set-a-pseudonym-and-publish-the-story",
+      "title": "Create an admin/moderation UI for the authorized principal to: view incoming submissions, enter rewritten/published title and body, set a pseudonym, and publish the story.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-visual-theme-across-the-app-colors-typography-spacing-and-components-suitable-for-an-anonymous-storytelling-platform-use-a-warm-editorial-style-paper-like-background-dark-neutral-text-subtle-accent-color-and-keep-it-consistent-across-all-pages-and-states",
+      "title": "Apply a coherent visual theme across the app (colors, typography, spacing, and components) suitable for an anonymous storytelling platform; use a warm editorial style (paper-like background, dark neutral text, subtle accent color) and keep it consistent across all pages and states.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-static-generated-image-assets-and-render-them-in-the-ui-include-a-simple-wordmark-logo-and-a-subtle-header-hero-illustration-consistent-with-the-editorial-theme-store-them-under-frontend-public-assets-generated-and-reference-them-directly-from-the-frontend",
+      "title": "Add static generated image assets and render them in the UI: include a simple wordmark/logo and a subtle header/hero illustration consistent with the editorial theme; store them under frontend/public/assets/generated and reference them directly from the frontend.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-app-s-generated-image-assets-to-remove-blue-light-blue-tones-and-replace-them-with-a-warm-neutral-editorial-palette-off-white-paper-warm-grays-ink-charcoal-then-update-the-frontend-to-reference-the-updated-image-filenames-wherever-they-are-used-header-wordmark-and-feed-hero-image",
+      "title": "Update the app’s generated image assets to remove blue/light-blue tones and replace them with a warm neutral, editorial palette (off-white paper, warm grays, ink/charcoal), then update the frontend to reference the updated image filenames wherever they are used (header wordmark and feed hero image).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "In-app story submission (supports anonymous submissions)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Publish/rewrite submitted stories under pseudonyms/different names",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Reader discussion features (comments/engagement on stories)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Create backend data models and stable storage for story submissions, published stories, and comments, including fields for: submission content, optional submitter name (or explicit anonymous flag), created timestamps, published pseudonym, published title/body (rewritten text), and per-story comment threads.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Implement backend APIs to: (1) create a story submission, (2) list submitted stories for moderation, (3) publish a story under a pseudonym with rewritten/public text, (4) list published stories (with pagination or sensible limits), (5) fetch a single published story with its comments, and (6) add a comment to a published story.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add a simple moderation/admin gate for rewriting/publishing actions so only an authorized principal (configured in backend) can list submissions and publish/rewrite stories; anonymous/public users can only view published stories and add comments.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Anonymous storytelling & discussion platform (in-app submission, pseudonym publishing, comments)",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

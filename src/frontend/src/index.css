@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.5rem;
+        
+        /* Warm paper-like editorial theme - Light Mode */
+        --background: 0.98 0.01 45;
+        --foreground: 0.20 0.02 30;
+        --card: 1 0 0;
+        --card-foreground: 0.20 0.02 30;
+        --popover: 1 0 0;
+        --popover-foreground: 0.20 0.02 30;
+        --primary: 0.35 0.08 25;
+        --primary-foreground: 0.98 0.01 45;
+        --secondary: 0.92 0.02 50;
+        --secondary-foreground: 0.25 0.02 30;
+        --muted: 0.94 0.01 45;
+        --muted-foreground: 0.50 0.02 30;
+        --accent: 0.88 0.05 35;
+        --accent-foreground: 0.25 0.02 30;
+        --destructive: 0.55 0.20 25;
+        --destructive-foreground: 0.98 0.01 45;
+        --border: 0.88 0.01 45;
+        --input: 0.88 0.01 45;
+        --ring: 0.50 0.05 30;
+        
+        --chart-1: 0.60 0.15 200;
+        --chart-2: 0.65 0.12 150;
+        --chart-3: 0.55 0.18 280;
+        --chart-4: 0.70 0.10 100;
+        --chart-5: 0.58 0.16 320;
+    }
+
+    .dark {
+        /* Warm editorial theme - Dark Mode */
+        --background: 0.15 0.02 30;
+        --foreground: 0.95 0.01 45;
+        --card: 0.20 0.02 30;
+        --card-foreground: 0.95 0.01 45;
+        --popover: 0.18 0.02 30;
+        --popover-foreground: 0.95 0.01 45;
+        --primary: 0.85 0.03 45;
+        --primary-foreground: 0.20 0.02 30;
+        --secondary: 0.25 0.02 30;
+        --secondary-foreground: 0.90 0.01 45;
+        --muted: 0.28 0.02 30;
+        --muted-foreground: 0.65 0.02 40;
+        --accent: 0.35 0.05 35;
+        --accent-foreground: 0.95 0.01 45;
+        --destructive: 0.50 0.22 25;
+        --destructive-foreground: 0.95 0.01 45;
+        --border: 0.30 0.02 30;
+        --input: 0.30 0.02 30;
+        --ring: 0.60 0.04 40;
+        
+        --chart-1: 0.55 0.18 220;
+        --chart-2: 0.60 0.14 170;
+        --chart-3: 0.50 0.20 300;
+        --chart-4: 0.65 0.12 120;
+        --chart-5: 0.53 0.19 340;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+    
+    /* Typography enhancements for editorial feel */
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-serif;
+    }
+    
+    /* Prose styling for story content */
+    .prose {
+        @apply text-foreground;
+    }
+    
+    .prose p {
+        @apply leading-relaxed mb-4;
+    }
+    
+    /* Focus states */
+    *:focus-visible {
+        @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    }
+    
+    /* Disabled states */
+    *:disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}

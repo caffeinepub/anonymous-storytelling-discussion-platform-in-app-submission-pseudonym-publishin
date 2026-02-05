@@ -1,2 +1,3 @@
-# anonymous-storytelling-discussion-platform-in-app-submission-pseudonym-publishin
-Exported from Caffeine project: Anonymous storytelling &amp; discussion platform (in-app submission, pseudonym publishing, comments)
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
