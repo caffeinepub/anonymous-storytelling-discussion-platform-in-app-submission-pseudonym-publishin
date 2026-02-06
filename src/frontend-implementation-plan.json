@@ -1,78 +1,77 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin approval workflow and admin removal of published articles (frontend-only)",
+  "title": "Replace My Submissions with a dedicated Login page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Ensure user submissions remain pending until admin publishes, and keep public pages showing only published stories.",
+      "summary": "Remove the “My Submissions” header navigation entry while keeping all other existing nav items intact.",
       "acceptanceCriteria": [
-        "A story submitted via the existing submission flow is not returned by any public endpoint used by the feed/articles pages until an admin publishes it.",
-        "The admin-only publish action is required to make a submission publicly visible.",
-        "User-facing copy related to this flow remains in English."
+        "When authenticated or unauthenticated, the header no longer displays a “My Submissions” button/link.",
+        "No other existing nav items (Home, Articles, Admin, About, Contact) are removed or broken."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useAdmin.ts",
+          "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Align admin hooks with the current backend interface by (1) fetching pending submissions via the backend capability for pending stories and (2) publishing a pending submission via the backend capability for admin publish. Also add an admin-check query (e.g., using the backend capability that returns whether the caller is admin) to support admin-only UI gating. Use the selected \"authorization\" component concepts (role-based access control) to drive admin gating logic; verify the component's usage instructions before implementing."
+          "description": "Remove the conditional “My Submissions” navigation button/link and any now-unused imports (e.g., the User icon). Keep existing Home/Articles/Admin/About/Contact navigation behavior unchanged."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Add a dedicated /login page that supports Internet Identity login and logout using the existing auth hook.",
+      "acceptanceCriteria": [
+        "Visiting /login shows a login screen when the user is not authenticated, with a primary button that triggers Internet Identity login.",
+        "When the user is authenticated, /login shows the authenticated state (at minimum: a message indicating the user is logged in and a logout button).",
+        "All user-facing text on the login page is in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "create",
+          "description": "Create a Login page that uses the existing Internet Identity hook for login/logout and displays authenticated vs unauthenticated states in English. Use the selected \"authorization\" component guidance to ensure logout clears cached application data (e.g., React Query cache). Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/AdminModerationPage.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the moderation UI to use the revised admin hooks: show only pending submissions in the moderation list, and publish a selected pending story using the backend publish capability. Remove/adjust any UI that depends on non-existent reword-and-publish or all-stories fetching. Add an explicit admin-only guard using the admin-check query and show the existing AccessDeniedState when unauthorized (per the selected \"authorization\" component guidance); verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/SubmitStoryPage.tsx",
-          "operation": "modify",
-          "description": "Keep submission confirmation messaging explicitly stating the story will be reviewed and is not publicly visible until published (English-only copy). Ensure the page continues to guide users to My Submissions for status tracking after submission."
-        },
-        {
-          "path": "frontend/src/pages/MySubmissionsPage.tsx",
-          "operation": "modify",
-          "description": "Ensure the pending vs published status presentation remains clear and consistent with the approval workflow (pending submissions should not offer public viewing). Keep all user-facing status copy in English."
+          "description": "Register a new /login route that renders the new LoginPage, ensuring it is part of the router tree and navigable."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Provide admin-only UI to view published articles and remove/unpublish them, updating React Query caches and showing not-found after removal.",
+      "summary": "Remove the MySubmissionsPage route and ensure /my-submissions shows the Login page experience instead.",
       "acceptanceCriteria": [
-        "Backend exposes an admin-only method to remove a published story by title, and it rejects non-admin callers with an Unauthorized error.",
-        "Admin UI provides a way to view published articles and remove one by selecting it and confirming removal.",
-        "After removal, the deleted article no longer appears on the Articles page or Feed page, and navigating to its detail route shows a not-found/error state.",
-        "React Query caches for published stories are invalidated after removal so the UI updates without a hard refresh."
+        "Navigating to /my-submissions no longer shows the My Submissions list UI.",
+        "Navigating to /my-submissions results in the Login page experience (equivalent to visiting /login).",
+        "The app builds successfully with no unused-import or route-tree errors related to removing MySubmissionsPage."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useAdmin.ts",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add an admin-only removal mutation that calls the backend capability to delete a published article by title. On success, invalidate React Query caches for the published stories list and the per-title published story query so Articles/Feed and detail views update without refresh. Incorporate admin gating/error handling consistent with the selected \"authorization\" component (Unauthorized traps should surface as a controlled UI state); verify the component's usage instructions before implementing."
+          "description": "Remove the MySubmissionsPage import and route configuration. Replace /my-submissions route behavior so it renders the same LoginPage experience (or otherwise forwards to /login) without exposing the old submissions UI."
         },
         {
-          "path": "frontend/src/pages/AdminModerationPage.tsx",
-          "operation": "modify",
-          "description": "Extend the admin moderation view with a published-articles section (e.g., an additional tab) that lists published stories and allows the admin to remove one by selecting it and confirming (e.g., via a confirmation prompt). After removal, ensure the list refreshes via cache invalidation and the removed item is no longer shown. Keep admin-only access guarded using the admin-check flow aligned with the selected \"authorization\" component; verify the component's usage instructions before implementing."
-        },
+          "path": "frontend/src/pages/MySubmissionsPage.tsx",
+          "operation": "delete",
+          "description": "Delete the MySubmissionsPage implementation to fully disable the /my-submissions experience and avoid unused code/imports after route removal."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Update UI links that point to /my-submissions (notably the Submit Story success state) to point to /login with updated English text.",
+      "acceptanceCriteria": [
+        "After a successful story submission, the call-to-action that previously navigated to /my-submissions no longer points to /my-submissions.",
+        "The updated call-to-action navigates to /login and uses clear English text (e.g., “Login” or “Account”)."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/ArticlesPage.tsx",
+          "path": "frontend/src/pages/SubmitStoryPage.tsx",
           "operation": "modify",
-          "description": "Ensure the Articles page reliably reflects removals by depending on the existing published-stories query and rendering appropriate empty/error states after cache invalidation. No admin controls should appear here (admin removal stays within admin UI)."
-        },
-        {
-          "path": "frontend/src/pages/FeedPage.tsx",
-          "operation": "modify",
-          "description": "Ensure the Feed page reliably reflects removals by depending on the existing published-stories query and rendering appropriate empty/error states after cache invalidation."
-        },
-        {
-          "path": "frontend/src/pages/ArticleDetailPage.tsx",
-          "operation": "modify",
-          "description": "Confirm that when the published story query fails (e.g., after admin removal), the page shows a clear not-found/error state and a way back to the Articles page."
-        },
-        {
-          "path": "frontend/src/pages/StoryDetailPage.tsx",
-          "operation": "modify",
-          "description": "Confirm that when the published story query fails (e.g., after admin removal), the page shows a clear not-found/error state and a way back to the Feed page."
+          "description": "Update the post-submit success call-to-action to navigate to /login instead of /my-submissions and change the button label to clear English (e.g., “Account” or “Login”). Also remove any now-unused imports that were only used for the old CTA."
         }
       ]
     }

@@ -1,24 +1,40 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Article publishing app with an admin approval step required before articles can be published; also needs removal of two already-published articles.",
+  "summary": "Project to replace/remove the 'My submission' area and implement a login page instead.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-enforce-an-explicit-admin-approval-workflow-stories-submitted-by-users-must-remain-in-a-pending-state-and-must-not-appear-in-any-public-listing-feed-articles-until-an-admin-publishes-them",
-      "title": "Enforce an explicit admin-approval workflow: stories submitted by users must remain in a pending state and must not appear in any public listing (feed/articles) until an admin publishes them.",
+      "id": "feature-remove-the-my-submissions-navigation-entry-from-the-header-so-users-no-longer-see-or-access-a-my-submissions-area-from-the-main-navigation",
+      "title": "Remove the “My Submissions” navigation entry from the header so users no longer see or access a My Submissions area from the main navigation.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-admin-only-functionality-to-remove-unpublish-published-articles-so-the-admin-can-delete-the-two-already-published-articles-from-the-site-by-title",
-      "title": "Add admin-only functionality to remove/unpublish published articles so the admin can delete the two already-published articles from the site by title.",
+      "id": "feature-add-a-new-login-page-route-at-login-that-allows-users-to-authenticate-with-internet-identity-and-to-log-out-using-the-existing-internet-identity-hook",
+      "title": "Add a new Login page route at /login that allows users to authenticate with Internet Identity and to log out, using the existing Internet Identity hook.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-disable-the-existing-my-submissions-experience-by-removing-the-mysubmissionspage-route-and-ensuring-my-submissions-instead-takes-the-user-to-the-new-login-page-via-redirect-or-by-rendering-the-login-page",
+      "title": "Disable the existing /my-submissions experience by removing the MySubmissionsPage route and ensuring /my-submissions instead takes the user to the new /login page (via redirect or by rendering the Login page).",
       "reqIds": [
         "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-ui-that-links-to-my-submissions-e-g-the-post-submit-success-state-on-submit-story-to-link-to-login-instead-with-updated-english-button-text",
+      "title": "Update any UI that links to /my-submissions (e.g., the post-submit success state on Submit Story) to link to /login instead, with updated English button text.",
+      "reqIds": [
+        "REQ-4"
       ],
       "version": 1
     }
@@ -26,26 +42,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Require admin approval before an article can be published (add approval workflow/gating).",
+      "summary": "Implement a login page (replace current 'My submission' area)",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Remove two already-published articles from the site/app.",
+      "summary": "Remove/disable the 'My submission' page/section",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "When an admin publishes a submitted story, remove it from the pending submissions list so it no longer appears as 'pending' in admin moderation views and does not remain duplicated as both pending and published.",
-      "reqIds": [
-        "REQ-2"
-      ],
       "status": "pending"
     }
   ],
-  "projectName": "Require admin approval before publication and let admin remove published articles",
+  "projectName": "Replace My Submissions with a dedicated Login page",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -2,13 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-enforce-an-explicit-admin-approval-workflow-stories-submitted-by-users-must-remain-in-a-pending-state-and-must-not-appear-in-any-public-listing-feed-articles-until-an-admin-publishes-them",
-      "featureTitle": "Enforce an explicit admin-approval workflow: stories submitted by users must remain in a pending state and must not appear in any public listing (feed/articles) until an admin publishes them.",
+      "featureId": "feature-remove-the-my-submissions-navigation-entry-from-the-header-so-users-no-longer-see-or-access-a-my-submissions-area-from-the-main-navigation",
+      "featureTitle": "Remove the “My Submissions” navigation entry from the header so users no longer see or access a My Submissions area from the main navigation.",
       "files": [
-        "frontend/src/hooks/useAdmin.ts",
-        "frontend/src/pages/AdminModerationPage.tsx",
-        "frontend/src/pages/MySubmissionsPage.tsx",
-        "frontend/src/pages/SubmitStoryPage.tsx"
+        "frontend/src/components/AppHeader.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -24,14 +21,31 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-admin-only-functionality-to-remove-unpublish-published-articles-so-the-admin-can-delete-the-two-already-published-articles-from-the-site-by-title",
-      "featureTitle": "Add admin-only functionality to remove/unpublish published articles so the admin can delete the two already-published articles from the site by title.",
+      "featureId": "feature-add-a-new-login-page-route-at-login-that-allows-users-to-authenticate-with-internet-identity-and-to-log-out-using-the-existing-internet-identity-hook",
+      "featureTitle": "Add a new Login page route at /login that allows users to authenticate with Internet Identity and to log out, using the existing Internet Identity hook.",
       "files": [
-        "frontend/src/hooks/useAdmin.ts",
-        "frontend/src/pages/AdminModerationPage.tsx",
-        "frontend/src/pages/ArticleDetailPage.tsx",
-        "frontend/src/pages/ArticlesPage.tsx",
-        "frontend/src/pages/StoryDetailPage.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-disable-the-existing-my-submissions-experience-by-removing-the-mysubmissionspage-route-and-ensuring-my-submissions-instead-takes-the-user-to-the-new-login-page-via-redirect-or-by-rendering-the-login-page",
+      "featureTitle": "Disable the existing /my-submissions experience by removing the MySubmissionsPage route and ensuring /my-submissions instead takes the user to the new /login page (via redirect or by rendering the Login page).",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/MySubmissionsPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -43,6 +57,25 @@
       ],
       "testIds": [
         "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-any-ui-that-links-to-my-submissions-e-g-the-post-submit-success-state-on-submit-story-to-link-to-login-instead-with-updated-english-button-text",
+      "featureTitle": "Update any UI that links to /my-submissions (e.g., the post-submit success state on Submit Story) to link to /login instead, with updated English button text.",
+      "files": [
+        "frontend/src/pages/SubmitStoryPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }

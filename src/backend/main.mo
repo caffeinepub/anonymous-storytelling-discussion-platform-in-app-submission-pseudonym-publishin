@@ -10,15 +10,17 @@ import Runtime "mo:core/Runtime";
 
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
   public query ({ caller }) func checkBackendHeartbeat() : async Bool {
     true;
+  };
+
+  public query ({ caller }) func callerIsAdmin() : async Bool {
+    AccessControl.isAdmin(accessControlState, caller);
   };
 
   // *** Story Type ***
@@ -29,7 +31,7 @@ actor {
     timestamp : Time.Time;
     isAnonymous : Bool;
     authorName : ?Text;
-    authorPrincipal : ?Principal; // To track submitter for "My Submissions"
+    authorPrincipal : ?Principal;
   };
 
   module Story {
@@ -48,7 +50,7 @@ actor {
   // Review/Rating Types
   public type Rating = {
     reviewerHandle : Text;
-    rating : Nat8; // 1-5 stars
+    rating : Nat8;
     comment : ?Text;
     timestamp : Time.Time;
   };
@@ -87,7 +89,7 @@ actor {
   public type SystemInfo = { version : Text };
 
   public query func systemInfo() : async SystemInfo {
-    { version = "0.2.0" };
+    { version = "0.2.1" };
   };
 
   // *** User Profile Management ***
@@ -136,7 +138,6 @@ actor {
     pendingStories.add(newStory);
   };
 
-  // *** New Function: Create and Publish Article ***
   public shared ({ caller }) func adminCreateAndPublishArticle(
     title : Text,
     authorPseudonym : Text,
@@ -261,6 +262,15 @@ actor {
     };
   };
 
+  public shared ({ caller }) func adminDeleteAllArticles() : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
+      Runtime.trap("Unauthorized: Only admins can delete all articles");
+    };
+    publishedTitles.clear();
+    commentThreads.clear();
+    reviewThreads.clear();
+  };
+
   // *** Public Endpoints ***
 
   // Get specific published story or error
@@ -353,7 +363,6 @@ actor {
     let allPendingStories = pendingStories.toArray();
     let allPublishedStories = publishedTitles.values().toArray();
 
-    // Map all to status variants
     let pendingWithStatus = allPendingStories.map(
       func(story) {
         {

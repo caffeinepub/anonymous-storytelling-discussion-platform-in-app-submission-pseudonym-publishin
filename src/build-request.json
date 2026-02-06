@@ -1,73 +1,87 @@
 {
   "kind": "build_request",
-  "title": "Require admin approval before publication and let admin remove published articles",
+  "title": "Replace My Submissions with a dedicated Login page",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Enforce an explicit admin-approval workflow: stories submitted by users must remain in a pending state and must not appear in any public listing (feed/articles) until an admin publishes them.",
-      "target": "both",
+      "text": "Remove the “My Submissions” navigation entry from the header so users no longer see or access a My Submissions area from the main navigation.",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "I said before publishing take my admin approval .."
+          "Remove My submission instead try login page there"
         ]
       },
       "acceptanceCriteria": [
-        "A story submitted via the existing submission flow is not returned by any public endpoint used by the feed/articles pages until an admin publishes it.",
-        "The admin-only publish action is required to make a submission publicly visible.",
-        "User-facing copy related to this flow remains in English."
+        "When authenticated or unauthenticated, the header no longer displays a “My Submissions” button/link.",
+        "No other existing nav items (Home, Articles, Admin, About, Contact) are removed or broken."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "When an admin publishes a submitted story, remove it from the pending submissions list so it no longer appears as 'pending' in admin moderation views and does not remain duplicated as both pending and published.",
-      "target": "backend",
+      "text": "Add a new Login page route at /login that allows users to authenticate with Internet Identity and to log out, using the existing Internet Identity hook.",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Before publishing take my admin approval ..."
+          "Remove My submission instead try login page there"
         ]
       },
       "acceptanceCriteria": [
-        "After calling the admin publish method for a given submission title, that submission no longer appears in the admin 'Pending Submissions' list returned by the backend.",
-        "After publishing, the story appears in the published stories list and is accessible from its detail page.",
-        "If an admin attempts to publish a title that is not pending, the backend returns a clear error (trap message is acceptable)."
+        "Visiting /login shows a login screen when the user is not authenticated, with a primary button that triggers Internet Identity login.",
+        "When the user is authenticated, /login shows the authenticated state (at minimum: a message indicating the user is logged in and a logout button).",
+        "All user-facing text on the login page is in English."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add admin-only functionality to remove/unpublish published articles so the admin can delete the two already-published articles from the site by title.",
-      "target": "both",
+      "text": "Disable the existing /my-submissions experience by removing the MySubmissionsPage route and ensuring /my-submissions instead takes the user to the new /login page (via redirect or by rendering the Login page).",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "I have published article remove that 2 articles ..."
+          "Remove My submission instead try login page there"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes an admin-only method to remove a published story by title, and it rejects non-admin callers with an Unauthorized error.",
-        "Admin UI provides a way to view published articles and remove one by selecting it and confirming removal.",
-        "After removal, the deleted article no longer appears on the Articles page or Feed page, and navigating to its detail route shows a not-found/error state.",
-        "React Query caches for published stories are invalidated after removal so the UI updates without a hard refresh."
+        "Navigating to /my-submissions no longer shows the My Submissions list UI.",
+        "Navigating to /my-submissions results in the Login page experience (equivalent to visiting /login).",
+        "The app builds successfully with no unused-import or route-tree errors related to removing MySubmissionsPage."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update any UI that links to /my-submissions (e.g., the post-submit success state on Submit Story) to link to /login instead, with updated English button text.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Remove My submission instead try login page there"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After a successful story submission, the call-to-action that previously navigated to /my-submissions no longer points to /my-submissions.",
+        "The updated call-to-action navigates to /login and uses clear English text (e.g., “Login” or “Account”)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
-    "Do not modify immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
+    "Frontend files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui must not be edited (compose/reuse them instead).",
+    "Keep the backend as a single Motoko actor; no backend changes are required for this request."
   ],
   "nonGoals": [
-    "Adding third-party authentication providers (only Internet Identity is supported).",
-    "Adding real-time updates (no websockets).",
-    "Implementing an external database or off-chain storage for stories."
+    "Reworking or redesigning the submission tracking feature beyond removing/redirecting the My Submissions page.",
+    "Changing authentication provider behavior beyond adding a dedicated login/logout UI.",
+    "Adding third-party auth providers (only Internet Identity is supported)."
   ],
   "imageRequirements": {
     "required": [],

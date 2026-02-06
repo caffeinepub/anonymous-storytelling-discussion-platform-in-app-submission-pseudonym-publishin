@@ -146,9 +146,11 @@ export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     addReview(storyTitle: string, reviewerHandle: string, rating: number, comment: string | null): Promise<void>;
     adminCreateAndPublishArticle(title: string, authorPseudonym: string, story: string, isAnonymous: boolean, authorName: string | null, authorPrincipal: Principal | null): Promise<void>;
+    adminDeleteAllArticles(): Promise<void>;
     adminDeletePublishedArticle(title: string): Promise<void>;
     adminPublishStory(title: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    callerIsAdmin(): Promise<boolean>;
     checkBackendHeartbeat(): Promise<boolean>;
     getAllDiscussions(): Promise<Discussions>;
     getAllPendingStories(): Promise<Array<Story>>;
@@ -224,6 +226,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async adminDeleteAllArticles(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.adminDeleteAllArticles();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.adminDeleteAllArticles();
+            return result;
+        }
+    }
     async adminDeletePublishedArticle(arg0: string): Promise<void> {
         if (this.processError) {
             try {
@@ -263,6 +279,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n3(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async callerIsAdmin(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.callerIsAdmin();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.callerIsAdmin();
             return result;
         }
     }

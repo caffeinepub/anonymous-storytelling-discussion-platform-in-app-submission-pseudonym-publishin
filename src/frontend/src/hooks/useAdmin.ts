@@ -11,7 +11,8 @@ export function useIsCallerAdmin() {
     queryKey: ['isCallerAdmin'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.isCallerAdmin();
+      // Use the correct backend method: callerIsAdmin
+      return await actor.callerIsAdmin();
     },
     enabled: !!actor && !isFetching,
     retry: false,
@@ -19,7 +20,7 @@ export function useIsCallerAdmin() {
 }
 
 // Get all pending submissions (admin only)
-export function useGetPendingStories() {
+export function useGetPendingStories(isAdmin: boolean | undefined) {
   const { actor, isFetching } = useActor();
 
   return useQuery<Story[]>({
@@ -28,7 +29,7 @@ export function useGetPendingStories() {
       if (!actor) throw new Error('Actor not available');
       return actor.getAllPendingStories();
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !isFetching && isAdmin === true,
     retry: false,
   });
 }
@@ -44,9 +45,11 @@ export function usePublishStory() {
       return actor.adminPublishStory(title);
     },
     onSuccess: () => {
+      // Invalidate all relevant queries
       queryClient.invalidateQueries({ queryKey: ['pendingStories'] });
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
       queryClient.invalidateQueries({ queryKey: ['mySubmissions'] });
+      queryClient.invalidateQueries({ queryKey: ['publishedStory'] });
     },
   });
 }
@@ -76,7 +79,9 @@ export function useCreateAndPublishArticle() {
       );
     },
     onSuccess: () => {
+      // Invalidate all published content queries
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+      queryClient.invalidateQueries({ queryKey: ['publishedStory'] });
     },
   });
 }
@@ -94,6 +99,26 @@ export function useDeletePublishedArticle() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
       queryClient.invalidateQueries({ queryKey: ['publishedStory'] });
+    },
+  });
+}
+
+// Delete all published articles (admin only)
+export function useDeleteAllArticles() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.adminDeleteAllArticles();
+    },
+    onSuccess: () => {
+      // Invalidate all content and discussion queries
+      queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+      queryClient.invalidateQueries({ queryKey: ['publishedStory'] });
+      queryClient.invalidateQueries({ queryKey: ['discussions'] });
+      queryClient.invalidateQueries({ queryKey: ['storyComments'] });
     },
   });
 }

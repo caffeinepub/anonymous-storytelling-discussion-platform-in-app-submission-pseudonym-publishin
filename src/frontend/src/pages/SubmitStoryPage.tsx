@@ -91,8 +91,8 @@ export default function SubmitStoryPage() {
                 </p>
               </div>
               <div className="flex gap-3 justify-center pt-4">
-                <Button onClick={() => navigate({ to: '/my-submissions' })}>
-                  View My Submissions
+                <Button onClick={() => navigate({ to: '/login' })}>
+                  Account
                 </Button>
                 <Button 
                   variant="outline" 

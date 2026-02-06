@@ -10,7 +10,7 @@ import DiscussionsPage from './pages/DiscussionsPage';
 import ContactPage from './pages/ContactPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
-import MySubmissionsPage from './pages/MySubmissionsPage';
+import LoginPage from './pages/LoginPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -87,10 +87,16 @@ const articleDetailRoute = createRoute({
   component: ArticleDetailPage,
 });
 
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
+});
+
 const mySubmissionsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/my-submissions',
-  component: MySubmissionsPage,
+  component: LoginPage,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -105,6 +111,7 @@ const routeTree = rootRoute.addChildren([
   contactRoute,
   articlesRoute,
   articleDetailRoute,
+  loginRoute,
   mySubmissionsRoute
 ]);
 

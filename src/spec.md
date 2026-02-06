@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add an admin approval workflow so user-submitted stories stay pending until published by an admin, and allow admins to remove already-published articles.
+**Goal:** Replace the removed “My Submissions” area with a dedicated Login page for Internet Identity authentication.
 
 **Planned changes:**
-- Ensure newly submitted stories are stored as pending and excluded from all public story/feed/article listings until an admin publishes them.
-- Add/adjust an admin-only publish action that moves a story from pending to published (so it no longer appears in pending moderation views).
-- Add admin-only functionality (backend + admin UI) to list published stories and remove/unpublish a published story by title, updating the UI immediately after removal.
+- Remove the “My Submissions” entry from the header navigation while keeping all other existing nav items intact.
+- Add a new `/login` route that uses the existing Internet Identity hook to let users log in (when unauthenticated) and log out (when authenticated), with English-only UI text.
+- Remove/disable the existing `MySubmissionsPage` route and make `/my-submissions` redirect to (or render) the `/login` experience.
+- Update any UI that links to `/my-submissions` (e.g., post-submit success state) to link to `/login` instead, with updated English call-to-action text.
 
-**User-visible outcome:** Users can submit stories but they won’t appear publicly until an admin publishes them; admins can publish pending submissions and remove published articles so they disappear from listings and show a not-found/error state on their detail page.
+**User-visible outcome:** Users no longer see “My Submissions” in the header; they can visit `/login` to log in/out with Internet Identity, and any attempt to visit `/my-submissions` will take them to the Login page.

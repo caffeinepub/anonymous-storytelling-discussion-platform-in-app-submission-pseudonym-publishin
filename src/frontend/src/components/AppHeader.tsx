@@ -1,17 +1,26 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { User } from 'lucide-react';
+import { useIsCallerAdmin } from '../hooks/useAdmin';
+import { ShieldCheck } from 'lucide-react';
 
 export default function AppHeader() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
+  const { data: isAdmin, isLoading: isCheckingAdmin } = useIsCallerAdmin();
+  
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+  const showAdminLink = isAuthenticated && isAdmin === true && !isCheckingAdmin;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <img 
+            src="/assets/generated/genuine-being-icon.dim_512x512.png" 
+            alt="Genuine-Being Real" 
+            className="h-10 w-10 object-contain"
+          />
           <span className="text-2xl font-serif font-bold text-foreground">
             Genuine-Being Real
           </span>
@@ -32,14 +41,14 @@ export default function AppHeader() {
           >
             Articles
           </Button>
-          {isAuthenticated && (
+          {showAdminLink && (
             <Button 
               variant="ghost" 
-              onClick={() => navigate({ to: '/my-submissions' })}
+              onClick={() => navigate({ to: '/admin' })}
               className="hover:text-primary hover:bg-primary/5 transition-colors"
             >
-              <User className="h-4 w-4 mr-2" />
-              My Submissions
+              <ShieldCheck className="h-4 w-4 mr-2" />
+              Admin
             </Button>
           )}
           <Button 

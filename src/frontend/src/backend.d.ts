@@ -63,9 +63,11 @@ export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     addReview(storyTitle: string, reviewerHandle: string, rating: number, comment: string | null): Promise<void>;
     adminCreateAndPublishArticle(title: string, authorPseudonym: string, story: string, isAnonymous: boolean, authorName: string | null, authorPrincipal: Principal | null): Promise<void>;
+    adminDeleteAllArticles(): Promise<void>;
     adminDeletePublishedArticle(title: string): Promise<void>;
     adminPublishStory(title: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    callerIsAdmin(): Promise<boolean>;
     checkBackendHeartbeat(): Promise<boolean>;
     getAllDiscussions(): Promise<Discussions>;
     getAllPendingStories(): Promise<Array<Story>>;
