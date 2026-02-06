@@ -1,8 +1,12 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { User } from 'lucide-react';
 
 export default function AppHeader() {
   const navigate = useNavigate();
+  const { identity } = useInternetIdentity();
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -21,6 +25,23 @@ export default function AppHeader() {
           >
             Home
           </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate({ to: '/articles' })}
+            className="hover:text-primary hover:bg-primary/5 transition-colors"
+          >
+            Articles
+          </Button>
+          {isAuthenticated && (
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate({ to: '/my-submissions' })}
+              className="hover:text-primary hover:bg-primary/5 transition-colors"
+            >
+              <User className="h-4 w-4 mr-2" />
+              My Submissions
+            </Button>
+          )}
           <Button 
             variant="ghost" 
             onClick={() => navigate({ to: '/about' })}

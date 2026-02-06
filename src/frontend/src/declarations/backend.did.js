@@ -44,8 +44,13 @@ export const Story = IDL.Record({
   'story' : IDL.Text,
   'timestamp' : Time,
   'authorPseudonym' : IDL.Text,
+  'authorPrincipal' : IDL.Opt(IDL.Principal),
 });
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const SubmissionStatus = IDL.Record({
+  'status' : IDL.Variant({ 'pending' : IDL.Null, 'published' : IDL.Null }),
+  'story' : Story,
+});
 export const SystemInfo = IDL.Record({ 'version' : IDL.Text });
 
 export const idlService = IDL.Service({
@@ -67,6 +72,7 @@ export const idlService = IDL.Service({
   'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getMySubmissions' : IDL.Func([], [IDL.Vec(SubmissionStatus)], ['query']),
   'getPublishedStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
   'getPublishedStory' : IDL.Func([IDL.Text], [Story], ['query']),
   'getStoryComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),
@@ -124,8 +130,13 @@ export const idlFactory = ({ IDL }) => {
     'story' : IDL.Text,
     'timestamp' : Time,
     'authorPseudonym' : IDL.Text,
+    'authorPrincipal' : IDL.Opt(IDL.Principal),
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const SubmissionStatus = IDL.Record({
+    'status' : IDL.Variant({ 'pending' : IDL.Null, 'published' : IDL.Null }),
+    'story' : Story,
+  });
   const SystemInfo = IDL.Record({ 'version' : IDL.Text });
   
   return IDL.Service({
@@ -147,6 +158,7 @@ export const idlFactory = ({ IDL }) => {
     'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getMySubmissions' : IDL.Func([], [IDL.Vec(SubmissionStatus)], ['query']),
     'getPublishedStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
     'getPublishedStory' : IDL.Func([IDL.Text], [Story], ['query']),
     'getStoryComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),

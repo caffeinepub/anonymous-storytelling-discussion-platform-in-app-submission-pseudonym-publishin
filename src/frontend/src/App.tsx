@@ -8,6 +8,9 @@ import AboutPage from './pages/AboutPage';
 import TroubleshootingPage from './pages/TroubleshootingPage';
 import DiscussionsPage from './pages/DiscussionsPage';
 import ContactPage from './pages/ContactPage';
+import ArticlesPage from './pages/ArticlesPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
+import MySubmissionsPage from './pages/MySubmissionsPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -72,6 +75,24 @@ const contactRoute = createRoute({
   component: ContactPage,
 });
 
+const articlesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/articles',
+  component: ArticlesPage,
+});
+
+const articleDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/article/$title',
+  component: ArticleDetailPage,
+});
+
+const mySubmissionsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/my-submissions',
+  component: MySubmissionsPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute, 
   storiesRoute, 
@@ -81,7 +102,10 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
   troubleshootingRoute,
   discussionsRoute,
-  contactRoute
+  contactRoute,
+  articlesRoute,
+  articleDetailRoute,
+  mySubmissionsRoute
 ]);
 
 const router = createRouter({ routeTree });

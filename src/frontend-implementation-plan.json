@@ -1,55 +1,86 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Contact page route and update navigation to display author details and social links",
+  "title": "Add public Articles section + authenticated My Submissions + clearer submission confirmation",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a dedicated `/contact` route and wire it into the existing TanStack router so it renders within AppLayout and is reachable via navigation.",
+      "summary": "Add an Articles section with a public list of published articles and an article detail page, reusing existing published story feed/detail data fetching.",
       "acceptanceCriteria": [
-        "Visiting `/contact` renders a Contact page within the existing AppLayout.",
-        "The Contact page can be reached via the app navigation without relying on a mailto link."
+        "The app has a clearly labeled \"Articles\" entry in the primary navigation.",
+        "The Articles page lists published items returned by the existing published-content API and shows an empty state when none exist.",
+        "Clicking an article opens a detail page that renders the full content.",
+        "Existing routes for current story pages continue to work (no broken links)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ContactPage.tsx",
-          "operation": "create",
-          "description": "Create a new ContactPage that uses existing layout patterns and existing shadcn/ui components (e.g., Card, CardContent, Button) to present contact information. Verify the component's usage instructions before implementing."
-        },
-        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register a new `/contact` route in the router tree and render the new ContactPage under the existing rootRoute (AppLayout), ensuring the page is navigable in-app."
+          "description": "Register new public routes for the Articles list and Article detail pages (in addition to the existing /stories and /story/$title routes) to ensure existing story routes continue to work."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Add a clearly labeled primary navigation entry for \"Articles\" that routes to the new Articles list page. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ArticlesPage.tsx",
+          "operation": "create",
+          "description": "Create an Articles list page that composes existing UI components and reuses the published stories query (useGetPublishedStories) to render a list, including an empty state when no published items exist. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ArticleDetailPage.tsx",
+          "operation": "create",
+          "description": "Create an Article detail page that loads a single published item via the existing detail query (useGetPublishedStory) and renders the full content, with navigation back to Articles. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Change the header 'Contact' action to navigate to `/contact` via the existing router navigation instead of using a `mailto:` link.",
+      "summary": "Add an authenticated \"My Submissions\" page that shows the logged-in user's submissions and their Pending/Published status, updating immediately after submission and when status changes.",
       "acceptanceCriteria": [
-        "Clicking 'Contact' in the header navigates to `/contact` using the existing router navigation (no `mailto:` link in the header Contact action)."
+        "Backend stores the submitter Principal for each new submission.",
+        "Backend exposes a query method that returns the caller’s submissions with a status field (Pending/Published).",
+        "Frontend provides a \"My Submissions\" page that requires login and shows a clear login prompt if the user is not authenticated.",
+        "After submitting an article while logged in, the new submission appears in \"My Submissions\" with status Pending without needing a page refresh.",
+        "When an admin publishes a submission, its status changes to Published in \"My Submissions\" and it becomes visible on the public Articles page."
       ],
       "file_operations": [
         {
+          "path": "frontend/src/hooks/useStories.ts",
+          "operation": "modify",
+          "description": "Add a React Query hook for fetching the caller's submissions (using the existing backend capability for my submissions) and update the submission mutation to invalidate/update the \"my submissions\" cache so newly submitted items appear without refresh and status changes are reflected. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/MySubmissionsPage.tsx",
+          "operation": "create",
+          "description": "Create a \"My Submissions\" page that requires Internet Identity login: show a clear login call-to-action if unauthenticated, otherwise list submissions with Pending/Published status and basic metadata, composing existing UI components. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the \"My Submissions\" page into the router with a dedicated route so it is navigable from the UI."
+        },
+        {
           "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Replace the current mailto-based Contact action with a router-based navigation action to `/contact` (keep styling consistent using existing Button component). Verify the component's usage instructions before implementing."
+          "description": "Add a navigation entry to reach \"My Submissions\" (e.g., conditionally shown when authenticated, or always shown with a login prompt on click) while keeping \"Articles\" in the primary navigation. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Implement Contact page content showing the author name, book title, and clickable Instagram/LinkedIn links with safe external-link attributes.",
+      "summary": "Improve the post-submit confirmation UI to clarify submissions are not public until published and provide a direct path to \"My Submissions\" or login.",
       "acceptanceCriteria": [
-        "The Contact page visibly shows the name \"Sana Khan\" and the book title exactly as: \"Shining Gaze - A search for the unknown\".",
-        "The Instagram and LinkedIn URLs are rendered as clickable links.",
-        "External social links open in a new tab/window and include appropriate `rel` attributes (e.g., `noopener noreferrer`)."
+        "The post-submit success message explicitly states that the article will not appear publicly until it is published.",
+        "The success screen includes a button/link to \"My Submissions\" when the user is logged in (and a login call-to-action if not logged in).",
+        "The wording is in English and matches the site’s tone (no placeholder text)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ContactPage.tsx",
+          "path": "frontend/src/pages/SubmitStoryPage.tsx",
           "operation": "modify",
-          "description": "Add visible page content for: Name \"Sana Khan\"; Book name \"Shining Gaze - A search for the unknown\"; and render Instagram/LinkedIn as clickable external links opening in a new tab with appropriate rel attributes. Use existing shadcn/ui components where helpful (e.g., Card) without editing `frontend/src/components/ui`. Verify the component's usage instructions before implementing."
+          "description": "Update the success/confirmation state messaging to explicitly state submissions are not publicly visible until published, and add a \"My Submissions\" link/button for logged-in users (or a login call-to-action when logged out). Ensure the new action routes to the My Submissions page. Verify the component's usage instructions before implementing."
         }
       ]
     }

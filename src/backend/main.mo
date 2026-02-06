@@ -7,10 +7,13 @@ import Order "mo:core/Order";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Migration "migration";
 
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
+// Apply migration logic to transform old persistent state to new format (with authorPrincipal field)
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -27,6 +30,7 @@ actor {
     timestamp : Time.Time;
     isAnonymous : Bool;
     authorName : ?Text;
+    authorPrincipal : ?Principal; // To track submitter for "My Submissions"
   };
 
   module Story {
@@ -107,7 +111,7 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // *** Story Submission (Anyone) ***
+  // *** Story Submission (Authenticated Users only) ***
   public shared ({ caller }) func submitStory(
     title : Text,
     authorPseudonym : Text,
@@ -115,6 +119,10 @@ actor {
     isAnonymous : Bool,
     authorName : ?Text,
   ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can submit stories");
+    };
+
     let newStory : Story = {
       title;
       authorPseudonym;
@@ -122,6 +130,7 @@ actor {
       timestamp = Time.now();
       isAnonymous;
       authorName;
+      authorPrincipal = ?caller;
     };
     stories.add(newStory);
   };
@@ -207,6 +216,7 @@ actor {
           timestamp = storyToPublish.timestamp;
           isAnonymous = storyToPublish.isAnonymous;
           authorName = storyToPublish.authorName;
+          authorPrincipal = storyToPublish.authorPrincipal;
         };
         publishedTitles.add(publishedStory.title, publishedStory);
       };
@@ -245,5 +255,54 @@ actor {
       comments = commentThreadsArr;
       reviews = reviewThreadsArr;
     };
+  };
+
+  // *** My Submissions Page ***
+  public type SubmissionStatus = {
+    story : Story;
+    status : { #published; #pending };
+  };
+
+  public query ({ caller }) func getMySubmissions() : async [SubmissionStatus] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view submissions");
+    };
+
+    let allStories = stories.toArray();
+    let pendingSubmissions = allStories.filter(
+      func(story) {
+        switch (story.authorPrincipal) {
+          case (?author) { author == caller };
+          case (null) { false };
+        };
+      }
+    ).map(
+        func(story) {
+          {
+            story;
+            status = #pending;
+          };
+        }
+      );
+
+    let allPublishedIter = publishedTitles.values();
+    let allPublished = allPublishedIter.toArray();
+    let publishedSubmissions = allPublished.filter(
+      func(story) {
+        switch (story.authorPrincipal) {
+          case (?author) { author == caller };
+          case (null) { false };
+        };
+      }
+    ).map(
+        func(story) {
+          {
+            story;
+            status = #published;
+          };
+        }
+      );
+
+    pendingSubmissions.concat(publishedSubmissions);
   };
 };

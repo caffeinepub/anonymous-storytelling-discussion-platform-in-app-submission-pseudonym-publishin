@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useSubmitStory } from '../hooks/useStories';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,10 +9,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, Loader2 } from 'lucide-react';
+import { CheckCircle2, Loader2, LogIn } from 'lucide-react';
 
 export default function SubmitStoryPage() {
   const navigate = useNavigate();
+  const { identity, login, isLoggingIn } = useInternetIdentity();
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+  
   const [title, setTitle] = useState('');
   const [story, setStory] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -45,6 +49,34 @@ export default function SubmitStoryPage() {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-dashed">
+            <CardContent className="pt-12 pb-12 text-center space-y-6">
+              <LogIn className="h-16 w-16 text-muted-foreground mx-auto opacity-50" />
+              <div className="space-y-2">
+                <h2 className="font-serif text-2xl font-bold">Login Required</h2>
+                <p className="text-muted-foreground">
+                  Please log in to submit your story
+                </p>
+              </div>
+              <Button 
+                onClick={login}
+                disabled={isLoggingIn}
+                size="lg"
+              >
+                {isLoggingIn && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoggingIn ? 'Logging in...' : 'Login to Submit'}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="container mx-auto px-4 py-12">
@@ -55,12 +87,12 @@ export default function SubmitStoryPage() {
               <div className="space-y-2">
                 <h2 className="font-serif text-2xl font-bold">Story Submitted!</h2>
                 <p className="text-muted-foreground">
-                  Thank you for sharing your story. It will be reviewed and published soon.
+                  Thank you for sharing your story. It will be reviewed and is not publicly visible until published.
                 </p>
               </div>
               <div className="flex gap-3 justify-center pt-4">
-                <Button onClick={() => navigate({ to: '/stories' })}>
-                  View Stories
+                <Button onClick={() => navigate({ to: '/my-submissions' })}>
+                  View My Submissions
                 </Button>
                 <Button 
                   variant="outline" 

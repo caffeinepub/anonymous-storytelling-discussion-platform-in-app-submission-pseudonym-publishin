@@ -11,21 +11,20 @@ export interface CommentThread {
     storyTitle: string;
     comments: Array<Comment>;
 }
+export type Time = bigint;
 export interface Rating {
     reviewerHandle: string;
     comment?: string;
     timestamp: Time;
     rating: number;
 }
-export type Time = bigint;
 export interface ReviewThread {
     reviews: Array<Rating>;
     storyTitle: string;
 }
-export interface Comment {
-    comment: string;
-    timestamp: Time;
-    commenterHandle: string;
+export interface SubmissionStatus {
+    status: Variant_pending_published;
+    story: Story;
 }
 export interface Story {
     title: string;
@@ -34,6 +33,12 @@ export interface Story {
     story: string;
     timestamp: Time;
     authorPseudonym: string;
+    authorPrincipal?: Principal;
+}
+export interface Comment {
+    comment: string;
+    timestamp: Time;
+    commenterHandle: string;
 }
 export interface SystemInfo {
     version: string;
@@ -50,6 +55,10 @@ export enum UserRole {
     user = "user",
     guest = "guest"
 }
+export enum Variant_pending_published {
+    pending = "pending",
+    published = "published"
+}
 export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     addReview(storyTitle: string, reviewerHandle: string, rating: number, comment: string | null): Promise<void>;
@@ -60,6 +69,7 @@ export interface backendInterface {
     getAllStories(): Promise<Array<Story>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getMySubmissions(): Promise<Array<SubmissionStatus>>;
     getPublishedStories(): Promise<Array<Story>>;
     getPublishedStory(title: string): Promise<Story>;
     getStoryComments(storyTitle: string): Promise<Array<Comment>>;

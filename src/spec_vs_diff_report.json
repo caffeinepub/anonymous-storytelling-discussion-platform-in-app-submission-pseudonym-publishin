@@ -1,31 +1,63 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T00:21:13.480Z",
-  "summary": "Diff adds a new Contact page component, registers a `/contact` route under the existing AppLayout via TanStack Router, and updates the header Contact navigation to route to `/contact`. The Contact page displays the requested author name, book title, and Instagram/LinkedIn links with `target=\"_blank\"` and `rel=\"noopener noreferrer\"`.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-06T01:11:38.666Z",
+  "summary": "Implemented new public Articles list/detail routes and navigation, added My Submissions page and frontend hooks, and updated backend Story model to store submitter Principal (with a migration). However, backend support for returning caller submissions with Pending/Published status is not evidenced in the diff summary.",
+  "missing_requirements": [
     {
-      "description": "Contact page includes an Email section with a `mailto:` button/link (authorsanakhan@gmail.com), which was not requested as part of the Contact page requirements.",
-      "reason": "BuildRequest only requires name, book title, Instagram and LinkedIn links on the Contact page; it does not request adding an email contact section.",
+      "id": "REQ-2",
+      "requirement": "Backend exposes a query method that returns the caller’s submissions with a status field (Pending/Published).",
+      "reason": "Frontend calls `actor.getMySubmissions()` and expects `SubmissionStatus[]`, but the diff summary for `backend/main.mo` does not show any `getMySubmissions` (or equivalent) query method nor any status computation (Pending vs Published).",
       "evidence": [
-        "frontend/src/pages/ContactPage.tsx"
-      ]
-    },
-    {
-      "description": "Additional UI/UX content on Contact page such as \"Get in Touch\" header text, \"Latest Book\" label, \"Connect on Social Media\" section label, and a closing paragraph.",
-      "reason": "Not specified in the BuildRequest requirements/acceptance criteria; these are extra presentational additions.",
-      "evidence": [
-        "frontend/src/pages/ContactPage.tsx"
+        "frontend/src/hooks/useStories.ts",
+        "frontend/src/pages/MySubmissionsPage.tsx",
+        "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.92,
+  "hallucinated_features": [
+    {
+      "description": "Added backend state migration module to retrofit `authorPrincipal` into existing persisted stories/published titles.",
+      "reason": "Migration work was not requested by any REQ; it may be useful, but it is additional scope beyond the stated requirements.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Global UI/theme changes (pastel blue OKLCH tokens, dark-blue mode, tailwind config updates).",
+      "reason": "No requirement requested design system/theme rework; requirements focused on Articles/My Submissions flow and confirmation UI.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Enhanced error handling/diagnostics on the published stories feed (retry progress indicators, troubleshooting links, diagnostics panel).",
+      "reason": "Not requested by REQ-1/REQ-2/REQ-3; extra UX/diagnostic functionality.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Added comments section to the new Article detail page (composer + thread).",
+      "reason": "REQ-1 only asked to reuse existing published story feed/detail functionality to view full content; explicitly adding a comments UI to the new Articles detail page is additional behavior not stated in the request.",
+      "evidence": [
+        "frontend/src/pages/ArticleDetailPage.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.62,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
     "frontend/src/components/AppHeader.tsx",
-    "frontend/src/pages/ContactPage.tsx",
+    "frontend/src/hooks/useStories.ts",
+    "frontend/src/pages/ArticleDetailPage.tsx",
+    "frontend/src/pages/ArticlesPage.tsx",
+    "frontend/src/pages/MySubmissionsPage.tsx",
+    "frontend/src/pages/SubmitStoryPage.tsx",
     "project_state.json"
   ]
 }

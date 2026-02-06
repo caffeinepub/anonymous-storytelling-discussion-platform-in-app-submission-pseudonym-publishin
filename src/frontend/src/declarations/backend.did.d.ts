@@ -40,6 +40,12 @@ export interface Story {
   'story' : string,
   'timestamp' : Time,
   'authorPseudonym' : string,
+  'authorPrincipal' : [] | [Principal],
+}
+export interface SubmissionStatus {
+  'status' : { 'pending' : null } |
+    { 'published' : null },
+  'story' : Story,
 }
 export interface SystemInfo { 'version' : string }
 export type Time = bigint;
@@ -61,6 +67,7 @@ export interface _SERVICE {
   'getAllStories' : ActorMethod<[], Array<Story>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getMySubmissions' : ActorMethod<[], Array<SubmissionStatus>>,
   'getPublishedStories' : ActorMethod<[], Array<Story>>,
   'getPublishedStory' : ActorMethod<[string], Story>,
   'getStoryComments' : ActorMethod<[string], Array<Comment>>,

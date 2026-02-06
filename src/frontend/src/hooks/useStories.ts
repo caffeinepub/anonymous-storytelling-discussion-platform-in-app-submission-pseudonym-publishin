@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Story, Comment } from '../backend';
+import type { Story, Comment, SubmissionStatus } from '../backend';
 
 /**
  * Exponential backoff with cap for retry delays
@@ -70,6 +70,25 @@ export function useGetComments(storyTitle: string) {
   });
 }
 
+export function useGetMySubmissions() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SubmissionStatus[]>({
+    queryKey: ['mySubmissions'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      try {
+        return await actor.getMySubmissions();
+      } catch (error) {
+        console.error('Error fetching my submissions:', error);
+        throw error;
+      }
+    },
+    enabled: !!actor && !isFetching,
+    retry: 2,
+  });
+}
+
 export function useSubmitStory() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -92,7 +111,9 @@ export function useSubmitStory() {
       );
     },
     onSuccess: () => {
+      // Invalidate both published stories and my submissions
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+      queryClient.invalidateQueries({ queryKey: ['mySubmissions'] });
     },
   });
 }

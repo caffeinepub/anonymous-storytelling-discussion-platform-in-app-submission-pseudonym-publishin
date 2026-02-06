@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T00:21:13.482Z",
+  "generatedAt": "2026-02-06T01:11:38.669Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -12,49 +12,69 @@
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Create a dedicated Contact page route (e.g., `/contact`) and update the app router so it is accessible via navigation.",
+        "summary": "Add an Articles/Blog section in the frontend so visitors can browse published articles and open a full article detail page, using the existing published story feed and detail functionality.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ContactPage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppHeader.tsx",
+          "frontend/src/pages/ArticlesPage.tsx",
+          "frontend/src/pages/ArticleDetailPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ContactPage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppHeader.tsx",
+          "frontend/src/pages/ArticlesPage.tsx",
+          "frontend/src/pages/ArticleDetailPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update the top navigation 'Contact' action so it navigates to the new Contact page route (instead of using a `mailto:` link).",
+        "summary": "Implement a \"My Submissions\" page for authenticated users to see articles they have submitted and whether each is Pending (not yet published) or Published, so submitters can verify their content was received even before moderation/publishing.",
         "status": "implemented",
         "plannedFiles": [
+          "frontend/src/hooks/useStories.ts",
+          "frontend/src/pages/MySubmissionsPage.tsx",
+          "frontend/src/App.tsx",
           "frontend/src/components/AppHeader.tsx"
         ],
         "matchedFiles": [
+          "frontend/src/hooks/useStories.ts",
+          "frontend/src/pages/MySubmissionsPage.tsx",
+          "frontend/src/App.tsx",
           "frontend/src/components/AppHeader.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "On the Contact page, display the following author details as visible page content: Name: \"Sana Khan\"; Book name: \"Shining Gaze - A search for the unknown\"; Instagram link: https://www.instagram.com/shining_starsana/; LinkedIn link: https://www.linkedin.com/in/sana-khan-919353159/.",
+        "summary": "Update the submission confirmation UI to clearly explain that submitted articles are not publicly visible until published, and provide a direct link to \"My Submissions\" (for logged-in users) so the user can immediately confirm the submission is recorded.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ContactPage.tsx"
+          "frontend/src/pages/SubmitStoryPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ContactPage.tsx"
+          "frontend/src/pages/SubmitStoryPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
     "frontend/src/components/AppHeader.tsx",
-    "frontend/src/pages/ContactPage.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useStories.ts",
+    "frontend/src/pages/ArticleDetailPage.tsx",
+    "frontend/src/pages/ArticlesPage.tsx",
+    "frontend/src/pages/MySubmissionsPage.tsx",
+    "frontend/src/pages/SubmitStoryPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

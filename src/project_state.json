@@ -1,32 +1,34 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "Website project: add an Articles/Blog publishing section so posts can be published and viewed; user also wants email notifications when someone posts an article (may be blocked by plan limitations).",
+  "architectural_notes": [
+    "Email notification capability may depend on plan/upgrade; treat as blocked until email features are available."
+  ],
   "known_issues": [
-    "Clicking on Contact does not show the user's details (name, book title, Instagram, LinkedIn)."
+    "Currently no article-publishing feature exists, so shared/published articles do not appear on the site."
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-create-a-dedicated-contact-page-route-e-g-contact-and-update-the-app-router-so-it-is-accessible-via-navigation",
-      "title": "Create a dedicated Contact page route (e.g., `/contact`) and update the app router so it is accessible via navigation.",
+      "id": "feature-add-an-articles-blog-section-in-the-frontend-so-visitors-can-browse-published-articles-and-open-a-full-article-detail-page-using-the-existing-published-story-feed-and-detail-functionality",
+      "title": "Add an Articles/Blog section in the frontend so visitors can browse published articles and open a full article detail page, using the existing published story feed and detail functionality.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-top-navigation-contact-action-so-it-navigates-to-the-new-contact-page-route-instead-of-using-a-mailto-link",
-      "title": "Update the top navigation 'Contact' action so it navigates to the new Contact page route (instead of using a `mailto:` link).",
+      "id": "feature-implement-a-my-submissions-page-for-authenticated-users-to-see-articles-they-have-submitted-and-whether-each-is-pending-not-yet-published-or-published-so-submitters-can-verify-their-content-was-received-even-before-moderation-publishing",
+      "title": "Implement a \"My Submissions\" page for authenticated users to see articles they have submitted and whether each is Pending (not yet published) or Published, so submitters can verify their content was received even before moderation/publishing.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-on-the-contact-page-display-the-following-author-details-as-visible-page-content-name-sana-khan-book-name-shining-gaze-a-search-for-the-unknown-instagram-link-https-www-instagram-com-shining-starsana-linkedin-link-https-www-linkedin-com-in-sana-khan-919353159",
-      "title": "On the Contact page, display the following author details as visible page content: Name: \"Sana Khan\"; Book name: \"Shining Gaze - A search for the unknown\"; Instagram link: https://www.instagram.com/shining_starsana/; LinkedIn link: https://www.linkedin.com/in/sana-khan-919353159/.",
+      "id": "feature-update-the-submission-confirmation-ui-to-clearly-explain-that-submitted-articles-are-not-publicly-visible-until-published-and-provide-a-direct-link-to-my-submissions-for-logged-in-users-so-the-user-can-immediately-confirm-the-submission-is-recorded",
+      "title": "Update the submission confirmation UI to clearly explain that submitted articles are not publicly visible until published, and provide a direct link to \"My Submissions\" (for logged-in users) so the user can immediately confirm the submission is recorded.",
       "reqIds": [
         "REQ-3"
       ],
@@ -36,12 +38,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fix Contact page so it displays the user's details (name, book title 'Shining Gaze - A search for the unknown', Instagram and LinkedIn links).",
+      "summary": "Add an Articles/Blog section with article publishing so shared posts are visible on the site",
       "reqIds": [],
-      "status": "pending"
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Send email notifications to authorsanakhan@gmail.com when someone posts an article",
+      "reqIds": [],
+      "status": "blocked"
     }
   ],
-  "projectName": "Add a Contact page and fix Contact navigation to show author details and social links",
+  "projectName": "Add Articles/Blog publishing flow so submitted posts can be published and visible",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
