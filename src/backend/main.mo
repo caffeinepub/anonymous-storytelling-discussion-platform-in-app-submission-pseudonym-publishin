@@ -7,13 +7,11 @@ import Order "mo:core/Order";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
-import Migration "migration";
+
 
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
-// Apply migration logic to transform old persistent state to new format (with authorPrincipal field)
-(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -133,6 +131,31 @@ actor {
       authorPrincipal = ?caller;
     };
     stories.add(newStory);
+  };
+
+  // *** New Function: Create and Publish Article ***
+  public shared ({ caller }) func adminCreateAndPublishArticle(
+    title : Text,
+    authorPseudonym : Text,
+    story : Text,
+    isAnonymous : Bool,
+    authorName : ?Text,
+    authorPrincipal : ?Principal,
+  ) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can publish stories");
+    };
+
+    let article : Story = {
+      title;
+      authorPseudonym;
+      story;
+      timestamp = Time.now();
+      isAnonymous;
+      authorName;
+      authorPrincipal;
+    };
+    publishedTitles.add(title, article);
   };
 
   // *** Commenting ***

@@ -61,6 +61,18 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'adminCreateAndPublishArticle' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Bool,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Principal),
+      ],
+      [],
+      [],
+    ),
   'adminRewordAndPublishStory' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text],
       [],
@@ -144,6 +156,18 @@ export const idlFactory = ({ IDL }) => {
     'addComment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'addReview' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Nat8, IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
+    'adminCreateAndPublishArticle' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Bool,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Principal),
+        ],
         [],
         [],
       ),

@@ -1,63 +1,59 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T01:11:38.666Z",
-  "summary": "Implemented new public Articles list/detail routes and navigation, added My Submissions page and frontend hooks, and updated backend Story model to store submitter Principal (with a migration). However, backend support for returning caller submissions with Pending/Published status is not evidenced in the diff summary.",
+  "generatedAt": "2026-02-06T01:17:54.132Z",
+  "summary": "Diff adds an admin create-and-publish flow: a new backend method stub `adminCreateAndPublishArticle`, new React Query mutation `useCreateAndPublishArticle`, Admin moderation page state/handler for creating an article, and an updated Articles empty-state message mentioning publication. However, backend implementation details are truncated, so key REQ-1 acceptance criteria (publishing visibility, validation, and full admin restriction behavior) cannot be confirmed from the provided diff summary.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Backend exposes a query method that returns the caller’s submissions with a status field (Pending/Published).",
-      "reason": "Frontend calls `actor.getMySubmissions()` and expects `SubmissionStatus[]`, but the diff summary for `backend/main.mo` does not show any `getMySubmissions` (or equivalent) query method nor any status computation (Pending vs Published).",
+      "id": "REQ-1",
+      "requirement": "Backend admin-only method must publish so the new article is returned by `getPublishedStories()` and accessible via `getPublishedStory(title)`.",
+      "reason": "The diff shows the new method signature and the start of an admin permission check, but the implementation is truncated before showing it actually writes into the published-story storage used by `getPublishedStories()` / `getPublishedStory(title)`.",
       "evidence": [
-        "frontend/src/hooks/useStories.ts",
-        "frontend/src/pages/MySubmissionsPage.tsx",
-        "backend/main.mo"
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "Backend method must prevent bad states (error/trap on empty title or duplicate existing published title).",
+      "reason": "Validation logic is not visible because the new function body is truncated right after the authorization check begins.",
+      "evidence": [
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "Backend admin-only method must be restricted to admin callers (same checks as existing admin endpoints).",
+      "reason": "The method begins an admin permission check, but due to truncation (it cuts off at `Run...`), it cannot be confirmed that the final implementation correctly enforces admin-only access and returns/handles unauthorized calls consistently.",
+      "evidence": [
+        "backend/main.mo (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added backend state migration module to retrofit `authorPrincipal` into existing persisted stories/published titles.",
-      "reason": "Migration work was not requested by any REQ; it may be useful, but it is additional scope beyond the stated requirements.",
+      "description": "Added an `authorPrincipal` parameter to the new admin create-and-publish method and corresponding frontend mutation payload.",
+      "reason": "REQ-1 minimum required fields were: title, authorPseudonym, story/body, isAnonymous, authorName. `authorPrincipal` was not requested as part of the admin create/publish API.",
       "evidence": [
-        "backend/migration.mo",
-        "backend/main.mo"
+        "backend/main.mo (truncated)",
+        "frontend/src/hooks/useAdmin.ts",
+        "frontend/src/pages/AdminModerationPage.tsx (truncated)"
       ]
     },
     {
-      "description": "Global UI/theme changes (pastel blue OKLCH tokens, dark-blue mode, tailwind config updates).",
-      "reason": "No requirement requested design system/theme rework; requirements focused on Articles/My Submissions flow and confirmation UI.",
+      "description": "Backend `systemInfo` version set to `0.2.0`.",
+      "reason": "No requirement requested a version bump/change in `systemInfo`.",
       "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Enhanced error handling/diagnostics on the published stories feed (retry progress indicators, troubleshooting links, diagnostics panel).",
-      "reason": "Not requested by REQ-1/REQ-2/REQ-3; extra UX/diagnostic functionality.",
-      "evidence": [
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Added comments section to the new Article detail page (composer + thread).",
-      "reason": "REQ-1 only asked to reuse existing published story feed/detail functionality to view full content; explicitly adding a comments UI to the new Articles detail page is additional behavior not stated in the request.",
-      "evidence": [
-        "frontend/src/pages/ArticleDetailPage.tsx"
+        "backend/main.mo (truncated)"
       ]
     }
   ],
   "confidence": 0.62,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/AppHeader.tsx",
-    "frontend/src/hooks/useStories.ts",
-    "frontend/src/pages/ArticleDetailPage.tsx",
+    "frontend/src/hooks/useAdmin.ts",
+    "frontend/src/pages/AdminModerationPage.tsx",
     "frontend/src/pages/ArticlesPage.tsx",
-    "frontend/src/pages/MySubmissionsPage.tsx",
-    "frontend/src/pages/SubmitStoryPage.tsx",
     "project_state.json"
   ]
 }

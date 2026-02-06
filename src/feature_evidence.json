@@ -2,35 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-an-articles-blog-section-in-the-frontend-so-visitors-can-browse-published-articles-and-open-a-full-article-detail-page-using-the-existing-published-story-feed-and-detail-functionality",
-      "featureTitle": "Add an Articles/Blog section in the frontend so visitors can browse published articles and open a full article detail page, using the existing published story feed and detail functionality.",
+      "featureId": "feature-update-the-admin-moderation-ui-to-include-a-create-publish-article-form-that-calls-the-new-backend-method-enabling-an-admin-to-add-the-first-published-article-from-the-frontend",
+      "featureTitle": "Update the Admin moderation UI to include a \"Create & Publish Article\" form that calls the new backend method, enabling an admin to add the first published article from the frontend.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/ArticleDetailPage.tsx",
-        "frontend/src/pages/ArticlesPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-a-my-submissions-page-for-authenticated-users-to-see-articles-they-have-submitted-and-whether-each-is-pending-not-yet-published-or-published-so-submitters-can-verify-their-content-was-received-even-before-moderation-publishing",
-      "featureTitle": "Implement a \"My Submissions\" page for authenticated users to see articles they have submitted and whether each is Pending (not yet published) or Published, so submitters can verify their content was received even before moderation/publishing.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/hooks/useStories.ts",
-        "frontend/src/pages/MySubmissionsPage.tsx"
+        "frontend/src/hooks/useAdmin.ts",
+        "frontend/src/pages/AdminModerationPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -46,10 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-submission-confirmation-ui-to-clearly-explain-that-submitted-articles-are-not-publicly-visible-until-published-and-provide-a-direct-link-to-my-submissions-for-logged-in-users-so-the-user-can-immediately-confirm-the-submission-is-recorded",
-      "featureTitle": "Update the submission confirmation UI to clearly explain that submitted articles are not publicly visible until published, and provide a direct link to \"My Submissions\" (for logged-in users) so the user can immediately confirm the submission is recorded.",
+      "featureId": "feature-ensure-the-articles-page-empty-state-guidance-reflects-the-presence-of-the-admin-publishing-flow-by-clarifying-that-articles-appear-after-being-published-english-text-only",
+      "featureTitle": "Ensure the Articles page empty-state guidance reflects the presence of the admin publishing flow by clarifying that articles appear after being published (English text only).",
       "files": [
-        "frontend/src/pages/SubmitStoryPage.tsx"
+        "frontend/src/pages/ArticlesPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",

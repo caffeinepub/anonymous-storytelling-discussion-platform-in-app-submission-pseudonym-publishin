@@ -1,75 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Add Articles/Blog publishing flow so submitted posts can be published and visible",
+  "title": "Add admin flow to publish the first article so Articles page shows content",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add an Articles/Blog section in the frontend so visitors can browse published articles and open a full article detail page, using the existing published story feed and detail functionality.",
-      "target": "frontend",
+      "text": "Add a new backend admin-only method that allows creating and publishing an article directly (without requiring a prior user submission), so the site can have its first published article and it will appear in the Articles list.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "recent-9",
-          "recent-11"
+          "msg-1"
         ],
         "quotes": [
-          "Issue is I am unable to publish I have shared article but cannot see ...",
           "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "The app has a clearly labeled \"Articles\" entry in the primary navigation.",
-        "The Articles page lists published items returned by the existing published-content API and shows an empty state when none exist.",
-        "Clicking an article opens a detail page that renders the full content.",
-        "Existing routes for current story pages continue to work (no broken links)."
+        "A new shared backend function exists that is restricted to admin callers (same permission checks as existing admin endpoints).",
+        "The method accepts the article fields needed by the existing `Story` type (at minimum: title, authorPseudonym, story/body, isAnonymous, authorName).",
+        "Calling the method results in the article being returned by `getPublishedStories()` and accessible via `getPublishedStory(title)`.",
+        "The method prevents obvious bad states (e.g., traps or returns an error when title is empty or duplicates an existing published title)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement a \"My Submissions\" page for authenticated users to see articles they have submitted and whether each is Pending (not yet published) or Published, so submitters can verify their content was received even before moderation/publishing.",
-      "target": "both",
+      "text": "Update the Admin moderation UI to include a \"Create & Publish Article\" form that calls the new backend method, enabling an admin to add the first published article from the frontend.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-9"
+          "msg-1"
         ],
         "quotes": [
-          "Issue is I am unable to publish I have shared article but cannot see ..."
+          "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores the submitter Principal for each new submission.",
-        "Backend exposes a query method that returns the caller’s submissions with a status field (Pending/Published).",
-        "Frontend provides a \"My Submissions\" page that requires login and shows a clear login prompt if the user is not authenticated.",
-        "After submitting an article while logged in, the new submission appears in \"My Submissions\" with status Pending without needing a page refresh.",
-        "When an admin publishes a submission, its status changes to Published in \"My Submissions\" and it becomes visible on the public Articles page."
+        "AdminModerationPage provides a clearly labeled section to create a new article with inputs for title, author pseudonym, story/body, and anonymity/author name as applicable.",
+        "Submitting the form calls the new backend admin publish method and shows a success state.",
+        "After success, the UI invalidates/refetches published-articles queries so the new article appears on `/articles` without requiring a hard refresh.",
+        "Non-admin users cannot access the creation form (they should see the existing access denied behavior)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update the submission confirmation UI to clearly explain that submitted articles are not publicly visible until published, and provide a direct link to \"My Submissions\" (for logged-in users) so the user can immediately confirm the submission is recorded.",
+      "text": "Ensure the Articles page empty-state guidance reflects the presence of the admin publishing flow by clarifying that articles appear after being published (English text only).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-9"
+          "msg-1"
         ],
         "quotes": [
-          "Issue is I am unable to publish I have shared article but cannot see ..."
+          "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "The post-submit success message explicitly states that the article will not appear publicly until it is published.",
-        "The success screen includes a button/link to \"My Submissions\" when the user is logged in (and a login call-to-action if not logged in).",
-        "The wording is in English and matches the site’s tone (no placeholder text)."
+        "When there are no published stories, the empty state message mentions that articles will appear after being published (in English).",
+        "The existing \"Share Your Story\" call-to-action remains available for regular users to submit stories."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo.",
-    "Do not edit files under frontend/src/components/ui or any other frontend immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead."
+    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional backend services).",
+    "Do not modify files under `frontend/src/components/ui` or other immutable frontend paths listed in SYSTEM_CONTEXT.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Do not implement email notifications to authorsanakhan@gmail.com or any outbound email feature (not supported in this environment).",
-    "Do not add third-party auth providers; only Internet Identity is allowed."
+    "Implementing email notifications for new articles (project state indicates this is blocked).",
+    "Adding third-party authentication beyond Internet Identity.",
+    "Adding external databases or any off-chain storage."
   ],
   "imageRequirements": {
     "required": [],

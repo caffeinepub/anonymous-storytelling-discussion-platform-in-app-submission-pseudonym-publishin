@@ -62,6 +62,7 @@ export enum Variant_pending_published {
 export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
     addReview(storyTitle: string, reviewerHandle: string, rating: number, comment: string | null): Promise<void>;
+    adminCreateAndPublishArticle(title: string, authorPseudonym: string, story: string, isAnonymous: boolean, authorName: string | null, authorPrincipal: Principal | null): Promise<void>;
     adminRewordAndPublishStory(title: string, rewordedStory: string, rewordedPseudonym: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkBackendHeartbeat(): Promise<boolean>;

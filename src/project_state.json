@@ -1,34 +1,22 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Website project: add an Articles/Blog publishing section so posts can be published and viewed; user also wants email notifications when someone posts an article (may be blocked by plan limitations).",
-  "architectural_notes": [
-    "Email notification capability may depend on plan/upgrade; treat as blocked until email features are available."
-  ],
-  "known_issues": [
-    "Currently no article-publishing feature exists, so shared/published articles do not appear on the site."
-  ],
-  "isFixRequest": true,
+  "summary": "Website project now includes an Articles section; next step is adding/publishing the first article so content appears.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-an-articles-blog-section-in-the-frontend-so-visitors-can-browse-published-articles-and-open-a-full-article-detail-page-using-the-existing-published-story-feed-and-detail-functionality",
-      "title": "Add an Articles/Blog section in the frontend so visitors can browse published articles and open a full article detail page, using the existing published story feed and detail functionality.",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-a-my-submissions-page-for-authenticated-users-to-see-articles-they-have-submitted-and-whether-each-is-pending-not-yet-published-or-published-so-submitters-can-verify-their-content-was-received-even-before-moderation-publishing",
-      "title": "Implement a \"My Submissions\" page for authenticated users to see articles they have submitted and whether each is Pending (not yet published) or Published, so submitters can verify their content was received even before moderation/publishing.",
+      "id": "feature-update-the-admin-moderation-ui-to-include-a-create-publish-article-form-that-calls-the-new-backend-method-enabling-an-admin-to-add-the-first-published-article-from-the-frontend",
+      "title": "Update the Admin moderation UI to include a \"Create & Publish Article\" form that calls the new backend method, enabling an admin to add the first published article from the frontend.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-submission-confirmation-ui-to-clearly-explain-that-submitted-articles-are-not-publicly-visible-until-published-and-provide-a-direct-link-to-my-submissions-for-logged-in-users-so-the-user-can-immediately-confirm-the-submission-is-recorded",
-      "title": "Update the submission confirmation UI to clearly explain that submitted articles are not publicly visible until published, and provide a direct link to \"My Submissions\" (for logged-in users) so the user can immediately confirm the submission is recorded.",
+      "id": "feature-ensure-the-articles-page-empty-state-guidance-reflects-the-presence-of-the-admin-publishing-flow-by-clarifying-that-articles-appear-after-being-published-english-text-only",
+      "title": "Ensure the Articles page empty-state guidance reflects the presence of the admin publishing flow by clarifying that articles appear after being published (English text only).",
       "reqIds": [
         "REQ-3"
       ],
@@ -38,18 +26,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add an Articles/Blog section with article publishing so shared posts are visible on the site",
+      "summary": "Add/publish initial article content in the Articles section (create first post so content is visible).",
       "reqIds": [],
       "status": "in_progress"
     },
     {
       "id": "AR-2",
-      "summary": "Send email notifications to authorsanakhan@gmail.com when someone posts an article",
-      "reqIds": [],
-      "status": "blocked"
+      "summary": "Add a new backend admin-only method that allows creating and publishing an article directly (without requiring a prior user submission), so the site can have its first published article and it will appear in the Articles list.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
     }
   ],
-  "projectName": "Add Articles/Blog publishing flow so submitted posts can be published and visible",
+  "projectName": "Add admin flow to publish the first article so Articles page shows content",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

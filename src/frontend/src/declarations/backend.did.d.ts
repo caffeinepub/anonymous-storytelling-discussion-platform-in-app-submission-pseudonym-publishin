@@ -57,6 +57,10 @@ export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addComment' : ActorMethod<[string, string, string], undefined>,
   'addReview' : ActorMethod<[string, string, number, [] | [string]], undefined>,
+  'adminCreateAndPublishArticle' : ActorMethod<
+    [string, string, string, boolean, [] | [string], [] | [Principal]],
+    undefined
+  >,
   'adminRewordAndPublishStory' : ActorMethod<
     [string, string, string],
     undefined

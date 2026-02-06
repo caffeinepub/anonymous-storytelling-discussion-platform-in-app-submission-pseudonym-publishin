@@ -76,7 +76,7 @@ export default function ArticlesPage() {
               <div className="space-y-2">
                 <h3 className="font-serif text-xl font-semibold">No Articles Yet</h3>
                 <p className="text-muted-foreground">
-                  Published articles will appear here. Check back soon!
+                  Articles will appear here after being published by our team. Check back soon!
                 </p>
               </div>
               <Button onClick={() => navigate({ to: '/submit' })}>
