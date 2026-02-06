@@ -46,9 +46,18 @@ export default function ArticleDetailPage() {
           </Button>
           <Alert variant="destructive">
             <AlertDescription>
-              {error instanceof Error ? error.message : 'Article not found.'}
+              {error instanceof Error && error.message.includes('not found') 
+                ? 'This article is no longer available. It may have been removed.' 
+                : error instanceof Error 
+                ? error.message 
+                : 'Article not found.'}
             </AlertDescription>
           </Alert>
+          <div className="text-center">
+            <Button onClick={() => navigate({ to: '/articles' })}>
+              Browse Other Articles
+            </Button>
+          </div>
         </div>
       </div>
     );

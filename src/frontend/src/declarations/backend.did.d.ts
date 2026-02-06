@@ -61,14 +61,13 @@ export interface _SERVICE {
     [string, string, string, boolean, [] | [string], [] | [Principal]],
     undefined
   >,
-  'adminRewordAndPublishStory' : ActorMethod<
-    [string, string, string],
-    undefined
-  >,
+  'adminDeletePublishedArticle' : ActorMethod<[string], undefined>,
+  'adminPublishStory' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'checkBackendHeartbeat' : ActorMethod<[], boolean>,
   'getAllDiscussions' : ActorMethod<[], Discussions>,
-  'getAllStories' : ActorMethod<[], Array<Story>>,
+  'getAllPendingStories' : ActorMethod<[], Array<Story>>,
+  'getAllStoriesWithStatus' : ActorMethod<[], Array<SubmissionStatus>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getMySubmissions' : ActorMethod<[], Array<SubmissionStatus>>,

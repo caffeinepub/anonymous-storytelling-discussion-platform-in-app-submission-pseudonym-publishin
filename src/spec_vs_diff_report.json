@@ -1,59 +1,82 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T01:17:54.132Z",
-  "summary": "Diff adds an admin create-and-publish flow: a new backend method stub `adminCreateAndPublishArticle`, new React Query mutation `useCreateAndPublishArticle`, Admin moderation page state/handler for creating an article, and an updated Articles empty-state message mentioning publication. However, backend implementation details are truncated, so key REQ-1 acceptance criteria (publishing visibility, validation, and full admin restriction behavior) cannot be confirmed from the provided diff summary.",
+  "generatedAt": "2026-02-06T19:14:04.530Z",
+  "summary": "Diff introduces a pending-stories storage path, an admin moderation UI (pending + published tabs), and frontend hooks for admin publish/delete operations, plus migration support. However, key backend behaviors required by REQ-1/REQ-2/REQ-3 are not fully evidenced in the truncated backend diff, and several unrelated UI/theme/content changes were added that were not requested.",
   "missing_requirements": [
     {
       "id": "REQ-1",
-      "requirement": "Backend admin-only method must publish so the new article is returned by `getPublishedStories()` and accessible via `getPublishedStory(title)`.",
-      "reason": "The diff shows the new method signature and the start of an admin permission check, but the implementation is truncated before showing it actually writes into the published-story storage used by `getPublishedStories()` / `getPublishedStory(title)`.",
+      "requirement": "Pending submissions must not appear in any public listing (feed/articles) until an admin publishes them.",
+      "reason": "The diff shows new pending storage (`pendingStories`) and `submitStory` writing to it, but does not show (in the provided/truncated backend diff) the public endpoints used by Feed/Articles filtering out pending stories or otherwise ensuring only published stories are returned.",
       "evidence": [
         "backend/main.mo (truncated)"
       ]
     },
     {
-      "id": "REQ-1",
-      "requirement": "Backend method must prevent bad states (error/trap on empty title or duplicate existing published title).",
-      "reason": "Validation logic is not visible because the new function body is truncated right after the authorization check begins.",
+      "id": "REQ-2",
+      "requirement": "Admin publishing must remove a submission from the pending list (no duplication) and error clearly if title is not pending.",
+      "reason": "Frontend calls `actor.adminPublishStory(title)` and invalidates pending/published queries, but the provided backend snippet is truncated before showing `adminPublishStory` implementation, including (a) removal from `pendingStories` and (b) trapping/erroring when the title is not pending.",
       "evidence": [
+        "frontend/src/hooks/useAdmin.ts",
         "backend/main.mo (truncated)"
       ]
     },
     {
-      "id": "REQ-1",
-      "requirement": "Backend admin-only method must be restricted to admin callers (same checks as existing admin endpoints).",
-      "reason": "The method begins an admin permission check, but due to truncation (it cuts off at `Run...`), it cannot be confirmed that the final implementation correctly enforces admin-only access and returns/handles unauthorized calls consistently.",
+      "id": "REQ-3",
+      "requirement": "Backend must expose an admin-only method to remove/unpublish a published story by title and reject non-admin callers with an Unauthorized error.",
+      "reason": "Frontend calls `actor.adminDeletePublishedArticle(title)`, but the backend method implementation and its authorization checks are not shown in the truncated backend diff, so the required admin-only enforcement and Unauthorized error behavior are not evidenced.",
       "evidence": [
+        "frontend/src/hooks/useAdmin.ts",
         "backend/main.mo (truncated)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Added an `authorPrincipal` parameter to the new admin create-and-publish method and corresponding frontend mutation payload.",
-      "reason": "REQ-1 minimum required fields were: title, authorPseudonym, story/body, isAnonymous, authorName. `authorPrincipal` was not requested as part of the admin create/publish API.",
+      "description": "Admin feature to create and publish a new article directly (not part of the requested approval/unpublish workflow).",
+      "reason": "BuildRequest only asks for admin approval of user submissions and admin removal/unpublish by title; it does not request an admin ‘create article’ capability.",
       "evidence": [
-        "backend/main.mo (truncated)",
-        "frontend/src/hooks/useAdmin.ts",
-        "frontend/src/pages/AdminModerationPage.tsx (truncated)"
+        "frontend/src/hooks/useAdmin.ts (useCreateAndPublishArticle)",
+        "frontend/src/pages/AdminModerationPage.tsx (Create Article tab)",
+        "backend/main.mo (truncated: adminCreateAndPublishArticle)"
       ]
     },
     {
-      "description": "Backend `systemInfo` version set to `0.2.0`.",
-      "reason": "No requirement requested a version bump/change in `systemInfo`.",
+      "description": "Global styling/theme overhaul to pastel/dark-blue token system and Tailwind theme changes.",
+      "reason": "Not requested by any REQ; BuildRequest is about moderation workflow and unpublishing.",
       "evidence": [
-        "backend/main.mo (truncated)"
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ]
+    },
+    {
+      "description": "Home/About/Contact content and navigation changes unrelated to moderation workflow (e.g., creator bio, discuss section, caffeine.ai attribution).",
+      "reason": "Not requested by any REQ; outside scope of admin approval/unpublish functionality.",
+      "evidence": [
+        "frontend-file-summaries.txt (AppLayout.tsx, HomePage.tsx, AboutPage.tsx)"
+      ]
+    },
+    {
+      "description": "Added backend migration module (`backend/migration.mo`).",
+      "reason": "Migration was not requested in the BuildRequest requirements/constraints; it may be useful, but it is an extra feature beyond the specified requirements.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo (with migration = Migration.run)"
       ]
     }
   ],
-  "confidence": 0.62,
+  "confidence": 0.66,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/hooks/useAdmin.ts",
     "frontend/src/pages/AdminModerationPage.tsx",
+    "frontend/src/pages/ArticleDetailPage.tsx",
     "frontend/src/pages/ArticlesPage.tsx",
+    "frontend/src/pages/MySubmissionsPage.tsx",
+    "frontend/src/pages/StoryDetailPage.tsx",
+    "frontend/src/pages/SubmitStoryPage.tsx",
     "project_state.json"
   ]
 }

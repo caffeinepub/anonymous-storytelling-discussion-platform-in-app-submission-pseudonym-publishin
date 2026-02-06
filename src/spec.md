@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Enable admins to create and publish the first article directly so the Articles page can show published content.
+**Goal:** Add an admin approval workflow so user-submitted stories stay pending until published by an admin, and allow admins to remove already-published articles.
 
 **Planned changes:**
-- Add a new admin-only backend method to create and publish an article directly (without a prior user submission), validating required fields and rejecting empty/duplicate titles.
-- Update the Admin moderation UI to include a “Create & Publish Article” form (title, author pseudonym, story/body, anonymity + author name as applicable) that calls the new backend method, shows success, and refetches published-article data so `/articles` updates without a hard refresh.
-- Adjust the Articles page empty-state message (English) to clarify that articles appear after being published, while keeping the existing “Share Your Story” call-to-action for regular users.
+- Ensure newly submitted stories are stored as pending and excluded from all public story/feed/article listings until an admin publishes them.
+- Add/adjust an admin-only publish action that moves a story from pending to published (so it no longer appears in pending moderation views).
+- Add admin-only functionality (backend + admin UI) to list published stories and remove/unpublish a published story by title, updating the UI immediately after removal.
 
-**User-visible outcome:** Admins can publish an article from the moderation page and see it appear on the Articles page immediately; non-admins continue to see access denied for admin features, and the Articles empty state clearly explains that content appears after publication.
+**User-visible outcome:** Users can submit stories but they won’t appear publicly until an admin publishes them; admins can publish pending submissions and remove published articles so they disappear from listings and show a not-found/error state on their detail page.

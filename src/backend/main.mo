@@ -8,10 +8,11 @@ import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
-
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -74,11 +75,13 @@ actor {
   };
 
   // *** Persistent State Structures ***
-  let stories = List.empty<Story>();
   let publishedTitles = Map.empty<Text, Story>();
   let commentThreads = Map.empty<Text, CommentThread>();
   let reviewThreads = Map.empty<Text, ReviewThread>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+
+  // *** Pending Stories Storage ***
+  let pendingStories = List.empty<Story>();
 
   // *** System Info ***
   public type SystemInfo = { version : Text };
@@ -130,7 +133,7 @@ actor {
       authorName;
       authorPrincipal = ?caller;
     };
-    stories.add(newStory);
+    pendingStories.add(newStory);
   };
 
   // *** New Function: Create and Publish Article ***
@@ -214,34 +217,46 @@ actor {
   };
 
   // *** Moderation (Admin only) - List submitted stories for moderation ***
-  public query ({ caller }) func getAllStories() : async [Story] {
+  public query ({ caller }) func getAllPendingStories() : async [Story] {
     if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
       Runtime.trap("Unauthorized: Only admins can view submitted stories for moderation");
     };
-    stories.toArray().sort();
+    pendingStories.toArray().sort();
   };
 
   // *** Admin Function to Publish and Reword Stories ***
-  public shared ({ caller }) func adminRewordAndPublishStory(title : Text, rewordedStory : Text, rewordedPseudonym : Text) : async () {
+  public shared ({ caller }) func adminPublishStory(title : Text) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
       Runtime.trap("Unauthorized: Only admins can perform this action");
     };
-    let storyIndex = stories.toArray().findIndex(func(story) { story.title == title });
+    let storiesArray = pendingStories.toArray();
+    let storyIndex = storiesArray.findIndex(func(story) { story.title == title });
     switch (storyIndex) {
-      case (null) { Runtime.trap("Admin: Could not find story to reword and publish") };
+      case (null) { Runtime.trap("Could not find story to publish") };
       case (?index) {
-        let storiesArray = stories.toArray();
         let storyToPublish = storiesArray[index];
-        let publishedStory = {
-          title = storyToPublish.title;
-          authorPseudonym = rewordedPseudonym;
-          story = rewordedStory;
-          timestamp = storyToPublish.timestamp;
-          isAnonymous = storyToPublish.isAnonymous;
-          authorName = storyToPublish.authorName;
-          authorPrincipal = storyToPublish.authorPrincipal;
-        };
-        publishedTitles.add(publishedStory.title, publishedStory);
+        let remainingPendingStories = storiesArray.filter(
+          func(story) { story != storyToPublish }
+        );
+        pendingStories.clear();
+        pendingStories.addAll(remainingPendingStories.values());
+        publishedTitles.add(storyToPublish.title, storyToPublish);
+      };
+    };
+  };
+
+  // *** Admin Unpublish/Delete Published Articles ***
+  public shared ({ caller }) func adminDeletePublishedArticle(title : Text) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
+      Runtime.trap("Unauthorized: Only admins can delete published articles");
+    };
+
+    switch (publishedTitles.get(title)) {
+      case (null) {
+        Runtime.trap("No published article found with the title: " # title);
+      };
+      case (?_) {
+        publishedTitles.remove(title);
       };
     };
   };
@@ -291,8 +306,8 @@ actor {
       Runtime.trap("Unauthorized: Only users can view submissions");
     };
 
-    let allStories = stories.toArray();
-    let pendingSubmissions = allStories.filter(
+    let allPendingStories = pendingStories.toArray();
+    let pendingSubmissions = allPendingStories.filter(
       func(story) {
         switch (story.authorPrincipal) {
           case (?author) { author == caller };
@@ -327,5 +342,36 @@ actor {
       );
 
     pendingSubmissions.concat(publishedSubmissions);
+  };
+
+  // *** Get All Stories with Status (Admin) ***
+  public query ({ caller }) func getAllStoriesWithStatus() : async [SubmissionStatus] {
+    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
+      Runtime.trap("Unauthorized: Only admins can view all stories with status");
+    };
+
+    let allPendingStories = pendingStories.toArray();
+    let allPublishedStories = publishedTitles.values().toArray();
+
+    // Map all to status variants
+    let pendingWithStatus = allPendingStories.map(
+      func(story) {
+        {
+          story;
+          status = #pending;
+        };
+      }
+    );
+
+    let publishedWithStatus = allPublishedStories.map(
+      func(story) {
+        {
+          story;
+          status = #published;
+        };
+      }
+    );
+
+    pendingWithStatus.concat(publishedWithStatus);
   };
 };

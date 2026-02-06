@@ -46,11 +46,11 @@ export const Story = IDL.Record({
   'authorPseudonym' : IDL.Text,
   'authorPrincipal' : IDL.Opt(IDL.Principal),
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const SubmissionStatus = IDL.Record({
   'status' : IDL.Variant({ 'pending' : IDL.Null, 'published' : IDL.Null }),
   'story' : Story,
 });
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const SystemInfo = IDL.Record({ 'version' : IDL.Text });
 
 export const idlService = IDL.Service({
@@ -73,15 +73,17 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
-  'adminRewordAndPublishStory' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text],
-      [],
-      [],
-    ),
+  'adminDeletePublishedArticle' : IDL.Func([IDL.Text], [], []),
+  'adminPublishStory' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'checkBackendHeartbeat' : IDL.Func([], [IDL.Bool], ['query']),
   'getAllDiscussions' : IDL.Func([], [Discussions], ['query']),
-  'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
+  'getAllPendingStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
+  'getAllStoriesWithStatus' : IDL.Func(
+      [],
+      [IDL.Vec(SubmissionStatus)],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getMySubmissions' : IDL.Func([], [IDL.Vec(SubmissionStatus)], ['query']),
@@ -144,11 +146,11 @@ export const idlFactory = ({ IDL }) => {
     'authorPseudonym' : IDL.Text,
     'authorPrincipal' : IDL.Opt(IDL.Principal),
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const SubmissionStatus = IDL.Record({
     'status' : IDL.Variant({ 'pending' : IDL.Null, 'published' : IDL.Null }),
     'story' : Story,
   });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const SystemInfo = IDL.Record({ 'version' : IDL.Text });
   
   return IDL.Service({
@@ -171,15 +173,17 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
-    'adminRewordAndPublishStory' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text],
-        [],
-        [],
-      ),
+    'adminDeletePublishedArticle' : IDL.Func([IDL.Text], [], []),
+    'adminPublishStory' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'checkBackendHeartbeat' : IDL.Func([], [IDL.Bool], ['query']),
     'getAllDiscussions' : IDL.Func([], [Discussions], ['query']),
-    'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
+    'getAllPendingStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
+    'getAllStoriesWithStatus' : IDL.Func(
+        [],
+        [IDL.Vec(SubmissionStatus)],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getMySubmissions' : IDL.Func([], [IDL.Vec(SubmissionStatus)], ['query']),

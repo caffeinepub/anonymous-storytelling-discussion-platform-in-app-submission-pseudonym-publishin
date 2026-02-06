@@ -76,7 +76,7 @@ export default function ArticlesPage() {
               <div className="space-y-2">
                 <h3 className="font-serif text-xl font-semibold">No Articles Yet</h3>
                 <p className="text-muted-foreground">
-                  Articles will appear here after being published by our team. Check back soon!
+                  Articles will appear here after being published by our team.
                 </p>
               </div>
               <Button onClick={() => navigate({ to: '/submit' })}>
@@ -88,19 +88,19 @@ export default function ArticlesPage() {
           <div className="space-y-6">
             {stories.map((story) => (
               <Card 
-                key={story.title} 
-                className="hover:shadow-lg transition-shadow cursor-pointer"
+                key={story.title}
+                className="hover:shadow-soft hover:border-primary/30 transition-all cursor-pointer"
                 onClick={() => navigate({ to: '/article/$title', params: { title: story.title } })}
               >
                 <CardHeader>
                   <CardTitle className="font-serif text-2xl">{story.title}</CardTitle>
-                  <CardDescription className="flex items-center gap-4 text-sm">
+                  <CardDescription className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
-                      <User className="h-3 w-3" />
+                      <User className="h-4 w-4" />
                       {story.isAnonymous ? 'Anonymous' : story.authorPseudonym}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
+                      <Clock className="h-4 w-4" />
                       {formatDate(story.timestamp)}
                     </span>
                   </CardDescription>
@@ -109,16 +109,6 @@ export default function ArticlesPage() {
                   <p className="text-muted-foreground line-clamp-3">
                     {story.story}
                   </p>
-                  <Button 
-                    variant="link" 
-                    className="mt-4 px-0"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate({ to: '/article/$title', params: { title: story.title } });
-                    }}
-                  >
-                    Read more →
-                  </Button>
                 </CardContent>
               </Card>
             ))}

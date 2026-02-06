@@ -3,6 +3,7 @@ import { useGetPublishedStory } from '../hooks/useStories';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, Calendar } from 'lucide-react';
 import CommentThread from '../components/CommentThread';
 import CommentComposer from '../components/CommentComposer';
@@ -44,11 +45,18 @@ export default function StoryDetailPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Stories
           </Button>
-          <Card className="border-destructive/50 bg-destructive/5">
-            <CardContent className="pt-6">
-              <p className="text-destructive text-center">Story not found or failed to load.</p>
-            </CardContent>
-          </Card>
+          <Alert variant="destructive">
+            <AlertDescription>
+              {error instanceof Error && error.message.includes('not found') 
+                ? 'This story is no longer available. It may have been removed.' 
+                : 'Story not found or failed to load.'}
+            </AlertDescription>
+          </Alert>
+          <div className="text-center">
+            <Button onClick={() => navigate({ to: '/stories' })}>
+              Browse Other Stories
+            </Button>
+          </div>
         </div>
       </div>
     );

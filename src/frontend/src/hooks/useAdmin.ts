@@ -3,44 +3,55 @@ import { useActor } from './useActor';
 import type { Story } from '../backend';
 import { Principal } from '@dfinity/principal';
 
-export function useGetAllStories() {
+// Check if the current user is an admin
+export function useIsCallerAdmin() {
   const { actor, isFetching } = useActor();
 
-  return useQuery<Story[]>({
-    queryKey: ['allStories'],
+  return useQuery<boolean>({
+    queryKey: ['isCallerAdmin'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getAllStories();
+      return actor.isCallerAdmin();
     },
     enabled: !!actor && !isFetching,
     retry: false,
   });
 }
 
+// Get all pending submissions (admin only)
+export function useGetPendingStories() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Story[]>({
+    queryKey: ['pendingStories'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getAllPendingStories();
+    },
+    enabled: !!actor && !isFetching,
+    retry: false,
+  });
+}
+
+// Publish a pending story (admin only)
 export function usePublishStory() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: {
-      title: string;
-      rewordedStory: string;
-      rewordedPseudonym: string;
-    }) => {
+    mutationFn: async (title: string) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.adminRewordAndPublishStory(
-        params.title,
-        params.rewordedStory,
-        params.rewordedPseudonym
-      );
+      return actor.adminPublishStory(title);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['allStories'] });
+      queryClient.invalidateQueries({ queryKey: ['pendingStories'] });
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+      queryClient.invalidateQueries({ queryKey: ['mySubmissions'] });
     },
   });
 }
 
+// Create and publish a new article directly (admin only)
 export function useCreateAndPublishArticle() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -66,6 +77,23 @@ export function useCreateAndPublishArticle() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+    },
+  });
+}
+
+// Delete a published article (admin only)
+export function useDeletePublishedArticle() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (title: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.adminDeletePublishedArticle(title);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['publishedStories'] });
+      queryClient.invalidateQueries({ queryKey: ['publishedStory'] });
     },
   });
 }

@@ -2,11 +2,13 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-moderation-ui-to-include-a-create-publish-article-form-that-calls-the-new-backend-method-enabling-an-admin-to-add-the-first-published-article-from-the-frontend",
-      "featureTitle": "Update the Admin moderation UI to include a \"Create & Publish Article\" form that calls the new backend method, enabling an admin to add the first published article from the frontend.",
+      "featureId": "feature-enforce-an-explicit-admin-approval-workflow-stories-submitted-by-users-must-remain-in-a-pending-state-and-must-not-appear-in-any-public-listing-feed-articles-until-an-admin-publishes-them",
+      "featureTitle": "Enforce an explicit admin-approval workflow: stories submitted by users must remain in a pending state and must not appear in any public listing (feed/articles) until an admin publishes them.",
       "files": [
         "frontend/src/hooks/useAdmin.ts",
-        "frontend/src/pages/AdminModerationPage.tsx"
+        "frontend/src/pages/AdminModerationPage.tsx",
+        "frontend/src/pages/MySubmissionsPage.tsx",
+        "frontend/src/pages/SubmitStoryPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,15 +19,19 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-articles-page-empty-state-guidance-reflects-the-presence-of-the-admin-publishing-flow-by-clarifying-that-articles-appear-after-being-published-english-text-only",
-      "featureTitle": "Ensure the Articles page empty-state guidance reflects the presence of the admin publishing flow by clarifying that articles appear after being published (English text only).",
+      "featureId": "feature-add-admin-only-functionality-to-remove-unpublish-published-articles-so-the-admin-can-delete-the-two-already-published-articles-from-the-site-by-title",
+      "featureTitle": "Add admin-only functionality to remove/unpublish published articles so the admin can delete the two already-published articles from the site by title.",
       "files": [
-        "frontend/src/pages/ArticlesPage.tsx"
+        "frontend/src/hooks/useAdmin.ts",
+        "frontend/src/pages/AdminModerationPage.tsx",
+        "frontend/src/pages/ArticleDetailPage.tsx",
+        "frontend/src/pages/ArticlesPage.tsx",
+        "frontend/src/pages/StoryDetailPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",

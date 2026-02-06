@@ -87,7 +87,7 @@ export default function SubmitStoryPage() {
               <div className="space-y-2">
                 <h2 className="font-serif text-2xl font-bold">Story Submitted!</h2>
                 <p className="text-muted-foreground">
-                  Thank you for sharing your story. It will be reviewed and is not publicly visible until published.
+                  Thank you for sharing your story. Your submission will be reviewed by our team and is not publicly visible until it has been approved and published.
                 </p>
               </div>
               <div className="flex gap-3 justify-center pt-4">
@@ -128,7 +128,7 @@ export default function SubmitStoryPage() {
           <CardHeader>
             <CardTitle>Your Story</CardTitle>
             <CardDescription>
-              All submissions are reviewed before publishing. We may edit for clarity while preserving your voice.
+              All submissions are reviewed before publishing. Your story will not be publicly visible until it has been approved by our team.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -189,7 +189,7 @@ export default function SubmitStoryPage() {
                   className="resize-none font-serif"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Write freely. We'll help polish it before publishing.
+                  Your story will be reviewed before being published.
                 </p>
               </div>
 

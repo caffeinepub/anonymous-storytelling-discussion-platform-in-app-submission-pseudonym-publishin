@@ -168,7 +168,7 @@ export default function MySubmissionsPage() {
                     )}
                     {isPending && (
                       <p className="text-sm text-muted-foreground">
-                        Your story is being reviewed. You'll be able to view it once it's published.
+                        Your story is awaiting admin approval. You'll be able to view it once it's published.
                       </p>
                     )}
                   </CardContent>

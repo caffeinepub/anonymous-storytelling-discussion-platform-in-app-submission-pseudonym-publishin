@@ -1,73 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Add admin flow to publish the first article so Articles page shows content",
+  "title": "Require admin approval before publication and let admin remove published articles",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a new backend admin-only method that allows creating and publishing an article directly (without requiring a prior user submission), so the site can have its first published article and it will appear in the Articles list.",
+      "text": "Enforce an explicit admin-approval workflow: stories submitted by users must remain in a pending state and must not appear in any public listing (feed/articles) until an admin publishes them.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "I said before publishing take my admin approval .."
+        ]
+      },
+      "acceptanceCriteria": [
+        "A story submitted via the existing submission flow is not returned by any public endpoint used by the feed/articles pages until an admin publishes it.",
+        "The admin-only publish action is required to make a submission publicly visible.",
+        "User-facing copy related to this flow remains in English."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "When an admin publishes a submitted story, remove it from the pending submissions list so it no longer appears as 'pending' in admin moderation views and does not remain duplicated as both pending and published.",
       "target": "backend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Yes"
+          "Before publishing take my admin approval ..."
         ]
       },
       "acceptanceCriteria": [
-        "A new shared backend function exists that is restricted to admin callers (same permission checks as existing admin endpoints).",
-        "The method accepts the article fields needed by the existing `Story` type (at minimum: title, authorPseudonym, story/body, isAnonymous, authorName).",
-        "Calling the method results in the article being returned by `getPublishedStories()` and accessible via `getPublishedStory(title)`.",
-        "The method prevents obvious bad states (e.g., traps or returns an error when title is empty or duplicates an existing published title)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Update the Admin moderation UI to include a \"Create & Publish Article\" form that calls the new backend method, enabling an admin to add the first published article from the frontend.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Yes"
-        ]
-      },
-      "acceptanceCriteria": [
-        "AdminModerationPage provides a clearly labeled section to create a new article with inputs for title, author pseudonym, story/body, and anonymity/author name as applicable.",
-        "Submitting the form calls the new backend admin publish method and shows a success state.",
-        "After success, the UI invalidates/refetches published-articles queries so the new article appears on `/articles` without requiring a hard refresh.",
-        "Non-admin users cannot access the creation form (they should see the existing access denied behavior)."
+        "After calling the admin publish method for a given submission title, that submission no longer appears in the admin 'Pending Submissions' list returned by the backend.",
+        "After publishing, the story appears in the published stories list and is accessible from its detail page.",
+        "If an admin attempts to publish a title that is not pending, the backend returns a clear error (trap message is acceptable)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the Articles page empty-state guidance reflects the presence of the admin publishing flow by clarifying that articles appear after being published (English text only).",
-      "target": "frontend",
+      "text": "Add admin-only functionality to remove/unpublish published articles so the admin can delete the two already-published articles from the site by title.",
+      "target": "both",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Yes"
+          "I have published article remove that 2 articles ..."
         ]
       },
       "acceptanceCriteria": [
-        "When there are no published stories, the empty state message mentions that articles will appear after being published (in English).",
-        "The existing \"Share Your Story\" call-to-action remains available for regular users to submit stories."
+        "Backend exposes an admin-only method to remove a published story by title, and it rejects non-admin callers with an Unauthorized error.",
+        "Admin UI provides a way to view published articles and remove one by selecting it and confirming removal.",
+        "After removal, the deleted article no longer appears on the Articles page or Feed page, and navigating to its detail route shows a not-found/error state.",
+        "React Query caches for published stories are invalidated after removal so the UI updates without a hard refresh."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional backend services).",
-    "Do not modify files under `frontend/src/components/ui` or other immutable frontend paths listed in SYSTEM_CONTEXT.",
-    "Use English for any user-facing text."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not edit files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not modify immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
   ],
   "nonGoals": [
-    "Implementing email notifications for new articles (project state indicates this is blocked).",
-    "Adding third-party authentication beyond Internet Identity.",
-    "Adding external databases or any off-chain storage."
+    "Adding third-party authentication providers (only Internet Identity is supported).",
+    "Adding real-time updates (no websockets).",
+    "Implementing an external database or off-chain storage for stories."
   ],
   "imageRequirements": {
     "required": [],
