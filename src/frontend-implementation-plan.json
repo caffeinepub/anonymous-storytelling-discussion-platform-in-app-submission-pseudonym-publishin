@@ -1,6 +1,57 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Untitled request",
-  "requirements": []
+  "title": "Add Contact page route and update navigation to display author details and social links",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add a dedicated `/contact` route and wire it into the existing TanStack router so it renders within AppLayout and is reachable via navigation.",
+      "acceptanceCriteria": [
+        "Visiting `/contact` renders a Contact page within the existing AppLayout.",
+        "The Contact page can be reached via the app navigation without relying on a mailto link."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ContactPage.tsx",
+          "operation": "create",
+          "description": "Create a new ContactPage that uses existing layout patterns and existing shadcn/ui components (e.g., Card, CardContent, Button) to present contact information. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register a new `/contact` route in the router tree and render the new ContactPage under the existing rootRoute (AppLayout), ensuring the page is navigable in-app."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Change the header 'Contact' action to navigate to `/contact` via the existing router navigation instead of using a `mailto:` link.",
+      "acceptanceCriteria": [
+        "Clicking 'Contact' in the header navigates to `/contact` using the existing router navigation (no `mailto:` link in the header Contact action)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Replace the current mailto-based Contact action with a router-based navigation action to `/contact` (keep styling consistent using existing Button component). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Implement Contact page content showing the author name, book title, and clickable Instagram/LinkedIn links with safe external-link attributes.",
+      "acceptanceCriteria": [
+        "The Contact page visibly shows the name \"Sana Khan\" and the book title exactly as: \"Shining Gaze - A search for the unknown\".",
+        "The Instagram and LinkedIn URLs are rendered as clickable links.",
+        "External social links open in a new tab/window and include appropriate `rel` attributes (e.g., `noopener noreferrer`)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ContactPage.tsx",
+          "operation": "modify",
+          "description": "Add visible page content for: Name \"Sana Khan\"; Book name \"Shining Gaze - A search for the unknown\"; and render Instagram/LinkedIn as clickable external links opening in a new tab with appropriate rel attributes. Use existing shadcn/ui components where helpful (e.g., Card) without editing `frontend/src/components/ui`. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
 }

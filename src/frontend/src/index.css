@@ -35,25 +35,25 @@
     }
 
     .dark {
-        /* Pastel Blue theme - Dark Mode */
-        --background: 0.22 0.04 235;
+        /* Dark Blue theme - Dark Mode (no black shades) */
+        --background: 0.18 0.06 235;
         --foreground: 0.92 0.02 230;
-        --card: 0.26 0.04 235;
+        --card: 0.22 0.06 235;
         --card-foreground: 0.92 0.02 230;
-        --popover: 0.24 0.04 235;
+        --popover: 0.20 0.06 235;
         --popover-foreground: 0.92 0.02 230;
         --primary: 0.70 0.14 230;
         --primary-foreground: 0.98 0.01 230;
-        --secondary: 0.32 0.04 235;
+        --secondary: 0.28 0.06 235;
         --secondary-foreground: 0.90 0.02 230;
-        --muted: 0.34 0.04 235;
+        --muted: 0.30 0.06 235;
         --muted-foreground: 0.68 0.04 235;
         --accent: 0.50 0.10 225;
         --accent-foreground: 0.92 0.02 230;
         --destructive: 0.50 0.22 25;
         --destructive-foreground: 0.92 0.02 230;
-        --border: 0.36 0.04 235;
-        --input: 0.36 0.04 235;
+        --border: 0.32 0.06 235;
+        --input: 0.32 0.06 235;
         --ring: 0.70 0.14 230;
         
         --chart-1: 0.55 0.12 220;

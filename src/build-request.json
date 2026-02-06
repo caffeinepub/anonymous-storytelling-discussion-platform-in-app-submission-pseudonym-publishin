@@ -1,10 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Untitled request",
+  "title": "Add a Contact page and fix Contact navigation to show author details and social links",
   "priority": "normal",
-  "requirements": [],
-  "constraints": [],
-  "nonGoals": [],
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a dedicated Contact page route (e.g., `/contact`) and update the app router so it is accessible via navigation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "when I click on contact I am unable to get my details with my name and my book name Shining Gaze - A search for the unknown  Instagram link https://www.instagram.com/shining_starsana/ linkedin link https://www.linkedin.com/in/sana-khan-919353159/"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Visiting `/contact` renders a Contact page within the existing AppLayout.",
+        "The Contact page can be reached via the app navigation without relying on a mailto link."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the top navigation 'Contact' action so it navigates to the new Contact page route (instead of using a `mailto:` link).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "when I click on contact I am unable to get my details with my name and my book name Shining Gaze - A search for the unknown  Instagram link https://www.instagram.com/shining_starsana/ linkedin link https://www.linkedin.com/in/sana-khan-919353159/"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking 'Contact' in the header navigates to `/contact` using the existing router navigation (no `mailto:` link in the header Contact action)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "On the Contact page, display the following author details as visible page content: Name: \"Sana Khan\"; Book name: \"Shining Gaze - A search for the unknown\"; Instagram link: https://www.instagram.com/shining_starsana/; LinkedIn link: https://www.linkedin.com/in/sana-khan-919353159/.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "when I click on contact I am unable to get my details with my name and my book name Shining Gaze - A search for the unknown  Instagram link https://www.instagram.com/shining_starsana/ linkedin link https://www.linkedin.com/in/sana-khan-919353159/"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Contact page visibly shows the name \"Sana Khan\" and the book title exactly as: \"Shining Gaze - A search for the unknown\".",
+        "The Instagram and LinkedIn URLs are rendered as clickable links.",
+        "External social links open in a new tab/window and include appropriate `rel` attributes (e.g., `noopener noreferrer`)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under `frontend/src/components/ui` (compose existing UI components instead).",
+    "Do not modify the immutable paths listed in SYSTEM_CONTEXT."
+  ],
+  "nonGoals": [
+    "No backend changes or new Motoko methods are required for this fix.",
+    "No third-party authentication or external API integrations are required."
+  ],
   "imageRequirements": {
     "required": [],
     "edits": []

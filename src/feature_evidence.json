@@ -1,4 +1,63 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-create-a-dedicated-contact-page-route-e-g-contact-and-update-the-app-router-so-it-is-accessible-via-navigation",
+      "featureTitle": "Create a dedicated Contact page route (e.g., `/contact`) and update the app router so it is accessible via navigation.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/ContactPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-top-navigation-contact-action-so-it-navigates-to-the-new-contact-page-route-instead-of-using-a-mailto-link",
+      "featureTitle": "Update the top navigation 'Contact' action so it navigates to the new Contact page route (instead of using a `mailto:` link).",
+      "files": [
+        "frontend/src/components/AppHeader.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-on-the-contact-page-display-the-following-author-details-as-visible-page-content-name-sana-khan-book-name-shining-gaze-a-search-for-the-unknown-instagram-link-https-www-instagram-com-shining-starsana-linkedin-link-https-www-linkedin-com-in-sana-khan-919353159",
+      "featureTitle": "On the Contact page, display the following author details as visible page content: Name: \"Sana Khan\"; Book name: \"Shining Gaze - A search for the unknown\"; Instagram link: https://www.instagram.com/shining_starsana/; LinkedIn link: https://www.linkedin.com/in/sana-khan-919353159/.",
+      "files": [
+        "frontend/src/pages/ContactPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

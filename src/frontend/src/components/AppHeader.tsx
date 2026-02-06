@@ -28,6 +28,13 @@ export default function AppHeader() {
           >
             About
           </Button>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate({ to: '/contact' })}
+            className="hover:text-primary hover:bg-primary/5 transition-colors"
+          >
+            Contact
+          </Button>
         </nav>
       </div>
     </header>

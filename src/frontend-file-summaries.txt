@@ -1,7 +1,7 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup defining routes for home, stories feed, story submission, story detail, admin moderation, about, troubleshooting, and discussions pages.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup defining routes for home, stories feed, story submission, story detail, admin moderation, about, troubleshooting, discussions, and contact pages.",
   "frontend/src/components/AppLayout.tsx": "Shared layout wrapper component providing consistent header, main content area, and footer with About and Troubleshooting navigation links, creator contact information (Sana Khan – authorsanakhan@gmail.com), and caffeine.ai attribution across all pages.",
-  "frontend/src/components/AppHeader.tsx": "Application header displaying \"Genuine-Being Real\" brand with top-right navigation links for Home and About only.",
+  "frontend/src/components/AppHeader.tsx": "Application header displaying \"Genuine-Being Real\" brand with top-right navigation links for Home, About, and Contact (now navigates to /contact route instead of mailto link).",
   "frontend/src/pages/FeedPage.tsx": "Published stories feed page with enhanced error handling including backend availability checks, retry progress indicators, actionable error messages with troubleshooting links, and integrated diagnostics panel.",
   "frontend/src/pages/StoryDetailPage.tsx": "Individual story detail page showing full story content, metadata, and integrated comment thread; \"Back to Stories\" button navigates to \"/stories\".",
   "frontend/src/pages/SubmitStoryPage.tsx": "Story submission form with anonymous toggle, title/content fields, and success confirmation state; navigates to \"/stories\" after submission or on cancel.",
@@ -11,8 +11,8 @@
   "frontend/src/components/AccessDeniedState.tsx": "Access denied UI state component shown when unauthorized users attempt to access admin routes; \"Return to Stories\" button navigates to \"/stories\".",
   "frontend/src/hooks/useStories.ts": "React Query hooks for story operations with exponential backoff retry strategy, now includes real comment retrieval via getStoryComments backend method.",
   "frontend/src/hooks/useAdmin.ts": "React Query hooks for admin operations including fetching all submissions and publishing stories with rewritten content.",
-  "frontend/src/index.css": "Global stylesheet with pastel blue OKLCH color system (hue 230-235) for all tokens in both light and dark modes, maintaining soft blue tones throughout with editorial typography styling.",
-  "frontend/tailwind.config.js": "Tailwind configuration with Merriweather serif font, extended pastel blue color tokens, custom blue-tinted shadows, and typography plugin for editorial styling.",
+  "frontend/src/index.css": "Global stylesheet with pastel blue OKLCH color system (hue 230-235) for all tokens in both light and dark modes, with dark mode now using dark blue tones (L: 0.18-0.32, C: 0.06) instead of black/neutral shades.",
+  "frontend/tailwind.config.js": "Tailwind configuration with Merriweather serif font, extended pastel blue color tokens, and custom dark-blue-tinted shadows for consistency with the dark blue theme.",
   "frontend/src/pages/AboutPage.tsx": "About page component displaying the creator's bio, mission statement, and a \"Get in Touch\" section with Sana Khan's name and clickable email link (authorsanakhan@gmail.com).",
   "frontend/index.html": "HTML entry point with document title set to \"Genuine-Being Real\".",
   "frontend/src/pages/HomePage.tsx": "Landing page component at \"/\" featuring hero section, feature cards, a dedicated \"Discuss & Engage\" section with Reviews and Comments navigation cards, and prominent CTAs to navigate to Stories or About.",
@@ -25,5 +25,6 @@
   "frontend/src/hooks/useDiscussions.ts": "React Query hooks for fetching all discussions (comments and reviews) and adding new reviews with automatic cache invalidation.",
   "frontend/src/components/CommentThreadDisplay.tsx": "Comment thread display component for the Discussions page that renders comments for a selected topic from the discussions data structure.",
   "frontend/src/components/ReviewComposer.tsx": "Review submission form with optional display name, interactive star rating selector (1-5), and optional review text field.",
-  "frontend/src/components/ReviewThread.tsx": "Review thread display component that renders ratings with stars and optional review text with timestamps for the selected topic."
+  "frontend/src/components/ReviewThread.tsx": "Review thread display component that renders ratings with stars and optional review text with timestamps for the selected topic.",
+  "frontend/src/pages/ContactPage.tsx": "Contact page displaying author Sana Khan's details, book title \"Shining Gaze - A search for the unknown\", email link, and social media links (Instagram and LinkedIn) with proper external link attributes."
 }
