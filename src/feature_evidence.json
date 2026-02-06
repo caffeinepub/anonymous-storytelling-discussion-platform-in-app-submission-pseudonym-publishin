@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-an-explicit-backend-availability-check-and-expose-it-to-the-frontend-so-the-app-can-distinguish-between-a-backend-canister-unreachable-not-yet-propagated-and-b-application-level-errors",
-      "featureTitle": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
+      "featureId": "feature-update-the-global-header-navigation-so-that-only-home-and-about-appear-in-the-top-right-navigation-area-and-remove-the-current-top-navigation-items-read-share-reviews-and-comments",
+      "featureTitle": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
       "files": [
-        "frontend/src/hooks/useBackendAvailability.ts",
-        "frontend/src/pages/FeedPage.tsx"
+        "frontend/src/components/AppHeader.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -22,11 +21,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-the-failed-to-load-stories-error-state-on-the-stories-feed-to-show-actionable-troubleshooting-and-canister-details-frontend-asset-canister-id-backend-api-canister-id-when-available-standard-url-raw-url-and-provide-one-click-actions",
-      "featureTitle": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
+      "featureId": "feature-on-the-home-page-add-a-lower-page-discuss-engage-section-that-provides-access-to-reviews-and-comments-by-linking-to-the-discussions-page-with-the-appropriate-mode-reviews-comments",
+      "featureTitle": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
       "files": [
-        "frontend/src/components/FeedDiagnosticsPanel.tsx",
-        "frontend/src/pages/FeedPage.tsx"
+        "frontend/src/pages/HomePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -38,26 +36,6 @@
       ],
       "testIds": [
         "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-retry-backoff-behavior-for-fetching-published-stories-to-reduce-perceived-slowness-and-provide-clear-progress-feedback-during-the-first-10-15-seconds-after-page-load-when-the-backend-is-not-yet-reachable",
-      "featureTitle": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
-      "files": [
-        "frontend/src/hooks/useStories.ts",
-        "frontend/src/pages/FeedPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
       ],
       "confidence": "high"
     }

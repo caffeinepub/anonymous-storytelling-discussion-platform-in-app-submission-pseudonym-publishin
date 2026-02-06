@@ -7,12 +7,25 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export type Time = bigint;
-export interface SystemInfo {
-    version: string;
+export interface CommentThread {
+    storyTitle: string;
+    comments: Array<Comment>;
 }
-export interface UserProfile {
-    name: string;
+export interface Rating {
+    reviewerHandle: string;
+    comment?: string;
+    timestamp: Time;
+    rating: number;
+}
+export type Time = bigint;
+export interface ReviewThread {
+    reviews: Array<Rating>;
+    storyTitle: string;
+}
+export interface Comment {
+    comment: string;
+    timestamp: Time;
+    commenterHandle: string;
 }
 export interface Story {
     title: string;
@@ -22,6 +35,16 @@ export interface Story {
     timestamp: Time;
     authorPseudonym: string;
 }
+export interface SystemInfo {
+    version: string;
+}
+export interface UserProfile {
+    name: string;
+}
+export interface Discussions {
+    reviews: Array<ReviewThread>;
+    comments: Array<CommentThread>;
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -29,14 +52,17 @@ export enum UserRole {
 }
 export interface backendInterface {
     addComment(storyTitle: string, commenterHandle: string, comment: string): Promise<void>;
+    addReview(storyTitle: string, reviewerHandle: string, rating: number, comment: string | null): Promise<void>;
     adminRewordAndPublishStory(title: string, rewordedStory: string, rewordedPseudonym: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkBackendHeartbeat(): Promise<boolean>;
+    getAllDiscussions(): Promise<Discussions>;
     getAllStories(): Promise<Array<Story>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getPublishedStories(): Promise<Array<Story>>;
     getPublishedStory(title: string): Promise<Story>;
+    getStoryComments(storyTitle: string): Promise<Array<Comment>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;

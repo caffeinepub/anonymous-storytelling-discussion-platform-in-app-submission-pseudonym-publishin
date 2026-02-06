@@ -1,12 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Story } from '../backend';
-
-interface Comment {
-  commenterHandle: string;
-  comment: string;
-  timestamp: bigint;
-}
+import type { Story, Comment } from '../backend';
 
 /**
  * Exponential backoff with cap for retry delays
@@ -64,9 +58,13 @@ export function useGetComments(storyTitle: string) {
   return useQuery<Comment[]>({
     queryKey: ['comments', storyTitle],
     queryFn: async () => {
-      // Backend doesn't have a getComments method yet
-      // Comments are stored but not retrievable
-      return [];
+      if (!actor) throw new Error('Actor not available');
+      try {
+        return await actor.getStoryComments(storyTitle);
+      } catch (error) {
+        // If no comments found, return empty array
+        return [];
+      }
     },
     enabled: !!actor && !isFetching && !!storyTitle,
   });

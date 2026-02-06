@@ -10,6 +10,29 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface Comment {
+  'comment' : string,
+  'timestamp' : Time,
+  'commenterHandle' : string,
+}
+export interface CommentThread {
+  'storyTitle' : string,
+  'comments' : Array<Comment>,
+}
+export interface Discussions {
+  'reviews' : Array<ReviewThread>,
+  'comments' : Array<CommentThread>,
+}
+export interface Rating {
+  'reviewerHandle' : string,
+  'comment' : [] | [string],
+  'timestamp' : Time,
+  'rating' : number,
+}
+export interface ReviewThread {
+  'reviews' : Array<Rating>,
+  'storyTitle' : string,
+}
 export interface Story {
   'title' : string,
   'authorName' : [] | [string],
@@ -27,17 +50,20 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addComment' : ActorMethod<[string, string, string], undefined>,
+  'addReview' : ActorMethod<[string, string, number, [] | [string]], undefined>,
   'adminRewordAndPublishStory' : ActorMethod<
     [string, string, string],
     undefined
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'checkBackendHeartbeat' : ActorMethod<[], boolean>,
+  'getAllDiscussions' : ActorMethod<[], Discussions>,
   'getAllStories' : ActorMethod<[], Array<Story>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getPublishedStories' : ActorMethod<[], Array<Story>>,
   'getPublishedStory' : ActorMethod<[string], Story>,
+  'getStoryComments' : ActorMethod<[string], Array<Comment>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,

@@ -1,37 +1,24 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-05T23:28:16.524Z",
-  "summary": "Diff adds a backend heartbeat query method and a frontend hook to call it, plus enhanced Feed page error logic and a diagnostics panel. Retry/backoff behavior for fetching stories is updated with exponential backoff, but the diff evidence is insufficient to confirm the required visible retry/progress UI and final-state actions are fully implemented.",
+  "generatedAt": "2026-02-05T23:58:31.640Z",
+  "summary": "REQ-1 appears implemented by updating AppHeader to show only Home and About. REQ-2 is partially evidenced (a Discuss & Engage section exists on Home), but the diff summary is truncated before showing the required navigation controls/links with mode=reviews/comments, so those acceptance criteria cannot be verified from provided evidence.",
   "missing_requirements": [
     {
       "id": "REQ-2",
-      "requirement": "On the Feed page error state, include one-click actions: Retry now, Open Troubleshooting page, and Open raw.icp0.io URL (when detectable).",
-      "reason": "The FeedPage diff excerpt shows error computation logic but does not show the rendered error-state UI containing the required buttons/links. The diagnostics panel includes raw URL display/copy, but an explicit one-click 'Open raw.icp0.io URL' action and the Troubleshooting link/button on the Feed error state are not confirmed in the provided truncated diff.",
+      "requirement": "The Home page \"Discuss & Engage\" section includes a \"Reviews\" control that navigates to \"/discussions\" with search param mode set to \"reviews\", and a \"Comments\" control that navigates to \"/discussions\" with search param mode set to \"comments\".",
+      "reason": "HomePage.tsx is truncated before the Discuss & Engage section’s controls/handlers are shown; the diff summary does not provide explicit evidence that navigation goes to /discussions with the required mode query param values.",
       "evidence": [
-        "frontend/src/pages/FeedPage.tsx",
-        "frontend/src/components/FeedDiagnosticsPanel.tsx (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "When the backend request fails, the UI shows a visible 'Retrying…' / 'Checking backend…' progress state for the first ~10–15 seconds, then stops after finite attempts with a final actionable error state including a manual 'Retry now'.",
-      "reason": "useStories.ts implements exponential backoff and finite retries, and FeedPage.tsx computes flags like isRetrying/hasReachedMaxRetries, but the truncated diff does not show the actual UI rendering that displays a visible retry/checking progress indicator nor the final error state's 'Retry now' action.",
-      "evidence": [
-        "frontend/src/hooks/useStories.ts",
-        "frontend/src/pages/FeedPage.tsx (truncated)"
+        "frontend/src/pages/HomePage.tsx (truncated)"
       ]
     }
   ],
   "hallucinated_features": [],
-  "confidence": 0.56,
+  "confidence": 0.62,
   "changed_files": [
-    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/FeedDiagnosticsPanel.tsx",
-    "frontend/src/hooks/useBackendAvailability.ts",
-    "frontend/src/hooks/useStories.ts",
-    "frontend/src/pages/FeedPage.tsx",
+    "frontend/src/components/AppHeader.tsx",
+    "frontend/src/pages/HomePage.tsx",
     "project_state.json"
   ]
 }

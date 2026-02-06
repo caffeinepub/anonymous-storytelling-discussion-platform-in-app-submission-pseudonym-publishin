@@ -14,6 +14,29 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const Time = IDL.Int;
+export const Rating = IDL.Record({
+  'reviewerHandle' : IDL.Text,
+  'comment' : IDL.Opt(IDL.Text),
+  'timestamp' : Time,
+  'rating' : IDL.Nat8,
+});
+export const ReviewThread = IDL.Record({
+  'reviews' : IDL.Vec(Rating),
+  'storyTitle' : IDL.Text,
+});
+export const Comment = IDL.Record({
+  'comment' : IDL.Text,
+  'timestamp' : Time,
+  'commenterHandle' : IDL.Text,
+});
+export const CommentThread = IDL.Record({
+  'storyTitle' : IDL.Text,
+  'comments' : IDL.Vec(Comment),
+});
+export const Discussions = IDL.Record({
+  'reviews' : IDL.Vec(ReviewThread),
+  'comments' : IDL.Vec(CommentThread),
+});
 export const Story = IDL.Record({
   'title' : IDL.Text,
   'authorName' : IDL.Opt(IDL.Text),
@@ -28,6 +51,11 @@ export const SystemInfo = IDL.Record({ 'version' : IDL.Text });
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addComment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+  'addReview' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Nat8, IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'adminRewordAndPublishStory' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text],
       [],
@@ -35,11 +63,13 @@ export const idlService = IDL.Service({
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'checkBackendHeartbeat' : IDL.Func([], [IDL.Bool], ['query']),
+  'getAllDiscussions' : IDL.Func([], [Discussions], ['query']),
   'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getPublishedStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
   'getPublishedStory' : IDL.Func([IDL.Text], [Story], ['query']),
+  'getStoryComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
@@ -64,6 +94,29 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const Time = IDL.Int;
+  const Rating = IDL.Record({
+    'reviewerHandle' : IDL.Text,
+    'comment' : IDL.Opt(IDL.Text),
+    'timestamp' : Time,
+    'rating' : IDL.Nat8,
+  });
+  const ReviewThread = IDL.Record({
+    'reviews' : IDL.Vec(Rating),
+    'storyTitle' : IDL.Text,
+  });
+  const Comment = IDL.Record({
+    'comment' : IDL.Text,
+    'timestamp' : Time,
+    'commenterHandle' : IDL.Text,
+  });
+  const CommentThread = IDL.Record({
+    'storyTitle' : IDL.Text,
+    'comments' : IDL.Vec(Comment),
+  });
+  const Discussions = IDL.Record({
+    'reviews' : IDL.Vec(ReviewThread),
+    'comments' : IDL.Vec(CommentThread),
+  });
   const Story = IDL.Record({
     'title' : IDL.Text,
     'authorName' : IDL.Opt(IDL.Text),
@@ -78,6 +131,11 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addComment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'addReview' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Nat8, IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'adminRewordAndPublishStory' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text],
         [],
@@ -85,11 +143,13 @@ export const idlFactory = ({ IDL }) => {
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'checkBackendHeartbeat' : IDL.Func([], [IDL.Bool], ['query']),
+    'getAllDiscussions' : IDL.Func([], [Discussions], ['query']),
     'getAllStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getPublishedStories' : IDL.Func([], [IDL.Vec(Story)], ['query']),
     'getPublishedStory' : IDL.Func([IDL.Text], [Story], ['query']),
+    'getStoryComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],

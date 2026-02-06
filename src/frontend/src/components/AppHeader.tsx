@@ -1,6 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { PenLine } from 'lucide-react';
 
 export default function AppHeader() {
   const navigate = useNavigate();
@@ -18,31 +17,16 @@ export default function AppHeader() {
           <Button 
             variant="ghost" 
             onClick={() => navigate({ to: '/' })}
-            className="hover:text-primary"
+            className="hover:text-primary hover:bg-primary/5 transition-colors"
           >
             Home
           </Button>
           <Button 
             variant="ghost" 
-            onClick={() => navigate({ to: '/stories' })}
-            className="hover:text-primary"
-          >
-            Stories
-          </Button>
-          <Button 
-            variant="ghost" 
             onClick={() => navigate({ to: '/about' })}
-            className="hover:text-primary"
+            className="hover:text-primary hover:bg-primary/5 transition-colors"
           >
             About
-          </Button>
-          <Button 
-            variant="default"
-            onClick={() => navigate({ to: '/submit' })}
-            className="gap-2 ml-2"
-          >
-            <PenLine className="h-4 w-4" />
-            Share Your Story
           </Button>
         </nav>
       </div>

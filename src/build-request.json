@@ -1,79 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Improve user-visible deployment diagnostics and backend availability checks for 'Failed to load stories'",
+  "title": "Adjust top navigation and move Reviews/Comments to Discuss & Engage section",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
-      "target": "both",
+      "text": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "its showing failed loading",
-          "Canister ID Not Resolved",
-          "Failed to load stories",
-          "yes why is taking so long"
+          "home and about should be at top right ? remove read from top and share story from top remove reviews and comments"
         ]
       },
       "acceptanceCriteria": [
-        "Backend provides a lightweight public method (e.g., health/ping) that returns immediately when the canister is reachable.",
-        "Frontend calls this method when the feed load fails and uses the result to label the error as either 'Backend unreachable/not propagated' vs 'Backend reachable but request failed'.",
-        "When the backend is unreachable, the UI messaging explicitly suggests propagation delay and next steps (wait, retry, try raw URL), rather than a generic error."
+        "On all pages, the top header shows navigation links/buttons for \"Home\" (routes to \"/\") and \"About\" (routes to \"/about\") aligned on the top-right side of the header.",
+        "The top header no longer shows \"Read\", \"Share\" (or \"Share Story\"), \"Reviews\", or \"Comments\" navigation items.",
+        "Header layout remains responsive and usable on mobile and desktop (no overflow/cutoff)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
+      "text": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Failed to load stories\nThere was an error loading the stories. This could be due to a connection issue or the backend service being unavailable.",
-          "Canister ID Not Resolved",
-          "yes why is taking so long"
+          "instead review and comments down in discuss and engage"
         ]
       },
       "acceptanceCriteria": [
-        "On the Feed page error state, display a clear heading and short explanation that the website loaded but the backend may be unavailable or still propagating.",
-        "Include buttons/links: Retry now, Open Troubleshooting page, and Open raw.icp0.io URL (when detectable).",
-        "Display detected canister info using existing canister resolution utilities (frontend canister ID/source, backend canister ID when available, standard/raw URLs) with copy-to-clipboard actions or a clear path to copy (can reuse existing UI patterns from TroubleshootingPage).",
-        "All user-facing text is in English and avoids vague messages like only 'Failed to load stories' without next steps."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "shows the message after about 1–2 seconds",
-          "yes why is taking so long"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When the backend request fails, the UI shows a visible 'Retrying…' / 'Checking backend…' state rather than immediately settling into a static failure state after 1–2 seconds.",
-        "Retry timing uses a backoff strategy (increasing delays) up to a reasonable cap, and stops after a finite number of attempts with a final actionable error state.",
-        "A manual 'Retry now' action is always available in the final error state."
+        "The Home page contains a clearly labeled \"Discuss & Engage\" section below the hero/top area (i.e., not in the header).",
+        "The section includes a \"Reviews\" control that navigates to \"/discussions\" with search param mode set to \"reviews\".",
+        "The section includes a \"Comments\" control that navigates to \"/discussions\" with search param mode set to \"comments\".",
+        "There are no \"Reviews\" or \"Comments\" navigation items remaining in the top header."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files under frontend/src/components/ui (read-only Shadcn components).",
-    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
-    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo if an upgrade requires state migration."
+    "Do not edit files under frontend/src/components/ui (compose using existing UI components instead).",
+    "Do not modify any files listed as immutable in SYSTEM_CONTEXT (e.g., frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
+    "Keep backend architecture unchanged (single Motoko actor); no backend changes are required for this request."
   ],
   "nonGoals": [
-    "Do not add third-party monitoring, logging services, or external uptime checks.",
-    "Do not implement real-time features (WebSockets/push).",
-    "Do not change authentication providers (Internet Identity remains the only auth)."
+    "Do not change routing paths or add new pages; continue using existing routes (/, /about, /discussions).",
+    "Do not change story submission, reading, reviews, or comments backend logic.",
+    "Do not redesign the overall theme/colors beyond what is needed for the navigation/content move."
   ],
   "imageRequirements": {
     "required": [],

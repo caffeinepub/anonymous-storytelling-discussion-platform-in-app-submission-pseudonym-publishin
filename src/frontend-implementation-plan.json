@@ -1,73 +1,38 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Improve feed error diagnostics, backend availability checks, and retry UX",
+  "title": "Adjust global header navigation and add Home-page Discuss & Engage links",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a frontend-visible backend availability check to classify feed load failures as propagation/unreachable vs application error.",
+      "summary": "Update global header top-right navigation to show only Home and About, removing Read/Share/Reviews/Comments.",
       "acceptanceCriteria": [
-        "Frontend calls the existing lightweight backend heartbeat capability when the feed load fails and labels the error as either 'Backend unreachable/not propagated' vs 'Backend reachable but request failed'.",
-        "When the backend is unreachable, the UI messaging explicitly suggests propagation delay and next steps (wait, retry, try raw URL), rather than a generic error."
+        "On all pages, the top header shows navigation links/buttons for \"Home\" (routes to \"/\") and \"About\" (routes to \"/about\") aligned on the top-right side of the header.",
+        "The top header no longer shows \"Read\", \"Share\" (or \"Share Story\"), \"Reviews\", or \"Comments\" navigation items.",
+        "Header layout remains responsive and usable on mobile and desktop (no overflow/cutoff)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useBackendAvailability.ts",
-          "operation": "create",
-          "description": "Create a small hook that uses the existing actor to call the backend heartbeat function (checkBackendHeartbeat) with conservative guards (only when actor is available) and returns an availability state (e.g., unknown/checking/reachable/unreachable) plus any diagnostic error text for UI display."
-        },
-        {
-          "path": "frontend/src/pages/FeedPage.tsx",
+          "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Integrate the backend availability hook into the feed error flow: when loading stories fails, trigger the availability check and use the result to render distinct messaging for (a) unreachable/not propagated vs (b) reachable-but-request-failed; ensure the unreachable message recommends waiting for propagation, retrying, and trying the raw URL."
+          "description": "Replace the current header navigation buttons (Read/Share/Reviews/Comments) with only two top-right navigation controls: Home (to \"/\") and About (to \"/about\"). Keep the header responsive (e.g., compact spacing on small screens) while preserving existing branding on the left. Use existing shadcn-ui Button and TanStack Router Link/navigate patterns; verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Enhance the Feed page 'Failed to load stories' error UI with actionable troubleshooting, canister details, and one-click actions.",
+      "summary": "Add a Home-page Discuss & Engage section linking to Discussions in reviews/comments modes.",
       "acceptanceCriteria": [
-        "On the Feed page error state, display a clear heading and short explanation that the website loaded but the backend may be unavailable or still propagating.",
-        "Include buttons/links: Retry now, Open Troubleshooting page, and Open raw.icp0.io URL (when detectable).",
-        "Display detected canister info using existing canister resolution utilities (frontend canister ID/source, backend canister ID when available, standard/raw URLs) with copy-to-clipboard actions or a clear path to copy (can reuse existing UI patterns from TroubleshootingPage).",
-        "All user-facing text is in English and avoids vague messages like only 'Failed to load stories' without next steps."
+        "The Home page contains a clearly labeled \"Discuss & Engage\" section below the hero/top area (i.e., not in the header).",
+        "The section includes a \"Reviews\" control that navigates to \"/discussions\" with search param mode set to \"reviews\".",
+        "The section includes a \"Comments\" control that navigates to \"/discussions\" with search param mode set to \"comments\".",
+        "There are no \"Reviews\" or \"Comments\" navigation items remaining in the top header."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/FeedDiagnosticsPanel.tsx",
-          "operation": "create",
-          "description": "Add a reusable Feed diagnostics UI block for the error state: uses existing canister resolution utilities (getCanisterInfo) to show frontend asset canister ID/source, backend canister ID (when available), standard/raw URLs, and provides copy-to-clipboard actions and external-open actions. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/FeedPage.tsx",
+          "path": "frontend/src/pages/HomePage.tsx",
           "operation": "modify",
-          "description": "Replace the current destructive Alert-only error state with an actionable error layout: include Retry now, a link/button to the existing /troubleshooting route, and an external link to the raw URL when available; render the new FeedDiagnosticsPanel and incorporate the backend availability classification messaging from REQ-1. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/utils/canisterUrls.ts",
-          "operation": "modify",
-          "description": "Extend/adjust canister URL utilities as needed to support Feed error actions reliably (e.g., exposing enough info to decide when raw URL is detectable and to display a clear 'unknown' state) while keeping existing TroubleshootingPage behavior intact."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Implement improved retry/backoff for the published stories fetch and show progress feedback during the initial 10–15 seconds after page load.",
-      "acceptanceCriteria": [
-        "When the backend request fails, the UI shows a visible 'Retrying…' / 'Checking backend…' state rather than immediately settling into a static failure state after 1–2 seconds.",
-        "Retry timing uses a backoff strategy (increasing delays) up to a reasonable cap, and stops after a finite number of attempts with a final actionable error state.",
-        "A manual 'Retry now' action is always available in the final error state."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useStories.ts",
-          "operation": "modify",
-          "description": "Update useGetPublishedStories react-query settings to use an increasing backoff (e.g., exponential with a cap) and a finite retry count tuned to cover roughly the first ~10–15 seconds; ensure failures ultimately settle into a final error state and that manual refetch remains available."
-        },
-        {
-          "path": "frontend/src/pages/FeedPage.tsx",
-          "operation": "modify",
-          "description": "Add a visible in-between state for the feed while retries/backoff are happening after an initial failure (e.g., 'Checking backend…' / 'Retrying…' with attempt feedback derived from react-query state such as failureCount/isFetching), and ensure the final error state still provides a prominent 'Retry now' action."
+          "description": "Add a distinct, clearly labeled \"Discuss & Engage\" section below the hero/top area that contains two controls: \"Reviews\" (navigate to \"/discussions\" with search { mode: 'reviews' }) and \"Comments\" (navigate to \"/discussions\" with search { mode: 'comments' }). Compose with existing shadcn-ui components (e.g., Card/Button) without modifying any files under frontend/src/components/ui; verify the component's usage instructions before implementing."
         }
       ]
     }

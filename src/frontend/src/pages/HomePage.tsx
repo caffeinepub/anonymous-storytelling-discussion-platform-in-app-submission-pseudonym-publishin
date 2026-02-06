@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, PenLine, Heart } from 'lucide-react';
+import { BookOpen, PenLine, MessageSquare, Star } from 'lucide-react';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function HomePage() {
                 className="gap-2 text-lg px-8 py-6"
               >
                 <BookOpen className="h-5 w-5" />
-                Read Stories
+                Read
               </Button>
               <Button 
                 size="lg"
@@ -34,7 +34,7 @@ export default function HomePage() {
                 className="gap-2 text-lg px-8 py-6"
               >
                 <PenLine className="h-5 w-5" />
-                Share Your Story
+                Share
               </Button>
             </div>
           </div>
@@ -44,21 +44,7 @@ export default function HomePage() {
       {/* Features Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-primary/20 hover:border-primary/40 transition-colors">
-              <CardHeader className="text-center">
-                <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="font-serif text-xl">Read Real Stories</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center leading-relaxed">
-                  Discover authentic experiences shared by people from all walks of life. Every story is real, every voice matters.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
+          <div className="grid md:grid-cols-2 gap-8">
             <Card className="border-primary/20 hover:border-primary/40 transition-colors">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -76,14 +62,79 @@ export default function HomePage() {
             <Card className="border-primary/20 hover:border-primary/40 transition-colors">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-primary" />
+                  <MessageSquare className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle className="font-serif text-xl">Connect & Reflect</CardTitle>
+                <CardTitle className="font-serif text-xl">Discuss & Engage</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-center leading-relaxed">
-                  Join thoughtful discussions, find solidarity in shared experiences, and discover you're not alone in your journey.
+                  Join thoughtful discussions through comments and reviews. Share your perspective, find solidarity in shared experiences, and discover you're not alone.
                 </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Discuss & Engage Section */}
+      <div className="container mx-auto px-4 py-16 bg-gradient-to-b from-background to-primary/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">
+              Discuss & Engage
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Explore conversations and share your thoughts on stories that resonate with you.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <Card className="border-primary/20 hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer" onClick={() => navigate({ to: '/discussions', search: { mode: 'reviews' } })}>
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-3 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Star className="h-7 w-7 text-primary" />
+                </div>
+                <CardTitle className="font-serif text-2xl">Reviews</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="leading-relaxed mb-4">
+                  Rate and review stories. Share your thoughts and help others discover meaningful content.
+                </CardDescription>
+                <Button 
+                  variant="outline" 
+                  className="w-full gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({ to: '/discussions', search: { mode: 'reviews' } });
+                  }}
+                >
+                  <Star className="h-4 w-4" />
+                  View Reviews
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/20 hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer" onClick={() => navigate({ to: '/discussions', search: { mode: 'comments' } })}>
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-3 h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MessageSquare className="h-7 w-7 text-primary" />
+                </div>
+                <CardTitle className="font-serif text-2xl">Comments</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="leading-relaxed mb-4">
+                  Join discussions and connect with others. Share your perspective and find community.
+                </CardDescription>
+                <Button 
+                  variant="outline" 
+                  className="w-full gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({ to: '/discussions', search: { mode: 'comments' } });
+                  }}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  View Comments
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -108,7 +159,7 @@ export default function HomePage() {
                   className="gap-2"
                 >
                   <BookOpen className="h-5 w-5" />
-                  Go to Stories
+                  Read Stories
                 </Button>
                 <Button 
                   size="lg"

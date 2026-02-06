@@ -1,42 +1,49 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [
-    "App appears to be deployed on Internet Computer (IC) with frontend + backend canisters accessed via a gateway/domain routing."
-  ],
-  "known_issues": [
-    "Deployment/runtime issue: gateway reports 'Canister ID Not Resolved' and frontend shows 'Failed to load stories' after 1–2 seconds, suggesting frontend loads but backend canister is unavailable/not resolving."
-  ],
+  "summary": "Website UI/navigation adjustments: move Home/About to top-right, remove Read and Share Story from the top navigation, and relocate Reviews/Comments from the top area to a lower \"Discuss and Engage\" section.",
+  "architectural_notes": [],
+  "known_issues": [],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-an-explicit-backend-availability-check-and-expose-it-to-the-frontend-so-the-app-can-distinguish-between-a-backend-canister-unreachable-not-yet-propagated-and-b-application-level-errors",
-      "title": "Add an explicit backend availability check and expose it to the frontend so the app can distinguish between (a) backend canister unreachable / not yet propagated and (b) application-level errors.",
+      "id": "feature-update-the-global-header-navigation-so-that-only-home-and-about-appear-in-the-top-right-navigation-area-and-remove-the-current-top-navigation-items-read-share-reviews-and-comments",
+      "title": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-improve-the-failed-to-load-stories-error-state-on-the-stories-feed-to-show-actionable-troubleshooting-and-canister-details-frontend-asset-canister-id-backend-api-canister-id-when-available-standard-url-raw-url-and-provide-one-click-actions",
-      "title": "Improve the 'Failed to load stories' error state on the stories feed to show actionable troubleshooting and canister details (frontend asset canister ID, backend API canister ID when available, standard URL, raw URL), and provide one-click actions.",
+      "id": "feature-on-the-home-page-add-a-lower-page-discuss-engage-section-that-provides-access-to-reviews-and-comments-by-linking-to-the-discussions-page-with-the-appropriate-mode-reviews-comments",
+      "title": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-update-retry-backoff-behavior-for-fetching-published-stories-to-reduce-perceived-slowness-and-provide-clear-progress-feedback-during-the-first-10-15-seconds-after-page-load-when-the-backend-is-not-yet-reachable",
-      "title": "Update retry/backoff behavior for fetching published stories to reduce perceived slowness and provide clear progress feedback during the first ~10–15 seconds after page load when the backend is not yet reachable.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Improve user-visible deployment diagnostics and backend availability checks for 'Failed to load stories'",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Move Home and About links to the top-right navigation area.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Remove \"Read\" and \"Share Story\" from the top navigation area.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Remove Reviews/Comments from the top area and place them under a \"Discuss and Engage\" section lower on the page.",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Adjust top navigation and move Reviews/Comments to Discuss & Engage section",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

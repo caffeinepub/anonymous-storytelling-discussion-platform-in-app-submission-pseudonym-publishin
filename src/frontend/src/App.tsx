@@ -6,6 +6,7 @@ import StoryDetailPage from './pages/StoryDetailPage';
 import AdminModerationPage from './pages/AdminModerationPage';
 import AboutPage from './pages/AboutPage';
 import TroubleshootingPage from './pages/TroubleshootingPage';
+import DiscussionsPage from './pages/DiscussionsPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -58,6 +59,12 @@ const troubleshootingRoute = createRoute({
   component: TroubleshootingPage,
 });
 
+const discussionsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/discussions',
+  component: DiscussionsPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute, 
   storiesRoute, 
@@ -65,7 +72,8 @@ const routeTree = rootRoute.addChildren([
   storyRoute, 
   adminRoute, 
   aboutRoute,
-  troubleshootingRoute
+  troubleshootingRoute,
+  discussionsRoute
 ]);
 
 const router = createRouter({ routeTree });

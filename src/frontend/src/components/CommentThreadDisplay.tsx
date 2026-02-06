@@ -1,14 +1,14 @@
-import { useGetComments } from '../hooks/useStories';
+import { useGetAllDiscussions } from '../hooks/useDiscussions';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MessageCircle, Calendar } from 'lucide-react';
 
-interface CommentThreadProps {
+interface CommentThreadDisplayProps {
   storyTitle: string;
 }
 
-export default function CommentThread({ storyTitle }: CommentThreadProps) {
-  const { data: comments, isLoading } = useGetComments(storyTitle);
+export default function CommentThreadDisplay({ storyTitle }: CommentThreadDisplayProps) {
+  const { data: discussions, isLoading } = useGetAllDiscussions();
 
   const formatDate = (timestamp: bigint) => {
     try {
@@ -31,7 +31,7 @@ export default function CommentThread({ storyTitle }: CommentThreadProps) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
+        {[1, 2].map((i) => (
           <Card key={i}>
             <CardContent className="pt-6 space-y-2">
               <Skeleton className="h-4 w-32" />
@@ -43,12 +43,15 @@ export default function CommentThread({ storyTitle }: CommentThreadProps) {
     );
   }
 
-  if (!comments || comments.length === 0) {
+  const thread = discussions?.comments.find((t) => t.storyTitle === storyTitle);
+  const comments = thread?.comments || [];
+
+  if (comments.length === 0) {
     return (
       <Card className="border-dashed">
         <CardContent className="pt-12 pb-12 text-center space-y-3">
           <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto opacity-50" />
-          <p className="text-muted-foreground">No comments yet. Be the first to share your thoughts!</p>
+          <p className="text-muted-foreground">No comments yet for this topic.</p>
         </CardContent>
       </Card>
     );
