@@ -1,43 +1,4 @@
 {
   "kind": "feature_evidence_report",
-  "features": [
-    {
-      "featureId": "feature-update-the-global-header-navigation-so-that-only-home-and-about-appear-in-the-top-right-navigation-area-and-remove-the-current-top-navigation-items-read-share-reviews-and-comments",
-      "featureTitle": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
-      "files": [
-        "frontend/src/components/AppHeader.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-on-the-home-page-add-a-lower-page-discuss-engage-section-that-provides-access-to-reviews-and-comments-by-linking-to-the-discussions-page-with-the-appropriate-mode-reviews-comments",
-      "featureTitle": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
-      "files": [
-        "frontend/src/pages/HomePage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    }
-  ]
+  "features": []
 }

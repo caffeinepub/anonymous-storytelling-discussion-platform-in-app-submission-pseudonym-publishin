@@ -1,56 +1,10 @@
 {
   "kind": "build_request",
-  "title": "Adjust top navigation and move Reviews/Comments to Discuss & Engage section",
+  "title": "Untitled request",
   "priority": "normal",
-  "requirements": [
-    {
-      "id": "REQ-1",
-      "text": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "home and about should be at top right ? remove read from top and share story from top remove reviews and comments"
-        ]
-      },
-      "acceptanceCriteria": [
-        "On all pages, the top header shows navigation links/buttons for \"Home\" (routes to \"/\") and \"About\" (routes to \"/about\") aligned on the top-right side of the header.",
-        "The top header no longer shows \"Read\", \"Share\" (or \"Share Story\"), \"Reviews\", or \"Comments\" navigation items.",
-        "Header layout remains responsive and usable on mobile and desktop (no overflow/cutoff)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "instead review and comments down in discuss and engage"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The Home page contains a clearly labeled \"Discuss & Engage\" section below the hero/top area (i.e., not in the header).",
-        "The section includes a \"Reviews\" control that navigates to \"/discussions\" with search param mode set to \"reviews\".",
-        "The section includes a \"Comments\" control that navigates to \"/discussions\" with search param mode set to \"comments\".",
-        "There are no \"Reviews\" or \"Comments\" navigation items remaining in the top header."
-      ]
-    }
-  ],
-  "constraints": [
-    "Do not edit files under frontend/src/components/ui (compose using existing UI components instead).",
-    "Do not modify any files listed as immutable in SYSTEM_CONTEXT (e.g., frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
-    "Keep backend architecture unchanged (single Motoko actor); no backend changes are required for this request."
-  ],
-  "nonGoals": [
-    "Do not change routing paths or add new pages; continue using existing routes (/, /about, /discussions).",
-    "Do not change story submission, reading, reviews, or comments backend logic.",
-    "Do not redesign the overall theme/colors beyond what is needed for the navigation/content move."
-  ],
+  "requirements": [],
+  "constraints": [],
+  "nonGoals": [],
   "imageRequirements": {
     "required": [],
     "edits": []

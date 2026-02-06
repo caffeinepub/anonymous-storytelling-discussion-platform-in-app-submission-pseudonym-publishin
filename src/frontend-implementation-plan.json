@@ -1,40 +1,6 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Adjust global header navigation and add Home-page Discuss & Engage links",
-  "requirements": [
-    {
-      "id": "REQ-1",
-      "summary": "Update global header top-right navigation to show only Home and About, removing Read/Share/Reviews/Comments.",
-      "acceptanceCriteria": [
-        "On all pages, the top header shows navigation links/buttons for \"Home\" (routes to \"/\") and \"About\" (routes to \"/about\") aligned on the top-right side of the header.",
-        "The top header no longer shows \"Read\", \"Share\" (or \"Share Story\"), \"Reviews\", or \"Comments\" navigation items.",
-        "Header layout remains responsive and usable on mobile and desktop (no overflow/cutoff)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Replace the current header navigation buttons (Read/Share/Reviews/Comments) with only two top-right navigation controls: Home (to \"/\") and About (to \"/about\"). Keep the header responsive (e.g., compact spacing on small screens) while preserving existing branding on the left. Use existing shadcn-ui Button and TanStack Router Link/navigate patterns; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Add a Home-page Discuss & Engage section linking to Discussions in reviews/comments modes.",
-      "acceptanceCriteria": [
-        "The Home page contains a clearly labeled \"Discuss & Engage\" section below the hero/top area (i.e., not in the header).",
-        "The section includes a \"Reviews\" control that navigates to \"/discussions\" with search param mode set to \"reviews\".",
-        "The section includes a \"Comments\" control that navigates to \"/discussions\" with search param mode set to \"comments\".",
-        "There are no \"Reviews\" or \"Comments\" navigation items remaining in the top header."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "modify",
-          "description": "Add a distinct, clearly labeled \"Discuss & Engage\" section below the hero/top area that contains two controls: \"Reviews\" (navigate to \"/discussions\" with search { mode: 'reviews' }) and \"Comments\" (navigate to \"/discussions\" with search { mode: 'comments' }). Compose with existing shadcn-ui components (e.g., Card/Button) without modifying any files under frontend/src/components/ui; verify the component's usage instructions before implementing."
-        }
-      ]
-    }
-  ]
+  "title": "Untitled request",
+  "requirements": []
 }

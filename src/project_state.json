@@ -1,49 +1,22 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Website UI/navigation adjustments: move Home/About to top-right, remove Read and Share Story from the top navigation, and relocate Reviews/Comments from the top area to a lower \"Discuss and Engage\" section.",
+  "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": true,
-  "existing_features": [
-    {
-      "id": "feature-update-the-global-header-navigation-so-that-only-home-and-about-appear-in-the-top-right-navigation-area-and-remove-the-current-top-navigation-items-read-share-reviews-and-comments",
-      "title": "Update the global header navigation so that only \"Home\" and \"About\" appear in the top-right navigation area, and remove the current top navigation items \"Read\", \"Share\", \"Reviews\", and \"Comments\".",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-on-the-home-page-add-a-lower-page-discuss-engage-section-that-provides-access-to-reviews-and-comments-by-linking-to-the-discussions-page-with-the-appropriate-mode-reviews-comments",
-      "title": "On the Home page, add a lower-page \"Discuss & Engage\" section that provides access to \"Reviews\" and \"Comments\" by linking to the Discussions page with the appropriate mode (reviews/comments).",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    }
+  "known_issues": [
+    "App currently displays a shade of pink instead of the intended blue color scheme"
   ],
+  "isFixRequest": true,
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Move Home and About links to the top-right navigation area.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Remove \"Read\" and \"Share Story\" from the top navigation area.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Remove Reviews/Comments from the top area and place them under a \"Discuss and Engage\" section lower on the page.",
+      "summary": "Update entire app color scheme to blue (light/pastel blue) and remove any pink shades",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Adjust top navigation and move Reviews/Comments to Discuss & Engage section",
+  "projectName": "Untitled request",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -6,61 +6,61 @@
     :root {
         --radius: 0.5rem;
         
-        /* Blue theme - Light Mode */
-        --background: 0.98 0.01 60;
-        --foreground: 0.25 0.02 40;
-        --card: 1 0 0;
-        --card-foreground: 0.25 0.02 40;
-        --popover: 1 0 0;
-        --popover-foreground: 0.25 0.02 40;
-        --primary: 0.50 0.15 250;
-        --primary-foreground: 0.98 0.01 250;
-        --secondary: 0.92 0.02 50;
-        --secondary-foreground: 0.30 0.02 40;
-        --muted: 0.95 0.01 50;
-        --muted-foreground: 0.50 0.03 40;
-        --accent: 0.75 0.08 45;
-        --accent-foreground: 0.25 0.02 40;
+        /* Pastel Blue theme - Light Mode */
+        --background: 0.97 0.015 230;
+        --foreground: 0.30 0.04 235;
+        --card: 0.99 0.01 230;
+        --card-foreground: 0.30 0.04 235;
+        --popover: 0.99 0.01 230;
+        --popover-foreground: 0.30 0.04 235;
+        --primary: 0.65 0.12 230;
+        --primary-foreground: 0.98 0.01 230;
+        --secondary: 0.90 0.03 235;
+        --secondary-foreground: 0.35 0.04 235;
+        --muted: 0.93 0.02 235;
+        --muted-foreground: 0.55 0.04 235;
+        --accent: 0.80 0.08 225;
+        --accent-foreground: 0.30 0.04 235;
         --destructive: 0.55 0.20 25;
-        --destructive-foreground: 0.98 0.01 60;
-        --border: 0.88 0.02 50;
-        --input: 0.88 0.02 50;
-        --ring: 0.50 0.12 250;
+        --destructive-foreground: 0.98 0.01 230;
+        --border: 0.88 0.03 235;
+        --input: 0.88 0.03 235;
+        --ring: 0.65 0.12 230;
         
-        --chart-1: 0.55 0.10 30;
-        --chart-2: 0.60 0.08 50;
-        --chart-3: 0.50 0.12 20;
-        --chart-4: 0.65 0.06 60;
-        --chart-5: 0.52 0.11 40;
+        --chart-1: 0.60 0.10 220;
+        --chart-2: 0.65 0.08 240;
+        --chart-3: 0.55 0.12 210;
+        --chart-4: 0.70 0.06 250;
+        --chart-5: 0.58 0.11 230;
     }
 
     .dark {
-        /* Blue theme - Dark Mode */
-        --background: 0.20 0.02 40;
-        --foreground: 0.95 0.01 50;
-        --card: 0.24 0.02 40;
-        --card-foreground: 0.95 0.01 50;
-        --popover: 0.22 0.02 40;
-        --popover-foreground: 0.95 0.01 50;
-        --primary: 0.60 0.18 250;
-        --primary-foreground: 0.98 0.01 250;
-        --secondary: 0.30 0.02 40;
-        --secondary-foreground: 0.92 0.01 50;
-        --muted: 0.32 0.02 40;
-        --muted-foreground: 0.65 0.03 45;
-        --accent: 0.45 0.08 50;
-        --accent-foreground: 0.95 0.01 50;
+        /* Pastel Blue theme - Dark Mode */
+        --background: 0.22 0.04 235;
+        --foreground: 0.92 0.02 230;
+        --card: 0.26 0.04 235;
+        --card-foreground: 0.92 0.02 230;
+        --popover: 0.24 0.04 235;
+        --popover-foreground: 0.92 0.02 230;
+        --primary: 0.70 0.14 230;
+        --primary-foreground: 0.98 0.01 230;
+        --secondary: 0.32 0.04 235;
+        --secondary-foreground: 0.90 0.02 230;
+        --muted: 0.34 0.04 235;
+        --muted-foreground: 0.68 0.04 235;
+        --accent: 0.50 0.10 225;
+        --accent-foreground: 0.92 0.02 230;
         --destructive: 0.50 0.22 25;
-        --destructive-foreground: 0.95 0.01 50;
-        --border: 0.34 0.02 40;
-        --input: 0.34 0.02 40;
-        --ring: 0.60 0.15 250;
+        --destructive-foreground: 0.92 0.02 230;
+        --border: 0.36 0.04 235;
+        --input: 0.36 0.04 235;
+        --ring: 0.70 0.14 230;
         
-        --chart-1: 0.50 0.12 35;
-        --chart-2: 0.55 0.10 55;
-        --chart-3: 0.45 0.14 25;
-        --chart-4: 0.60 0.08 65;
-        --chart-5: 0.48 0.13 45;
+        --chart-1: 0.55 0.12 220;
+        --chart-2: 0.60 0.10 240;
+        --chart-3: 0.50 0.14 210;
+        --chart-4: 0.65 0.08 250;
+        --chart-5: 0.53 0.13 230;
     }
 
     * {
