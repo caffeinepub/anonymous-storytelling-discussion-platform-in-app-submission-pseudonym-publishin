@@ -9,6 +9,7 @@ export interface CanisterInfo {
   standardUrl: string | null;
   rawUrl: string | null;
   source: 'hostname' | 'env' | 'unknown';
+  isBackendConfigured: boolean;
 }
 
 /**
@@ -61,6 +62,13 @@ function getFrontendCanisterIdFromEnv(): string | null {
 }
 
 /**
+ * Check if backend canister ID is properly configured
+ */
+function isBackendConfigured(backendId: string | null): boolean {
+  return !!backendId && backendId !== 'unknown' && backendId.trim().length > 0;
+}
+
+/**
  * Get comprehensive canister information for troubleshooting
  * Prioritizes hostname-derived frontend canister ID for URL generation
  */
@@ -91,6 +99,7 @@ export function getCanisterInfo(): CanisterInfo {
     standardUrl,
     rawUrl,
     source,
+    isBackendConfigured: isBackendConfigured(backendCanisterId),
   };
 }
 

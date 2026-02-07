@@ -2,18 +2,23 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useSubmitStory } from '../hooks/useStories';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useActor } from '../hooks/useActor';
+import { getCanisterInfo } from '../utils/canisterUrls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, Loader2, LogIn } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle2, Loader2, LogIn, AlertCircle, Wifi, AlertTriangle } from 'lucide-react';
+import { getErrorMessage, isUnauthorizedError, isActorConnectivityError } from '../utils/authErrors';
 
 export default function SubmitStoryPage() {
   const navigate = useNavigate();
   const { identity, login, isLoggingIn } = useInternetIdentity();
+  const { actor, isFetching: actorFetching } = useActor();
+  const canisterInfo = getCanisterInfo();
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
   
   const [title, setTitle] = useState('');
@@ -23,6 +28,10 @@ export default function SubmitStoryPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const submitMutation = useSubmitStory();
+
+  // Compute actor connecting state for authenticated users
+  const actorConnecting = isAuthenticated && (!actor || actorFetching);
+  const backendNotConfigured = !canisterInfo.isBackendConfigured;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +55,7 @@ export default function SubmitStoryPage() {
       setSubmitted(true);
     } catch (error) {
       console.error('Failed to submit story:', error);
+      // Error is handled by the mutation error state below
     }
   };
 
@@ -91,8 +101,8 @@ export default function SubmitStoryPage() {
                 </p>
               </div>
               <div className="flex gap-3 justify-center pt-4">
-                <Button onClick={() => navigate({ to: '/login' })}>
-                  Account
+                <Button onClick={() => navigate({ to: '/my-submissions' })}>
+                  View My Submissions
                 </Button>
                 <Button 
                   variant="outline" 
@@ -123,6 +133,36 @@ export default function SubmitStoryPage() {
             Your experience matters. Share it anonymously or with your name.
           </p>
         </div>
+
+        {/* Backend Not Configured Alert */}
+        {backendNotConfigured && (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Backend Not Configured</AlertTitle>
+            <AlertDescription className="space-y-3">
+              <p>
+                The backend canister ID is not configured. Your application needs to be properly deployed before you can submit stories.
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => navigate({ to: '/troubleshooting' })}
+              >
+                View Troubleshooting Guide
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Actor Connecting Status */}
+        {actorConnecting && !backendNotConfigured && (
+          <Alert>
+            <Wifi className="h-4 w-4 animate-pulse" />
+            <AlertDescription>
+              Connecting to the backend... Please wait a moment.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card>
           <CardHeader>
@@ -195,8 +235,41 @@ export default function SubmitStoryPage() {
 
               {submitMutation.isError && (
                 <Alert variant="destructive">
-                  <AlertDescription>
-                    Failed to submit your story. Please try again.
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="space-y-2">
+                    <div>
+                      {isUnauthorizedError(submitMutation.error) 
+                        ? 'You must be logged in to submit a story. Please log in and try again.'
+                        : getErrorMessage(submitMutation.error)}
+                    </div>
+                    {isUnauthorizedError(submitMutation.error) && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={login}
+                        className="mt-2"
+                      >
+                        Log In Again
+                      </Button>
+                    )}
+                    {isActorConnectivityError(submitMutation.error) && (
+                      <div className="flex gap-2 mt-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => submitMutation.reset()}
+                        >
+                          Try Again
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => navigate({ to: '/troubleshooting' })}
+                        >
+                          Troubleshooting
+                        </Button>
+                      </div>
+                    )}
                   </AlertDescription>
                 </Alert>
               )}
@@ -205,11 +278,24 @@ export default function SubmitStoryPage() {
               <div className="flex gap-3 pt-4">
                 <Button
                   type="submit"
-                  disabled={submitMutation.isPending || !title.trim() || !story.trim() || (!isAnonymous && !authorName.trim())}
+                  disabled={
+                    backendNotConfigured ||
+                    actorConnecting || 
+                    submitMutation.isPending || 
+                    !title.trim() || 
+                    !story.trim() || 
+                    (!isAnonymous && !authorName.trim())
+                  }
                   className="flex-1"
                 >
-                  {submitMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Submit Story
+                  {(submitMutation.isPending || actorConnecting) && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {backendNotConfigured 
+                    ? 'Backend Not Configured' 
+                    : actorConnecting 
+                    ? 'Connecting...' 
+                    : 'Submit Story'}
                 </Button>
                 <Button
                   type="button"

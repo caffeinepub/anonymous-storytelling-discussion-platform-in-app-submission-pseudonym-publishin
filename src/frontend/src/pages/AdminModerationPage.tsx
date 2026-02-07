@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { CheckCircle2, Loader2, Calendar, ShieldAlert, PlusCircle, Trash2, AlertCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Loader2, Calendar, ShieldAlert, PlusCircle, Trash2, AlertCircle, AlertTriangle, X } from 'lucide-react';
 import AccessDeniedState from '../components/AccessDeniedState';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useNavigate } from '@tanstack/react-router';
@@ -20,7 +20,7 @@ import type { Story } from '../backend';
 
 export default function AdminModerationPage() {
   const navigate = useNavigate();
-  const { identity } = useInternetIdentity();
+  const { identity, login } = useInternetIdentity();
   const { data: isAdmin, isLoading: isCheckingAdmin, error: adminCheckError } = useIsCallerAdmin();
   const { data: pendingStories, isLoading: loadingPending, error: pendingError } = useGetPendingStories(isAdmin);
   const { data: publishedStories, isLoading: loadingPublished } = useGetPublishedStories();
@@ -71,11 +71,15 @@ export default function AdminModerationPage() {
       await publishMutation.mutateAsync(selectedStory.title);
       setPublishSuccess(true);
       setSelectedStory(null);
-      setTimeout(() => setPublishSuccess(false), 3000);
+      setTimeout(() => setPublishSuccess(false), 5000);
     } catch (error: any) {
       console.error('Publish error:', error);
       setPublishError(getErrorMessage(error));
     }
+  };
+
+  const handleDismissPublishError = () => {
+    setPublishError(null);
   };
 
   const handleCreateArticle = async () => {
@@ -103,11 +107,15 @@ export default function AdminModerationPage() {
       setNewStory('');
       setNewIsAnonymous(false);
       setNewAuthorName('');
-      setTimeout(() => setCreateSuccess(false), 3000);
+      setTimeout(() => setCreateSuccess(false), 5000);
     } catch (error: any) {
       console.error('Create article error:', error);
       setCreateError(getErrorMessage(error));
     }
+  };
+
+  const handleDismissCreateError = () => {
+    setCreateError(null);
   };
 
   const handleDeleteArticle = async (title: string) => {
@@ -181,10 +189,34 @@ export default function AdminModerationPage() {
 
             {publishError && (
               <Alert className="bg-destructive/10 border-destructive/50">
-                <AlertCircle className="h-4 w-4 text-destructive" />
-                <AlertDescription className="text-destructive">
-                  {publishError}
-                </AlertDescription>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-4 w-4 text-destructive mt-0.5" />
+                    <AlertDescription className="text-destructive">
+                      {isUnauthorizedError(publishError)
+                        ? 'You must be an admin to publish stories. Please log in with an admin account.'
+                        : publishError}
+                    </AlertDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleDismissPublishError}
+                    className="h-6 w-6 p-0 hover:bg-destructive/20"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                {isUnauthorizedError(publishError) && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={login}
+                    className="mt-2"
+                  >
+                    Log In Again
+                  </Button>
+                )}
               </Alert>
             )}
 
@@ -235,34 +267,54 @@ export default function AdminModerationPage() {
                         <Button
                           onClick={() => handleSelectStory(story)}
                           variant={selectedStory?.title === story.title ? 'default' : 'outline'}
-                          className="gap-2"
+                          size="sm"
                         >
-                          {selectedStory?.title === story.title ? 'Selected' : 'Select'}
+                          {selectedStory?.title === story.title ? 'Selected' : 'Select to Publish'}
                         </Button>
-                        {selectedStory?.title === story.title && (
-                          <Button
-                            onClick={handlePublish}
-                            disabled={publishMutation.isPending}
-                            className="gap-2"
-                          >
-                            {publishMutation.isPending ? (
-                              <>
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                                Publishing...
-                              </>
-                            ) : (
-                              <>
-                                <CheckCircle2 className="h-4 w-4" />
-                                Approve & Publish
-                              </>
-                            )}
-                          </Button>
-                        )}
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+            )}
+
+            {selectedStory && (
+              <Card className="border-primary">
+                <CardHeader>
+                  <CardTitle>Ready to Publish</CardTitle>
+                  <CardDescription>
+                    Review the selected story before publishing
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-4 rounded-lg bg-accent/20 border border-border">
+                    <h3 className="font-serif text-xl font-bold mb-2">{selectedStory.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      By: {selectedStory.isAnonymous ? 'Anonymous' : selectedStory.authorName || selectedStory.authorPseudonym}
+                    </p>
+                    <p className="text-sm whitespace-pre-wrap font-serif">
+                      {selectedStory.story}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handlePublish}
+                      disabled={publishMutation.isPending}
+                      className="flex-1"
+                    >
+                      {publishMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Publish Story
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setSelectedStory(null)}
+                      disabled={publishMutation.isPending}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             )}
           </TabsContent>
 
@@ -279,114 +331,162 @@ export default function AdminModerationPage() {
 
             {createError && (
               <Alert className="bg-destructive/10 border-destructive/50">
-                <AlertCircle className="h-4 w-4 text-destructive" />
-                <AlertDescription className="text-destructive">
-                  {createError}
-                </AlertDescription>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-4 w-4 text-destructive mt-0.5" />
+                    <AlertDescription className="text-destructive">
+                      {isUnauthorizedError(createError)
+                        ? 'You must be an admin to create articles. Please log in with an admin account.'
+                        : createError}
+                    </AlertDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleDismissCreateError}
+                    className="h-6 w-6 p-0 hover:bg-destructive/20"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                {isUnauthorizedError(createError) && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={login}
+                    className="mt-2"
+                  >
+                    Log In Again
+                  </Button>
+                )}
               </Alert>
             )}
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-serif text-2xl">Create & Publish Article</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <PlusCircle className="h-5 w-5" />
+                  Create New Article
+                </CardTitle>
                 <CardDescription>
-                  Create a new article directly without going through the submission process
+                  Create and publish an article directly without user submission
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title *</Label>
-                  <Input
-                    id="title"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Enter article title"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="authorPseudonym">Author Pseudonym *</Label>
-                  <Input
-                    id="authorPseudonym"
-                    value={newAuthorPseudonym}
-                    onChange={(e) => setNewAuthorPseudonym(e.target.value)}
-                    placeholder="Enter author pseudonym"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="story">Story Content *</Label>
-                  <Textarea
-                    id="story"
-                    value={newStory}
-                    onChange={(e) => setNewStory(e.target.value)}
-                    placeholder="Enter the story content"
-                    rows={12}
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="anonymous"
-                    checked={newIsAnonymous}
-                    onCheckedChange={setNewIsAnonymous}
-                  />
-                  <Label htmlFor="anonymous">Publish as Anonymous</Label>
-                </div>
-
-                {!newIsAnonymous && (
-                  <div className="space-y-2">
-                    <Label htmlFor="authorName">Author Name (Optional)</Label>
-                    <Input
-                      id="authorName"
-                      value={newAuthorName}
-                      onChange={(e) => setNewAuthorName(e.target.value)}
-                      placeholder="Enter author's real name (optional)"
+              <CardContent>
+                <form onSubmit={(e) => { e.preventDefault(); handleCreateArticle(); }} className="space-y-6">
+                  <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-accent/10">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="new-anonymous" className="text-base font-medium">
+                        Anonymous Article
+                      </Label>
+                      <p className="text-sm text-muted-foreground">
+                        Publish without author attribution
+                      </p>
+                    </div>
+                    <Switch
+                      id="new-anonymous"
+                      checked={newIsAnonymous}
+                      onCheckedChange={setNewIsAnonymous}
                     />
                   </div>
-                )}
 
-                <Button
-                  onClick={handleCreateArticle}
-                  disabled={createArticleMutation.isPending}
-                  className="w-full gap-2"
-                  size="lg"
-                >
-                  {createArticleMutation.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    <>
-                      <PlusCircle className="h-4 w-4" />
-                      Create & Publish Article
-                    </>
+                  {!newIsAnonymous && (
+                    <div className="space-y-2">
+                      <Label htmlFor="new-author-name">Author Name (Optional)</Label>
+                      <Input
+                        id="new-author-name"
+                        placeholder="Real author name"
+                        value={newAuthorName}
+                        onChange={(e) => setNewAuthorName(e.target.value)}
+                      />
+                    </div>
                   )}
-                </Button>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="new-pseudonym">Author Pseudonym *</Label>
+                    <Input
+                      id="new-pseudonym"
+                      placeholder="Display name for the article"
+                      value={newAuthorPseudonym}
+                      onChange={(e) => setNewAuthorPseudonym(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="new-title">Article Title *</Label>
+                    <Input
+                      id="new-title"
+                      placeholder="Give your article a title"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="new-story">Article Content *</Label>
+                    <Textarea
+                      id="new-story"
+                      placeholder="Write your article content..."
+                      value={newStory}
+                      onChange={(e) => setNewStory(e.target.value)}
+                      required
+                      rows={12}
+                      className="resize-none font-serif"
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button
+                      type="submit"
+                      disabled={createArticleMutation.isPending || !newTitle.trim() || !newAuthorPseudonym.trim() || !newStory.trim()}
+                      className="flex-1"
+                    >
+                      {createArticleMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Create & Publish Article
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setNewTitle('');
+                        setNewAuthorPseudonym('');
+                        setNewStory('');
+                        setNewIsAnonymous(false);
+                        setNewAuthorName('');
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </form>
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Published Articles Tab */}
           <TabsContent value="published" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <p className="text-sm text-muted-foreground">
-                {publishedStories?.length || 0} published articles
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-serif font-bold">Published Articles</h2>
+                <p className="text-sm text-muted-foreground">
+                  {publishedStories?.length || 0} article{publishedStories?.length !== 1 ? 's' : ''} published
+                </p>
+              </div>
               {publishedStories && publishedStories.length > 0 && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm" className="gap-2">
-                      <Trash2 className="h-4 w-4" />
-                      Delete All Articles
+                    <Button variant="destructive" size="sm">
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete All
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogTitle>Delete All Articles?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete all {publishedStories.length} published articles and all associated comments and reviews.
+                        This will permanently delete all {publishedStories.length} published articles. This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -395,7 +495,7 @@ export default function AdminModerationPage() {
                         onClick={handleDeleteAllArticles}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
-                        {deleteAllMutation.isPending ? 'Deleting...' : 'Delete All'}
+                        Delete All
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -416,13 +516,13 @@ export default function AdminModerationPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-6">
+              <div className="grid gap-4">
                 {publishedStories.map((story) => (
-                  <Card key={story.title} className="border-primary/20">
+                  <Card key={story.title}>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="space-y-1 flex-1">
-                          <CardTitle className="font-serif text-2xl">{story.title}</CardTitle>
+                          <CardTitle className="font-serif text-xl">{story.title}</CardTitle>
                           <CardDescription className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
                             {formatDate(story.timestamp)}
@@ -433,16 +533,15 @@ export default function AdminModerationPage() {
                         </div>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="sm" className="gap-2">
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
                               <Trash2 className="h-4 w-4" />
-                              Delete
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete this article?</AlertDialogTitle>
+                              <AlertDialogTitle>Delete Article?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete "{story.title}".
+                                This will permanently delete "{story.title}". This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -451,7 +550,7 @@ export default function AdminModerationPage() {
                                 onClick={() => handleDeleteArticle(story.title)}
                                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                               >
-                                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+                                Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -459,11 +558,9 @@ export default function AdminModerationPage() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="prose prose-sm max-w-none">
-                        <p className="text-muted-foreground whitespace-pre-wrap line-clamp-4">
-                          {story.story}
-                        </p>
-                      </div>
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">
+                        {story.story}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}

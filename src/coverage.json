@@ -1,41 +1,50 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-06T21:11:56.796Z",
+  "generatedAt": "2026-02-07T08:58:12.564Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 4,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AppHeader.tsx",
-          "frontend/src/pages/HomePage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AppHeader.tsx",
-          "frontend/src/pages/HomePage.tsx"
-        ]
+        "summary": "Update backend access-control initialization so that calls to `_initializeAccessControlWithSecret` from the frontend during authenticated actor creation never trap when the provided secret is empty/invalid, and do not prevent the actor from being created/usable for normal authenticated user actions (including `submitStory`).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
+        "summary": "Ensure any authenticated principal can obtain the `#user` permission required by user endpoints (at minimum `submitStory`, `addComment`, `addReview`, `getMySubmissions`, `getCallerUserProfile`, and `saveCallerUserProfile`) without requiring an admin token, using the existing initialization flow already invoked by the frontend.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Keep `checkBackendHeartbeat()` callable without authentication and ensure it reliably returns `true` without trapping so frontend availability checks can consistently distinguish backend reachability from other failures.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Perform final pre-release verification in the deployed environment to confirm the app is ready to publish/go live, including the end-to-end authenticated submission flow and key user interactions.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useAdmin.ts",
-          "frontend/src/components/AppHeader.tsx",
-          "frontend/src/pages/AdminModerationPage.tsx"
+          "frontend/DEPLOYMENT.md",
+          "frontend/src/components/BackendHeartbeatCheck.tsx",
+          "frontend/src/pages/TroubleshootingPage.tsx",
+          "frontend/src/pages/FeedPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useAdmin.ts",
-          "frontend/src/components/AppHeader.tsx",
-          "frontend/src/pages/AdminModerationPage.tsx"
+          "frontend/src/components/BackendHeartbeatCheck.tsx",
+          "frontend/src/pages/TroubleshootingPage.tsx",
+          "frontend/src/pages/FeedPage.tsx"
         ]
       }
     ]
@@ -45,10 +54,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/AppHeader.tsx",
-    "frontend/src/hooks/useAdmin.ts",
-    "frontend/src/pages/AdminModerationPage.tsx",
-    "frontend/src/pages/HomePage.tsx",
+    "frontend/src/components/BackendHeartbeatCheck.tsx",
+    "frontend/src/pages/FeedPage.tsx",
+    "frontend/src/pages/TroubleshootingPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

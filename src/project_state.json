@@ -1,30 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Publishing/story platform with user submissions and an admin approval workflow; users report missing login UI and missing admin publishing/approval interface, and want email notifications on new story publications.",
-  "architectural_notes": [
-    "Implement admin moderation workflow: submitted stories -> admin review -> approve/publish state transition.",
-    "Email notification capability required for publish/submit events (SMTP/transactional email integration and configuration)."
-  ],
-  "known_issues": [
-    "Login control/entry point is not visible to the user (cannot access login).",
-    "Admin cannot see publishing/approval UI (no page/icon to publish/approve)."
-  ],
-  "isFixRequest": true,
+  "summary": "Project is ready to be finalized and published (build/deployment to go live).",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-clearly-visible-authentication-entry-point-across-the-app-so-users-can-always-find-where-to-log-in-update-the-global-header-appheader-to-show-a-login-button-link-when-the-user-is-not-authenticated-that-navigates-to-login-a-logout-action-when-the-user-is-authenticated-keep-existing-navigation-home-articles-about-contact-intact-add-a-prominent-login-call-to-action-on-the-home-page-hero-section-for-unauthenticated-users-that-navigates-to-login-in-addition-to-existing-read-share-buttons",
-      "title": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
+      "id": "feature-perform-final-pre-release-verification-in-the-deployed-environment-to-confirm-the-app-is-ready-to-publish-go-live-including-the-end-to-end-authenticated-submission-flow-and-key-user-interactions",
+      "title": "Perform final pre-release verification in the deployed environment to confirm the app is ready to publish/go live, including the end-to-end authenticated submission flow and key user interactions.",
       "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-admin-approval-workflow-is-accessible-once-the-user-is-authenticated-and-is-an-admin-keep-the-existing-admin-only-visibility-rule-for-the-admin-link-but-verify-that-the-admin-link-appears-in-the-header-when-the-authenticated-user-is-an-admin-the-admin-route-continues-to-render-the-existing-adminmoderationpage-and-shows-the-awaiting-approval-tab-with-pending-submissions-for-admins-non-admins-or-logged-out-users-continue-to-see-an-access-denied-state-on-admin-with-a-login-prompt-when-logged-out",
-      "title": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
-      "reqIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "version": 1
     }
@@ -32,24 +18,36 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fix missing login UI / inability to log in (user cannot see the login option).",
+      "summary": "Finalize the project and publish/go live (run build and deployment process).",
       "reqIds": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "AR-2",
-      "summary": "Add/admin-enable an admin interface to view submitted stories and approve/publish them (approval workflow).",
-      "reqIds": [],
+      "summary": "Update backend access-control initialization so that calls to `_initializeAccessControlWithSecret` from the frontend during authenticated actor creation never trap when the provided secret is empty/invalid, and do not prevent the actor from being created/usable for normal authenticated user actions (including `submitStory`).",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Send email notification to authorsanakhan@gmail.com when someone publishes/submits a story.",
-      "reqIds": [],
+      "summary": "Ensure any authenticated principal can obtain the `#user` permission required by user endpoints (at minimum `submitStory`, `addComment`, `addReview`, `getMySubmissions`, `getCallerUserProfile`, and `saveCallerUserProfile`) without requiring an admin token, using the existing initialization flow already invoked by the frontend.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Keep `checkBackendHeartbeat()` callable without authentication and ensure it reliably returns `true` without trapping so frontend availability checks can consistently distinguish backend reachability from other failures.",
+      "reqIds": [
+        "REQ-3"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Make login entry point visible and ensure admin moderation is reachable after login",
+  "projectName": "Finalize access-control flow and prepare production deployment",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

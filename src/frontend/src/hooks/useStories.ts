@@ -90,7 +90,7 @@ export function useGetMySubmissions() {
 }
 
 export function useSubmitStory() {
-  const { actor } = useActor();
+  const { actor, isFetching } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -101,7 +101,15 @@ export function useSubmitStory() {
       isAnonymous: boolean;
       authorName: string | null;
     }) => {
-      if (!actor) throw new Error('Actor not available');
+      // Check if actor is still being initialized
+      if (isFetching) {
+        throw new Error('ACTOR_CONNECTING');
+      }
+      
+      if (!actor) {
+        throw new Error('ACTOR_UNAVAILABLE');
+      }
+      
       return actor.submitStory(
         params.title,
         params.authorPseudonym,

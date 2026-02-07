@@ -2,11 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-clearly-visible-authentication-entry-point-across-the-app-so-users-can-always-find-where-to-log-in-update-the-global-header-appheader-to-show-a-login-button-link-when-the-user-is-not-authenticated-that-navigates-to-login-a-logout-action-when-the-user-is-authenticated-keep-existing-navigation-home-articles-about-contact-intact-add-a-prominent-login-call-to-action-on-the-home-page-hero-section-for-unauthenticated-users-that-navigates-to-login-in-addition-to-existing-read-share-buttons",
-      "featureTitle": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
+      "featureId": "feature-perform-final-pre-release-verification-in-the-deployed-environment-to-confirm-the-app-is-ready-to-publish-go-live-including-the-end-to-end-authenticated-submission-flow-and-key-user-interactions",
+      "featureTitle": "Perform final pre-release verification in the deployed environment to confirm the app is ready to publish/go live, including the end-to-end authenticated submission flow and key user interactions.",
       "files": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/HomePage.tsx"
+        "frontend/src/components/BackendHeartbeatCheck.tsx",
+        "frontend/src/pages/FeedPage.tsx",
+        "frontend/src/pages/TroubleshootingPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,28 +18,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-admin-approval-workflow-is-accessible-once-the-user-is-authenticated-and-is-an-admin-keep-the-existing-admin-only-visibility-rule-for-the-admin-link-but-verify-that-the-admin-link-appears-in-the-header-when-the-authenticated-user-is-an-admin-the-admin-route-continues-to-render-the-existing-adminmoderationpage-and-shows-the-awaiting-approval-tab-with-pending-submissions-for-admins-non-admins-or-logged-out-users-continue-to-see-an-access-denied-state-on-admin-with-a-login-prompt-when-logged-out",
-      "featureTitle": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
-      "files": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/hooks/useAdmin.ts",
-        "frontend/src/pages/AdminModerationPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "confidence": "high"
     }

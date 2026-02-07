@@ -11,11 +11,13 @@ import Runtime "mo:core/Runtime";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
+// No migration needed, just a code fix
+
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  public query ({ caller }) func checkBackendHeartbeat() : async Bool {
+  public query func checkBackendHeartbeat() : async Bool {
     true;
   };
 

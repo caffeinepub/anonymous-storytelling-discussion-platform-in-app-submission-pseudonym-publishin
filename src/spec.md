@@ -1,11 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Make authentication easy to find from anywhere in the app and ensure admins can reach the moderation workflow after logging in.
+**Goal:** Finalize access-control initialization so normal authenticated users can use core app features without an admin token, ensure heartbeat reliability, and verify the app is ready to publish/go live.
 
 **Planned changes:**
-- Update the global header (AppHeader) to always show a visible “Login” control when logged out (navigates to `/login`) and a visible “Logout” control when logged in, while keeping existing navigation links intact.
-- Add a prominent “Login” call-to-action in the Home page hero for logged-out users that navigates to `/login`, in addition to the existing hero actions.
-- Verify admin-only navigation and routing: show an “Admin” link in the header only for authenticated admins, ensure `/admin` renders the existing moderation page (including “Awaiting Approval”) for admins, and ensure non-admin/logged-out users see an access denied state (with an Internet Identity login prompt when logged out).
+- Update backend access-control initialization so `_initializeAccessControlWithSecret` never traps on empty/invalid secrets and does not block authenticated actor creation or normal user actions.
+- Ensure any authenticated principal can obtain `#user` permissions (via the existing initialization flow) to use user endpoints: `submitStory`, `addComment`, `addReview`, `getMySubmissions`, `getCallerUserProfile`, `saveCallerUserProfile`, without requiring an admin token.
+- Keep admin-only endpoints restricted to admins (no permission widening).
+- Make `checkBackendHeartbeat()` callable anonymously and reliably return `true` without trapping for consistent frontend availability checks.
+- Perform final pre-release verification in the deployed environment covering: anonymous browsing, Internet Identity login, story submission and “My Submissions”, commenting/reviewing, admin moderation restrictions, and heartbeat-based reachability checks.
 
-**User-visible outcome:** Logged-out users can always find a Login option in the header (and on the Home hero), logged-in users can log out from the header, and admins can navigate to `/admin` to access the moderation/approval workflow while others see an appropriate access-denied view.
+**User-visible outcome:** Users can browse the app anonymously, log in with Internet Identity, submit stories, view their submissions, and add comments/reviews without authorization traps even without an admin token; admins retain exclusive access to moderation actions; the app’s backend availability check consistently reports reachability when the backend is up.

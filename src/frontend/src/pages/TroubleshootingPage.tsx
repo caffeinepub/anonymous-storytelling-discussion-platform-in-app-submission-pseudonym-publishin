@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Copy, CheckCircle2, AlertCircle, RefreshCw, Globe, ExternalLink, AlertTriangle } from 'lucide-react';
 import { getCanisterInfo } from '../utils/canisterUrls';
+import { BackendHeartbeatCheck } from '../components/BackendHeartbeatCheck';
 
 export default function TroubleshootingPage() {
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
@@ -59,6 +60,9 @@ export default function TroubleshootingPage() {
             </AlertDescription>
           </Alert>
         )}
+
+        {/* Backend Heartbeat Check */}
+        <BackendHeartbeatCheck />
 
         <Card>
           <CardHeader>

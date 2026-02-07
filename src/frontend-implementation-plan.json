@@ -1,54 +1,38 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Visible login entry point and reliable admin moderation access",
+  "title": "Production readiness: frontend verification flow and heartbeat diagnostics",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Expose a consistent Login/Logout control in the global header and add a prominent Home hero Login call-to-action for logged-out users.",
+      "id": "REQ-4",
+      "summary": "Add production verification support in the frontend: documented pre-release checklist and a user-visible backend heartbeat reachability check integrated into troubleshooting/diagnostics UI.",
       "acceptanceCriteria": [
-        "When browsing any page while logged out, the header contains a visible \"Login\" control that navigates to /login.",
-        "When logged in, the header no longer shows \"Login\" and instead provides a visible \"Logout\" control.",
-        "On the Home page while logged out, a prominent \"Login\" button is visible in the hero section and navigates to /login.",
-        "All user-facing text added/changed is in English."
+        "Unauthenticated users can load the app, browse published stories, and the home/feed pages render without fatal errors.",
+        "A user can log in with Internet Identity, submit a story successfully, and then see it listed in “My Submissions” as pending.",
+        "A logged-in user can add a comment and a review to a published story without authorization errors.",
+        "Admin moderation workflows still require admin permissions and are not accidentally granted to normal users.",
+        "The app’s troubleshooting/availability check flow can successfully call the backend heartbeat and show backend reachability when the backend is up."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AppHeader.tsx",
+          "path": "frontend/DEPLOYMENT.md",
           "operation": "modify",
-          "description": "Add a clearly visible auth entry point in the header: show a \"Login\" control that navigates to /login when unauthenticated, and a \"Logout\" control when authenticated (triggering Internet Identity clear + React Query cache clear). Keep existing navigation (Home, Articles, About, Contact) intact. Use the selected \"authorization\" component guidance for Internet Identity login/logout behavior and cache clearing; verify the component's usage instructions before implementing."
+          "description": "Add a concise pre-release verification checklist for the deployed environment, covering: anonymous browsing (home/feed/story pages), Internet Identity login/logout behavior (including React Query cache clearing), end-to-end submit-story flow and pending visibility in “My Submissions”, commenting/reviewing a published story, confirming admin-only routes/actions remain restricted, and confirming backend reachability via the heartbeat check shown in the UI. Use English for all text."
         },
         {
-          "path": "frontend/src/pages/HomePage.tsx",
-          "operation": "modify",
-          "description": "In the hero section, conditionally render a prominent \"Login\" call-to-action for unauthenticated users that navigates to /login, in addition to the existing Read/Share buttons. Use the selected \"authorization\" component guidance for determining authenticated vs guest state; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Ensure admin moderation remains reachable post-login and /admin correctly shows admin content for admins and access denied states for others.",
-      "acceptanceCriteria": [
-        "After logging in with an admin identity, the header shows an \"Admin\" navigation option and it navigates to /admin.",
-        "On /admin as an admin, the Admin Moderation page loads and includes the \"Awaiting Approval\" area for reviewing/publishing submissions.",
-        "On /admin as a logged-out user, an access denied view is shown with a visible Internet Identity login prompt.",
-        "On /admin as a non-admin logged-in user, an access denied view is shown indicating lack of admin privileges."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useAdmin.ts",
-          "operation": "modify",
-          "description": "Adjust the admin-check query behavior so it only runs when the user is authenticated (guest users should not attempt admin checks), and ensure the returned loading/data states support correctly showing/hiding the Admin header link without accidental exposure. Use the selected \"authorization\" component guidance for role-based admin checks and guest handling; verify the component's usage instructions before implementing."
+          "path": "frontend/src/components/BackendHeartbeatCheck.tsx",
+          "operation": "create",
+          "description": "Create a small diagnostics component that uses the existing backend capability check via the useBackendAvailability hook to run an explicit heartbeat check on user action and render clear states (idle/checking/reachable/unreachable) with any error message. Use shadcn-ui primitives (e.g., Card/Alert/Button) to present results. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/AppHeader.tsx",
+          "path": "frontend/src/pages/TroubleshootingPage.tsx",
           "operation": "modify",
-          "description": "Verify and refine Admin link visibility so it appears only for authenticated admins and reliably navigates to /admin, while remaining hidden for guests and non-admin users. Use the selected \"authorization\" component guidance for role-based access control checks; verify the component's usage instructions before implementing."
+          "description": "Integrate the new BackendHeartbeatCheck component into the troubleshooting UI so users can explicitly run a backend heartbeat check and see reachability. Keep user-facing text in English and reuse existing layout/styling patterns. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/AdminModerationPage.tsx",
+          "path": "frontend/src/pages/FeedPage.tsx",
           "operation": "modify",
-          "description": "Harden /admin access gating: (1) when logged out, render the existing AccessDeniedState with a visible Internet Identity login prompt; (2) when logged in but not admin, render the existing AccessDeniedState indicating lack of admin privileges; (3) when admin, ensure the existing AdminModerationPage UI renders and includes the \"Awaiting Approval\" tab with pending submissions, optionally making it the default tab to guarantee immediate visibility. Use the selected \"authorization\" component guidance for access-denied UI patterns; verify the component's usage instructions before implementing."
+          "description": "Tighten the feed failure diagnostics to better distinguish backend reachability vs. other failures by ensuring the heartbeat-driven state is surfaced consistently when story loading fails (reuse existing useBackendAvailability behavior) and provide a clear call-to-action to retry and/or open troubleshooting. Verify the component's usage instructions before implementing."
         }
       ]
     }

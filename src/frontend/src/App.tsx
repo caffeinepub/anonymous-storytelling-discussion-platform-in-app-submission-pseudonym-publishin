@@ -11,6 +11,7 @@ import ContactPage from './pages/ContactPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import LoginPage from './pages/LoginPage';
+import MySubmissionsPage from './pages/MySubmissionsPage';
 import AppLayout from './components/AppLayout';
 
 const rootRoute = createRootRoute({
@@ -96,7 +97,7 @@ const loginRoute = createRoute({
 const mySubmissionsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/my-submissions',
-  component: LoginPage,
+  component: MySubmissionsPage,
 });
 
 const routeTree = rootRoute.addChildren([

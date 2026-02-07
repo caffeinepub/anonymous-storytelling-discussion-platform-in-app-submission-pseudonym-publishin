@@ -1,55 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Make login entry point visible and ensure admin moderation is reachable after login",
-  "priority": "high",
+  "title": "Finalize access-control flow and prepare production deployment",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
-      "target": "frontend",
+      "text": "Update backend access-control initialization so that calls to `_initializeAccessControlWithSecret` from the frontend during authenticated actor creation never trap when the provided secret is empty/invalid, and do not prevent the actor from being created/usable for normal authenticated user actions (including `submitStory`).",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-9",
+          "msg-11"
         ],
         "quotes": [
-          "1)I cannot see login"
+          "I want the project to be finalised and published now",
+          "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "When browsing any page while logged out, the header contains a visible \"Login\" control that navigates to /login.",
-        "When logged in, the header no longer shows \"Login\" and instead provides a visible \"Logout\" control.",
-        "On the Home page while logged out, a prominent \"Login\" button is visible in the hero section and navigates to /login.",
-        "All user-facing text added/changed is in English."
+        "Calling `_initializeAccessControlWithSecret(\"\")` does not trap.",
+        "A user can authenticate via Internet Identity and the frontend can create an authenticated actor even when no `caffeineAdminToken` is provided.",
+        "After successful login without an admin token, `submitStory` can be called without an authorization trap."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
-      "target": "frontend",
+      "text": "Ensure any authenticated principal can obtain the `#user` permission required by user endpoints (at minimum `submitStory`, `addComment`, `addReview`, `getMySubmissions`, `getCallerUserProfile`, and `saveCallerUserProfile`) without requiring an admin token, using the existing initialization flow already invoked by the frontend.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-9",
+          "msg-11"
         ],
         "quotes": [
-          "2)Yes"
+          "I want the project to be finalised and published now",
+          "Yes"
         ]
       },
       "acceptanceCriteria": [
-        "After logging in with an admin identity, the header shows an \"Admin\" navigation option and it navigates to /admin.",
-        "On /admin as an admin, the Admin Moderation page loads and includes the \"Awaiting Approval\" area for reviewing/publishing submissions.",
-        "On /admin as a logged-out user, an access denied view is shown with a visible Internet Identity login prompt.",
-        "On /admin as a non-admin logged-in user, an access denied view is shown indicating lack of admin privileges."
+        "A newly authenticated principal (no admin token) can call `submitStory`, `addComment`, `addReview`, `getMySubmissions`, `getCallerUserProfile`, and `saveCallerUserProfile` without trapping for authorization.",
+        "Admin-only endpoints (e.g., moderation/publishing/delete) remain restricted and still trap/deny for non-admin users."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Keep `checkBackendHeartbeat()` callable without authentication and ensure it reliably returns `true` without trapping so frontend availability checks can consistently distinguish backend reachability from other failures.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-9",
+          "msg-11"
+        ],
+        "quotes": [
+          "I want the project to be finalised and published now",
+          "Yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`checkBackendHeartbeat()` succeeds for anonymous callers and returns `true`.",
+        "`checkBackendHeartbeat()` does not trap under normal operation."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Perform final pre-release verification in the deployed environment to confirm the app is ready to publish/go live, including the end-to-end authenticated submission flow and key user interactions.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-9",
+          "msg-11"
+        ],
+        "quotes": [
+          "I want the project to be finalised and published now",
+          "Yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Unauthenticated users can load the app, browse published stories, and the home/feed pages render without fatal errors.",
+        "A user can log in with Internet Identity, submit a story successfully, and then see it listed in “My Submissions” as pending.",
+        "A logged-in user can add a comment and a review to a published story without authorization errors.",
+        "Admin moderation workflows still require admin permissions and are not accidentally granted to normal users.",
+        "The app’s troubleshooting/availability check flow can successfully call the backend heartbeat and show backend reachability when the backend is up."
       ]
     }
   ],
   "constraints": [
-    "Do not modify files in frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and anything under frontend/src/components/ui.",
-    "Backend must remain single-actor (all Motoko logic in backend/main.mo); only add a migration if persistent state schema changes (not expected for this request)."
+    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
+    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or any sources under frontend/src/components/ui (compose instead).",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Implementing email notifications to authorsanakhan@gmail.com.",
-    "Adding third-party authentication providers other than Internet Identity.",
-    "Changing admin permission rules or adding new admin management UI in the backend."
+    "Adding new product features beyond what is required to finalize and publish.",
+    "Major UI redesign or new visual theme work.",
+    "Integrations with third-party auth providers beyond Internet Identity."
   ],
   "imageRequirements": {
     "required": [],

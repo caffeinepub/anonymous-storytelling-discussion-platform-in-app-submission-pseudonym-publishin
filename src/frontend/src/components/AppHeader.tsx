@@ -2,7 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useIsCallerAdmin } from '../hooks/useAdmin';
-import { ShieldCheck, LogIn, LogOut } from 'lucide-react';
+import { ShieldCheck, LogIn, LogOut, FileText } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function AppHeader() {
@@ -61,6 +61,16 @@ export default function AppHeader() {
           >
             Articles
           </Button>
+          {isAuthenticated && (
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate({ to: '/my-submissions' })}
+              className="hover:text-primary hover:bg-primary/5 transition-colors"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              My Submissions
+            </Button>
+          )}
           {showAdminLink && (
             <Button 
               variant="ghost" 
