@@ -1,77 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Replace My Submissions with a dedicated Login page",
+  "title": "Visible login entry point and reliable admin moderation access",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove the “My Submissions” header navigation entry while keeping all other existing nav items intact.",
+      "summary": "Expose a consistent Login/Logout control in the global header and add a prominent Home hero Login call-to-action for logged-out users.",
       "acceptanceCriteria": [
-        "When authenticated or unauthenticated, the header no longer displays a “My Submissions” button/link.",
-        "No other existing nav items (Home, Articles, Admin, About, Contact) are removed or broken."
+        "When browsing any page while logged out, the header contains a visible \"Login\" control that navigates to /login.",
+        "When logged in, the header no longer shows \"Login\" and instead provides a visible \"Logout\" control.",
+        "On the Home page while logged out, a prominent \"Login\" button is visible in the hero section and navigates to /login.",
+        "All user-facing text added/changed is in English."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Remove the conditional “My Submissions” navigation button/link and any now-unused imports (e.g., the User icon). Keep existing Home/Articles/Admin/About/Contact navigation behavior unchanged."
+          "description": "Add a clearly visible auth entry point in the header: show a \"Login\" control that navigates to /login when unauthenticated, and a \"Logout\" control when authenticated (triggering Internet Identity clear + React Query cache clear). Keep existing navigation (Home, Articles, About, Contact) intact. Use the selected \"authorization\" component guidance for Internet Identity login/logout behavior and cache clearing; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "In the hero section, conditionally render a prominent \"Login\" call-to-action for unauthenticated users that navigates to /login, in addition to the existing Read/Share buttons. Use the selected \"authorization\" component guidance for determining authenticated vs guest state; verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add a dedicated /login page that supports Internet Identity login and logout using the existing auth hook.",
+      "summary": "Ensure admin moderation remains reachable post-login and /admin correctly shows admin content for admins and access denied states for others.",
       "acceptanceCriteria": [
-        "Visiting /login shows a login screen when the user is not authenticated, with a primary button that triggers Internet Identity login.",
-        "When the user is authenticated, /login shows the authenticated state (at minimum: a message indicating the user is logged in and a logout button).",
-        "All user-facing text on the login page is in English."
+        "After logging in with an admin identity, the header shows an \"Admin\" navigation option and it navigates to /admin.",
+        "On /admin as an admin, the Admin Moderation page loads and includes the \"Awaiting Approval\" area for reviewing/publishing submissions.",
+        "On /admin as a logged-out user, an access denied view is shown with a visible Internet Identity login prompt.",
+        "On /admin as a non-admin logged-in user, an access denied view is shown indicating lack of admin privileges."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
-          "operation": "create",
-          "description": "Create a Login page that uses the existing Internet Identity hook for login/logout and displays authenticated vs unauthenticated states in English. Use the selected \"authorization\" component guidance to ensure logout clears cached application data (e.g., React Query cache). Verify the component's usage instructions before implementing."
+          "path": "frontend/src/hooks/useAdmin.ts",
+          "operation": "modify",
+          "description": "Adjust the admin-check query behavior so it only runs when the user is authenticated (guest users should not attempt admin checks), and ensure the returned loading/data states support correctly showing/hiding the Admin header link without accidental exposure. Use the selected \"authorization\" component guidance for role-based admin checks and guest handling; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Register a new /login route that renders the new LoginPage, ensuring it is part of the router tree and navigable."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Remove the MySubmissionsPage route and ensure /my-submissions shows the Login page experience instead.",
-      "acceptanceCriteria": [
-        "Navigating to /my-submissions no longer shows the My Submissions list UI.",
-        "Navigating to /my-submissions results in the Login page experience (equivalent to visiting /login).",
-        "The app builds successfully with no unused-import or route-tree errors related to removing MySubmissionsPage."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Remove the MySubmissionsPage import and route configuration. Replace /my-submissions route behavior so it renders the same LoginPage experience (or otherwise forwards to /login) without exposing the old submissions UI."
+          "description": "Verify and refine Admin link visibility so it appears only for authenticated admins and reliably navigates to /admin, while remaining hidden for guests and non-admin users. Use the selected \"authorization\" component guidance for role-based access control checks; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/MySubmissionsPage.tsx",
-          "operation": "delete",
-          "description": "Delete the MySubmissionsPage implementation to fully disable the /my-submissions experience and avoid unused code/imports after route removal."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Update UI links that point to /my-submissions (notably the Submit Story success state) to point to /login with updated English text.",
-      "acceptanceCriteria": [
-        "After a successful story submission, the call-to-action that previously navigated to /my-submissions no longer points to /my-submissions.",
-        "The updated call-to-action navigates to /login and uses clear English text (e.g., “Login” or “Account”)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/SubmitStoryPage.tsx",
+          "path": "frontend/src/pages/AdminModerationPage.tsx",
           "operation": "modify",
-          "description": "Update the post-submit success call-to-action to navigate to /login instead of /my-submissions and change the button label to clear English (e.g., “Account” or “Login”). Also remove any now-unused imports that were only used for the old CTA."
+          "description": "Harden /admin access gating: (1) when logged out, render the existing AccessDeniedState with a visible Internet Identity login prompt; (2) when logged in but not admin, render the existing AccessDeniedState indicating lack of admin privileges; (3) when admin, ensure the existing AdminModerationPage UI renders and includes the \"Awaiting Approval\" tab with pending submissions, optionally making it the default tab to guarantee immediate visibility. Use the selected \"authorization\" component guidance for access-denied UI patterns; verify the component's usage instructions before implementing."
         }
       ]
     }

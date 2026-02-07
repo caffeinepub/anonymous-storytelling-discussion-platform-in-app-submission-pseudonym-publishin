@@ -1,10 +1,14 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, PenLine, MessageSquare, Star } from 'lucide-react';
+import { BookOpen, PenLine, MessageSquare, Star, LogIn } from 'lucide-react';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { identity } = useInternetIdentity();
+  
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   return (
     <div className="w-full">
@@ -36,6 +40,17 @@ export default function HomePage() {
                 <PenLine className="h-5 w-5" />
                 Share
               </Button>
+              {!isAuthenticated && (
+                <Button 
+                  size="lg"
+                  variant="secondary"
+                  onClick={() => navigate({ to: '/login' })}
+                  className="gap-2 text-lg px-8 py-6"
+                >
+                  <LogIn className="h-5 w-5" />
+                  Login
+                </Button>
+              )}
             </div>
           </div>
         </div>

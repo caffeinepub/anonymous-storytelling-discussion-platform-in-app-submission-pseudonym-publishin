@@ -1,40 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project to replace/remove the 'My submission' area and implement a login page instead.",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "summary": "Publishing/story platform with user submissions and an admin approval workflow; users report missing login UI and missing admin publishing/approval interface, and want email notifications on new story publications.",
+  "architectural_notes": [
+    "Implement admin moderation workflow: submitted stories -> admin review -> approve/publish state transition.",
+    "Email notification capability required for publish/submit events (SMTP/transactional email integration and configuration)."
+  ],
+  "known_issues": [
+    "Login control/entry point is not visible to the user (cannot access login).",
+    "Admin cannot see publishing/approval UI (no page/icon to publish/approve)."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-remove-the-my-submissions-navigation-entry-from-the-header-so-users-no-longer-see-or-access-a-my-submissions-area-from-the-main-navigation",
-      "title": "Remove the “My Submissions” navigation entry from the header so users no longer see or access a My Submissions area from the main navigation.",
+      "id": "feature-add-a-clearly-visible-authentication-entry-point-across-the-app-so-users-can-always-find-where-to-log-in-update-the-global-header-appheader-to-show-a-login-button-link-when-the-user-is-not-authenticated-that-navigates-to-login-a-logout-action-when-the-user-is-authenticated-keep-existing-navigation-home-articles-about-contact-intact-add-a-prominent-login-call-to-action-on-the-home-page-hero-section-for-unauthenticated-users-that-navigates-to-login-in-addition-to-existing-read-share-buttons",
+      "title": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-new-login-page-route-at-login-that-allows-users-to-authenticate-with-internet-identity-and-to-log-out-using-the-existing-internet-identity-hook",
-      "title": "Add a new Login page route at /login that allows users to authenticate with Internet Identity and to log out, using the existing Internet Identity hook.",
+      "id": "feature-ensure-the-admin-approval-workflow-is-accessible-once-the-user-is-authenticated-and-is-an-admin-keep-the-existing-admin-only-visibility-rule-for-the-admin-link-but-verify-that-the-admin-link-appears-in-the-header-when-the-authenticated-user-is-an-admin-the-admin-route-continues-to-render-the-existing-adminmoderationpage-and-shows-the-awaiting-approval-tab-with-pending-submissions-for-admins-non-admins-or-logged-out-users-continue-to-see-an-access-denied-state-on-admin-with-a-login-prompt-when-logged-out",
+      "title": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
       "reqIds": [
         "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-disable-the-existing-my-submissions-experience-by-removing-the-mysubmissionspage-route-and-ensuring-my-submissions-instead-takes-the-user-to-the-new-login-page-via-redirect-or-by-rendering-the-login-page",
-      "title": "Disable the existing /my-submissions experience by removing the MySubmissionsPage route and ensuring /my-submissions instead takes the user to the new /login page (via redirect or by rendering the Login page).",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-any-ui-that-links-to-my-submissions-e-g-the-post-submit-success-state-on-submit-story-to-link-to-login-instead-with-updated-english-button-text",
-      "title": "Update any UI that links to /my-submissions (e.g., the post-submit success state on Submit Story) to link to /login instead, with updated English button text.",
-      "reqIds": [
-        "REQ-4"
       ],
       "version": 1
     }
@@ -42,18 +32,24 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Implement a login page (replace current 'My submission' area)",
+      "summary": "Fix missing login UI / inability to log in (user cannot see the login option).",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Remove/disable the 'My submission' page/section",
+      "summary": "Add/admin-enable an admin interface to view submitted stories and approve/publish them (approval workflow).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Send email notification to authorsanakhan@gmail.com when someone publishes/submits a story.",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Replace My Submissions with a dedicated Login page",
+  "projectName": "Make login entry point visible and ensure admin moderation is reachable after login",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

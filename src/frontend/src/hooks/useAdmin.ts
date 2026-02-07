@@ -1,20 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
+import { useInternetIdentity } from './useInternetIdentity';
 import type { Story } from '../backend';
 import { Principal } from '@dfinity/principal';
 
 // Check if the current user is an admin
 export function useIsCallerAdmin() {
   const { actor, isFetching } = useActor();
+  const { identity } = useInternetIdentity();
+  
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
   return useQuery<boolean>({
     queryKey: ['isCallerAdmin'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      // Use the correct backend method: callerIsAdmin
       return await actor.callerIsAdmin();
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !isFetching && isAuthenticated,
     retry: false,
   });
 }

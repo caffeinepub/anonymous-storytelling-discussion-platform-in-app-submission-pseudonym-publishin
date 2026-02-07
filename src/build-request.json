@@ -1,87 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Replace My Submissions with a dedicated Login page",
-  "priority": "normal",
+  "title": "Make login entry point visible and ensure admin moderation is reachable after login",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the “My Submissions” navigation entry from the header so users no longer see or access a My Submissions area from the main navigation.",
+      "text": "Add a clearly visible authentication entry point across the app so users can always find where to log in.\n\n- Update the global header (AppHeader) to show:\n  - A \"Login\" button/link when the user is not authenticated that navigates to /login.\n  - A \"Logout\" action when the user is authenticated.\n  - Keep existing navigation (Home, Articles, About, Contact) intact.\n- Add a prominent \"Login\" call-to-action on the Home page hero section for unauthenticated users that navigates to /login (in addition to existing Read/Share buttons).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-5"
         ],
         "quotes": [
-          "Remove My submission instead try login page there"
+          "1)I cannot see login"
         ]
       },
       "acceptanceCriteria": [
-        "When authenticated or unauthenticated, the header no longer displays a “My Submissions” button/link.",
-        "No other existing nav items (Home, Articles, Admin, About, Contact) are removed or broken."
+        "When browsing any page while logged out, the header contains a visible \"Login\" control that navigates to /login.",
+        "When logged in, the header no longer shows \"Login\" and instead provides a visible \"Logout\" control.",
+        "On the Home page while logged out, a prominent \"Login\" button is visible in the hero section and navigates to /login.",
+        "All user-facing text added/changed is in English."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a new Login page route at /login that allows users to authenticate with Internet Identity and to log out, using the existing Internet Identity hook.",
+      "text": "Ensure the admin approval workflow is accessible once the user is authenticated and is an admin.\n\n- Keep the existing admin-only visibility rule for the Admin link, but verify that:\n  - The Admin link appears in the header when the authenticated user is an admin.\n  - The /admin route continues to render the existing AdminModerationPage and shows the \"Awaiting Approval\" tab with pending submissions for admins.\n  - Non-admins (or logged-out users) continue to see an access denied state on /admin with a login prompt when logged out.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-5"
         ],
         "quotes": [
-          "Remove My submission instead try login page there"
+          "2)Yes"
         ]
       },
       "acceptanceCriteria": [
-        "Visiting /login shows a login screen when the user is not authenticated, with a primary button that triggers Internet Identity login.",
-        "When the user is authenticated, /login shows the authenticated state (at minimum: a message indicating the user is logged in and a logout button).",
-        "All user-facing text on the login page is in English."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Disable the existing /my-submissions experience by removing the MySubmissionsPage route and ensuring /my-submissions instead takes the user to the new /login page (via redirect or by rendering the Login page).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Remove My submission instead try login page there"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Navigating to /my-submissions no longer shows the My Submissions list UI.",
-        "Navigating to /my-submissions results in the Login page experience (equivalent to visiting /login).",
-        "The app builds successfully with no unused-import or route-tree errors related to removing MySubmissionsPage."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Update any UI that links to /my-submissions (e.g., the post-submit success state on Submit Story) to link to /login instead, with updated English button text.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Remove My submission instead try login page there"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After a successful story submission, the call-to-action that previously navigated to /my-submissions no longer points to /my-submissions.",
-        "The updated call-to-action navigates to /login and uses clear English text (e.g., “Login” or “Account”)."
+        "After logging in with an admin identity, the header shows an \"Admin\" navigation option and it navigates to /admin.",
+        "On /admin as an admin, the Admin Moderation page loads and includes the \"Awaiting Approval\" area for reviewing/publishing submissions.",
+        "On /admin as a logged-out user, an access denied view is shown with a visible Internet Identity login prompt.",
+        "On /admin as a non-admin logged-in user, an access denied view is shown indicating lack of admin privileges."
       ]
     }
   ],
   "constraints": [
-    "Frontend files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui must not be edited (compose/reuse them instead).",
-    "Keep the backend as a single Motoko actor; no backend changes are required for this request."
+    "Do not modify files in frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and anything under frontend/src/components/ui.",
+    "Backend must remain single-actor (all Motoko logic in backend/main.mo); only add a migration if persistent state schema changes (not expected for this request)."
   ],
   "nonGoals": [
-    "Reworking or redesigning the submission tracking feature beyond removing/redirecting the My Submissions page.",
-    "Changing authentication provider behavior beyond adding a dedicated login/logout UI.",
-    "Adding third-party auth providers (only Internet Identity is supported)."
+    "Implementing email notifications to authorsanakhan@gmail.com.",
+    "Adding third-party authentication providers other than Internet Identity.",
+    "Changing admin permission rules or adding new admin management UI in the backend."
   ],
   "imageRequirements": {
     "required": [],

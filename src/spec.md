@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the removed “My Submissions” area with a dedicated Login page for Internet Identity authentication.
+**Goal:** Make authentication easy to find from anywhere in the app and ensure admins can reach the moderation workflow after logging in.
 
 **Planned changes:**
-- Remove the “My Submissions” entry from the header navigation while keeping all other existing nav items intact.
-- Add a new `/login` route that uses the existing Internet Identity hook to let users log in (when unauthenticated) and log out (when authenticated), with English-only UI text.
-- Remove/disable the existing `MySubmissionsPage` route and make `/my-submissions` redirect to (or render) the `/login` experience.
-- Update any UI that links to `/my-submissions` (e.g., post-submit success state) to link to `/login` instead, with updated English call-to-action text.
+- Update the global header (AppHeader) to always show a visible “Login” control when logged out (navigates to `/login`) and a visible “Logout” control when logged in, while keeping existing navigation links intact.
+- Add a prominent “Login” call-to-action in the Home page hero for logged-out users that navigates to `/login`, in addition to the existing hero actions.
+- Verify admin-only navigation and routing: show an “Admin” link in the header only for authenticated admins, ensure `/admin` renders the existing moderation page (including “Awaiting Approval”) for admins, and ensure non-admin/logged-out users see an access denied state (with an Internet Identity login prompt when logged out).
 
-**User-visible outcome:** Users no longer see “My Submissions” in the header; they can visit `/login` to log in/out with Internet Identity, and any attempt to visit `/my-submissions` will take them to the Login page.
+**User-visible outcome:** Logged-out users can always find a Login option in the header (and on the Home hero), logged-in users can log out from the header, and admins can navigate to `/admin` to access the moderation/approval workflow while others see an appropriate access-denied view.
